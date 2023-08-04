@@ -1,9 +1,9 @@
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
+import EslingPlugin from 'eslint-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import { merge } from 'webpack-merge';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import EslingPlugin from 'eslint-webpack-plugin';
-import CopyPlugin from 'copy-webpack-plugin';
 
 const baseConfig = {
   entry: path.resolve(__dirname, './src/app/app'),

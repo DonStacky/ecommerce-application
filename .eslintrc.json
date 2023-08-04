@@ -21,6 +21,7 @@
   },
   "rules": {
     "no-debugger": "off",
+    "import/order": "off",
     "no-console": 0,
     "class-methods-use-this": "off",
     "@typescript-eslint/no-explicit-any": 2,
