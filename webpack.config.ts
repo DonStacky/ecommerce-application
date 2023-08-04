@@ -1,9 +1,9 @@
-const path = require('path');
-const { merge } = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const EslingPlugin = require('eslint-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+import path from 'path';
+import { merge } from 'webpack-merge';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import EslingPlugin from 'eslint-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const baseConfig = {
   entry: path.resolve(__dirname, './src/app/app'),
@@ -49,7 +49,7 @@ const baseConfig = {
     path: path.resolve(__dirname, './dist'),
   },
   plugins: [
-    new EslingPlugin({ extensions: 'ts' }),
+    new EslingPlugin({ extensions: ['ts'] }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './public/index.html'),
       filename: 'index.html',
@@ -74,8 +74,9 @@ const baseConfig = {
   ],
 };
 
-module.exports = ({ mode }) => {
+module.exports = (mode: string) => {
   const isProductionMode = mode === 'prod';
+  // eslint-disable-next-line global-require
   const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
 
   return merge(baseConfig, envConfig);
