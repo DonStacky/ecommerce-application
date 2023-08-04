@@ -1,6 +1,8 @@
 import path from 'path';
+import { Configuration } from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 
-module.exports = {
+const devConfig: Configuration & WebpackDevServer.Configuration = {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
@@ -11,3 +13,5 @@ module.exports = {
     port: 9000,
   },
 };
+
+export default devConfig;

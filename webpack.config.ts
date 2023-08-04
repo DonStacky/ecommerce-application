@@ -3,9 +3,12 @@ import CopyPlugin from 'copy-webpack-plugin';
 import EslingPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
+import { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
+import devConfig from './webpack.dev.config';
+import prodConfig from './webpack.prod.config';
 
-const baseConfig = {
+const baseConfig: Configuration = {
   entry: path.resolve(__dirname, './src/app/app'),
   mode: 'development',
   module: {
@@ -74,10 +77,10 @@ const baseConfig = {
   ],
 };
 
-module.exports = (mode: string) => {
-  const isProductionMode = mode === 'prod';
+module.exports = (mode: Configuration['mode']) => {
+  const isProductionMode = mode === 'production';
   // eslint-disable-next-line global-require
-  const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
+  const envConfig = isProductionMode ? prodConfig : devConfig;
 
   return merge(baseConfig, envConfig);
 };
