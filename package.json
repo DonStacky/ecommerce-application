@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack serve --open --config ./webpack.config.ts --env mode=development",
     "build": "webpack --config ./webpack.config.ts --env mode=production",
+    "clean": "rd /s /q dist",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --write .",
