@@ -78,12 +78,11 @@ const baseConfig: Configuration = {
 };
 
 type EnvironmentVar = {
-  mode: 'production' | 'development';
+  mode: Configuration['mode'];
 };
 
 module.exports = (env: EnvironmentVar) => {
   const isProductionMode = env.mode === 'production';
-  // eslint-disable-next-line global-require
   const envConfig = isProductionMode ? prodConfig : devConfig;
 
   return merge(baseConfig, envConfig);
