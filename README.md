@@ -8,9 +8,12 @@ Welcome to our eCommerce application! This platform replicates real-world shoppi
  - [Commercetools API](https://docs.commercetools.com/api/)
 
 
+## Requirements:
+
+- Installed `node 18.x` or higher.
+
 ## How to Install and Run the Project
 
--   Use `node 18.x` or higher.
 -   Clone this repo: `$ git clone https://github.com/DonStacky/ecommerce-application.git`.
 -   Go to downloaded folder:  `$ cd ecommerce-application`.
 -   Install dependencies:  `$ npm install`.
