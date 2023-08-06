@@ -81,7 +81,7 @@ type EnvironmentVar = {
   mode: Configuration['mode'];
 };
 
-module.exports = (env: EnvironmentVar) => {
+export default (env: EnvironmentVar) => {
   const isProductionMode = env.mode === 'production';
   const envConfig = isProductionMode ? prodConfig : devConfig;
 
