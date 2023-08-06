@@ -12,6 +12,14 @@ Welcome to our eCommerce application! This platform replicates real-world shoppi
 
 - Installed `node 18.x` or higher.
 
+## Formatting and code quality
+
+To enforce consistent coding styles and to identify potential code issues we use:
+
+- [Eslint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Husky](https://typicode.github.io/husky/)
+
 ## How to Install and Run the Project
 
 -   Clone this repo: `$ git clone https://github.com/DonStacky/ecommerce-application.git`.
