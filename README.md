@@ -32,7 +32,7 @@ Browse through a vast range of products 📚👗👟, view detailed descriptions
  
 
 ## Scripts:
-- `start` Runs local server at port`9000` .
+- `start` Runs local server at port `9000`.
 - `build` Compiles source files into a finished bundle in folder `./ecommerce-application/dist`.
 - `lint` Runs eslint to check source files with `.ts` extension.
 - `lint:fix` Runs eslint to check/automatically fix problems  in source files with `.ts` extension.
@@ -42,7 +42,7 @@ Browse through a vast range of products 📚👗👟, view detailed descriptions
 
 ## Project team:
 1. [SpaNb4](https://github.com/SpaNb4) - Mentor of team.
-2. [DonStacky](https://github.com/DonStacky) - Participant.
-3. [GSerdg](https://github.com/GSerdg) - Participant.
-4. [user42022](https://github.com/user42022) - Participant.
+2. [DonStacky](https://github.com/DonStacky) - Project developer.
+3. [GSerdg](https://github.com/GSerdg) - Project developer.
+4. [user42022](https://github.com/user42022) - Project developer.
 
