@@ -20,6 +20,7 @@
   "author": "Sergey Grebel",
   "license": "ISC",
   "devDependencies": {
+    "@types/bootstrap": "^5.2.6",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -50,5 +51,9 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.9.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.1"
   }
 }
