@@ -39,6 +39,10 @@ const baseConfig: Configuration = {
         ],
       },
       {
+        test: /\.(png|jpg|svg)$/,
+        type: 'asset/resource',
+      },
+      {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
