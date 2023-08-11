@@ -6,5 +6,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ecommerce Application</title>
   </head>
-  <body></body>
+  <body>
+    <form class="registration-form needs-validation" novalidate>
+      <h1 class="form-header">Registration</h1>
+      <div class="form-field">
+        <label for="firstName" class="form-label">First name</label>
+        <input type="text" class="form-control" id="firstName" value="Иван">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="lastName" class="form-label">Last name</label>
+        <input type="text" class="form-control" id="lastName" value="Петров">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group has-validation">
+          <span class="input-group-text" id="inputGroupPrepend">@</span>
+          <input type="text" class="form-control" id="email" aria-describedby="inputGroupPrepend">
+          <div class="invalid-feedback">
+            Пожалуйста, выберите имя пользователя.
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" value="Петров">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="birthDate" class="form-label">Birth date</label>
+        <input type="date" class="form-control" id="birthDate">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <h2 class="address-header"> Billing address</h2>
+      <div class="form-field">
+        <label for="country" class="form-label">Country</label>
+        <select class="form-select" id="country">
+          <option selected disabled value="">Country...</option>
+          <option>...</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid state.
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="postalCode" class="form-label">Postal code</label>
+        <input type="text" class="form-control" id="postalCode">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="city" class="form-label">City</label>
+        <input type="text" class="form-control" id="city">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="street" class="form-label">Street</label>
+        <input type="text" class="form-control" id="street">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        <label class="form-check-label" for="flexSwitchCheckChecked">Set shipping address as default to billing address</label>
+      </div>
+      <div class="collapse" id="collapseExample">
+
+
+        <h2 class="address-header"> Shipping address</h2>
+      <div class="form-field">
+        <label for="country" class="form-label">Country</label>
+        <select class="form-select" id="country">
+          <option selected disabled value="">Country...</option>
+          <option>...</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid state.
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="postalCode" class="form-label">Postal code</label>
+        <input type="text" class="form-control" id="postalCode">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="city" class="form-label">City</label>
+        <input type="text" class="form-control" id="city">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="street" class="form-label">Street</label>
+        <input type="text" class="form-control" id="street">
+        <div class="invalid-feedback">
+          Все хорошо!
+        </div>
+      </div>
+
+
+      </div>
+        <button class="submit-button" type="submit">Register</button>
+    </form>
+  </body>
 </html>
