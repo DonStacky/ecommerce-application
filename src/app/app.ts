@@ -1,4 +1,3 @@
-// import 'bootstrap';
 import LoginForm from '../pages/login/create-login-page';
 import '../pages/login/login-validation';
 import './index.scss';

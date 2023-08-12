@@ -1,9 +1,7 @@
-// import { string } from 'yup';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { LoginValidation } from '../../shared/types/types';
 import { loginValidation, passwordValidation } from './login-validation';
-// import './login.scss';
 
 export default class LoginForm {
   LABEL_EMAIL: HTMLLabelElement;
