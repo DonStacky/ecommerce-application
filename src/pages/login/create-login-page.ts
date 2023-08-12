@@ -1,4 +1,8 @@
+// import { string } from 'yup';
+import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
+// import { LoginValidation } from '../../shared/types/types';
+import { loginValidation, passwordValidation } from './login-validation';
 // import './login.scss';
 
 export default function createLoginPage() {
@@ -6,7 +10,7 @@ export default function createLoginPage() {
     tagname: 'label',
     options: [
       ['className', 'form-label'],
-      ['htmlFor', 'exampleInputEmail1'],
+      ['htmlFor', 'InputEmail'],
       ['textContent', 'Email address'],
     ],
   });
@@ -15,18 +19,14 @@ export default function createLoginPage() {
     options: [
       ['className', 'form-control'],
       ['type', 'email'],
-      ['id', 'exampleInputEmail1'],
+      ['id', 'InputEmail'],
     ],
   });
-
-  INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
-
   const HELP_EMAIL = createElement({
     tagname: 'div',
     options: [
       ['className', 'form-text'],
       ['id', 'emailHelp'],
-      ['textContent', "We'll never share your email with anyone else."],
     ],
   });
   const CONTAINER_EMAIL = createElement({
@@ -39,7 +39,7 @@ export default function createLoginPage() {
     tagname: 'label',
     options: [
       ['className', 'form-label'],
-      ['htmlFor', 'exampleInputPassword1'],
+      ['htmlFor', 'InputPassword'],
       ['textContent', 'Password'],
     ],
   });
@@ -48,12 +48,19 @@ export default function createLoginPage() {
     options: [
       ['className', 'form-control'],
       ['type', 'password'],
-      ['id', 'exampleInputPassword1'],
+      ['id', 'InputPassword'],
+    ],
+  });
+  const HELP_PASSWD = createElement({
+    tagname: 'div',
+    options: [
+      ['className', 'form-text'],
+      ['id', 'passwdHelp'],
     ],
   });
   const CONTAINER_PASSWD = createElement({
     tagname: 'div',
-    childElements: [LABEL_PASSWD, INPUT_PASSWD],
+    childElements: [LABEL_PASSWD, INPUT_PASSWD, HELP_PASSWD],
     options: [['className', 'mb-3']],
   });
 
@@ -93,6 +100,9 @@ export default function createLoginPage() {
     childElements: [CONTAINER_EMAIL, CONTAINER_PASSWD, CONTAINER_CHECK, BUTTON],
   });
 
+  INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
+  BUTTON.setAttribute('disabled', '');
+
   // Показать/скрыть пароль
   INPUT_CHECK.addEventListener('click', (event: MouseEvent) => {
     const target = event.target as HTMLInputElement;
@@ -123,5 +133,46 @@ export default function createLoginPage() {
     { once: true }
   );
 
+  FORM.addEventListener('keyup', (event: KeyboardEvent) => {
+    const target = event.target as HTMLInputElement;
+    if (target.tagName !== 'INPUT') return;
+
+    const text = target.value;
+
+    if (target.id === 'InputEmail') {
+      const validation = loginValidation({ login: text });
+
+      if (typeof validation === 'string') {
+        HELP_EMAIL.innerText = validation;
+        target.classList.add('form-control_validation');
+        loginValidationResults.login = false;
+      } else {
+        target.classList.remove('form-control_validation');
+        HELP_EMAIL.innerText = '';
+        loginValidationResults.login = true;
+      }
+    }
+
+    if (target.id === 'InputPassword') {
+      const validation = passwordValidation({ password: text });
+
+      if (typeof validation === 'string') {
+        HELP_PASSWD.innerText = validation;
+        target.classList.add('form-control_validation');
+        loginValidationResults.password = false;
+      } else {
+        target.classList.remove('form-control_validation');
+        HELP_PASSWD.innerText = '';
+        loginValidationResults.password = true;
+      }
+    }
+  });
+
   return FORM;
 }
+
+/* function checkValidationResultsObject(obj: LoginValidation) {
+  if (obj.login && obj.password) {
+
+  }
+} */
