@@ -2,8 +2,9 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import { CreateOptions } from '../../shared/types/types';
 import blackLogo from '../../../public/svg/logo-black.svg';
 import whiteLogo from '../../../public/svg/logo-white.svg';
+import deer from '../../../public/image/deer.jpg';
 import seaSet from '../../../public/image/morskoj-nabor.jpg';
-import sailboat from '../../../public/image/sailboat.jpg';
+import lights from '../../../public/image/lights.jpg';
 import lighthouse from '../../../public/image/lighthouse.jpg';
 import './header.scss';
 // import 'bootstrap';
@@ -91,7 +92,7 @@ const HEADER_CONTAINER = createElement({
   childElements: [HEADER_NAV_LOGO, HEADER_NAV_BUTTON, HEADER_LIST_WRAPPER],
 });
 
-const HEADER = createElement({
+export const HEADER = createElement({
   tagname: 'nav',
   options: [['className', 'header-bottom__nav navbar navbar-expand-sm bg-body-tertiary sticky-top element-show']],
   childElements: [HEADER_CONTAINER],
@@ -266,7 +267,7 @@ const MAIN_HEADER_TEXT_COLUMN = createElement({
   childElements: [MAIN_HEADER_TITLE, MAIN_HEADER_TEXT, MAIN_HEADER_VIEW_BTN],
 });
 
-const headerCarouselImages = [seaSet, sailboat, lighthouse];
+const headerCarouselImages = [deer, seaSet, lights, lighthouse];
 
 const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
   const HEADER_CAROUSEL_IMAGE = createElement({
@@ -323,12 +324,8 @@ const MAIN_HEADER_CONTAINER = createElement({
   childElements: [HEADER_GRID_ROW],
 });
 
-const MAIN_HEADER = createElement({
+export const MAIN_HEADER = createElement({
   tagname: 'header',
   options: [['className', 'header d-flex flex-column']],
   childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
 });
-
-document.body.append(MAIN_HEADER);
-
-export default HEADER;

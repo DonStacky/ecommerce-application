@@ -1,6 +1,5 @@
 import 'bootstrap';
-import HEADER from '../widgets/header/header';
-import FOOTER from '../widgets/footer/footer';
 import './index.scss';
+import MAIN_PAGE from '../pages/main/main-page';
 
-document.body.append(HEADER, FOOTER);
+document.body.append(MAIN_PAGE);
