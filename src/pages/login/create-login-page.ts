@@ -1,4 +1,5 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
+// import './login.scss';
 
 export default function createLoginPage() {
   const LABEL_EMAIL = createElement({
@@ -69,7 +70,7 @@ export default function createLoginPage() {
     options: [
       ['className', 'form-check-label'],
       ['htmlFor', 'exampleCheck1'],
-      ['textContent', 'Check me out'],
+      ['textContent', 'Show password'],
     ],
   });
   const CONTAINER_CHECK = createElement({
@@ -91,6 +92,36 @@ export default function createLoginPage() {
     tagname: 'form',
     childElements: [CONTAINER_EMAIL, CONTAINER_PASSWD, CONTAINER_CHECK, BUTTON],
   });
+
+  // Показать/скрыть пароль
+  INPUT_CHECK.addEventListener('click', (event: MouseEvent) => {
+    const target = event.target as HTMLInputElement;
+
+    if (target.checked) {
+      INPUT_PASSWD.setAttribute('type', 'text');
+    } else {
+      INPUT_PASSWD.setAttribute('type', 'password');
+    }
+  });
+
+  // Поле краснеет при первом фокусе на него
+  INPUT_EMAIL.addEventListener(
+    'focus',
+    (event: FocusEvent) => {
+      const target = event.target as HTMLInputElement;
+      target.classList.add('form-control_validation');
+    },
+    { once: true }
+  );
+
+  INPUT_PASSWD.addEventListener(
+    'focus',
+    (event: FocusEvent) => {
+      const target = event.target as HTMLInputElement;
+      target.classList.add('form-control_validation');
+    },
+    { once: true }
+  );
 
   return FORM;
 }
