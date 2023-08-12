@@ -1,6 +1,7 @@
 // import 'bootstrap';
-import createLoginPage from '../pages/login/create-login-page';
+import LoginForm from '../pages/login/create-login-page';
 import '../pages/login/login-validation';
 import './index.scss';
 
-document.body.append(createLoginPage());
+const loginForm = new LoginForm();
+document.body.append(loginForm.FORM);
