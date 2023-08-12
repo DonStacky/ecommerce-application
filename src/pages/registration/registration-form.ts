@@ -1,5 +1,8 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import 'bootstrap';
+import { MIN_AGE_MILISEC, submit, validateDate, validatePostalCode, validateString } from './form-validation';
+import { date, string } from 'yup';
+import countries from './postal-codes';
 
 const REGISTRATION_HEADER = createElement({
   tagname: 'h1',
@@ -34,6 +37,11 @@ const NAME_LABEL = createElement({
   ],
 });
 
+const NAME_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const NAME_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -41,11 +49,17 @@ const NAME_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const NAME_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    [
+      'change',
+      validateString(
+        NAME_INVALID,
+        string()
+          .required()
+          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      ),
+    ],
+  ],
 });
 
 const NAME_FIELD = createElement({
@@ -63,6 +77,11 @@ const LAST_NAME_LABEL = createElement({
   ],
 });
 
+const LAST_NAME_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const LAST_NAME_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -70,11 +89,17 @@ const LAST_NAME_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const LAST_NAME_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    [
+      'change',
+      validateString(
+        LAST_NAME_INVALID,
+        string()
+          .required()
+          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      ),
+    ],
+  ],
 });
 
 const LAST_NAME_FIELD = createElement({
@@ -101,6 +126,11 @@ const EMAIL_SYMBOL = createElement({
   ],
 });
 
+const EMAIL_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const EMAIL_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -108,13 +138,9 @@ const EMAIL_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
+  events: [['change', validateString(EMAIL_INVALID, string().required().email())]],
 });
 EMAIL_INPUT.setAttribute('aria-describedby', 'inputGroupPrepend');
-
-const EMAIL_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
-});
 
 const EMAIL_INPUT_GROUP = createElement({
   tagname: 'div',
@@ -137,6 +163,11 @@ const PASSWORD_LABEL = createElement({
   ],
 });
 
+const PASSWORD_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const PASSWORD_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -144,11 +175,20 @@ const PASSWORD_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'password'],
   ],
-});
-
-const PASSWORD_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    [
+      'change',
+      validateString(
+        PASSWORD_INVALID,
+        string()
+          .required()
+          .min(8, 'this should contain at least 8 characters')
+          .matches(/^.*[a-z]+.*$/, 'this should contain at least 1 lowercase letter')
+          .matches(/^.*[A-Z]+.*$/, 'this should contain at least 1 uppercase letter')
+          .matches(/^.*[\d]+.*$/, 'this should contain at least 1 digit')
+      ),
+    ],
+  ],
 });
 
 const PASSWORD_FIELD = createElement({
@@ -166,6 +206,11 @@ const BIRTH_DATE_LABEL = createElement({
   ],
 });
 
+const BIRTH_DATE_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const BIRTH_DATE_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -173,11 +218,26 @@ const BIRTH_DATE_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'date'],
   ],
-});
-
-const BIRTH_DATE_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    [
+      'change',
+      validateDate(
+        BIRTH_DATE_INVALID,
+        date()
+          .required()
+          .max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
+      ),
+    ],
+    [
+      'blur',
+      validateDate(
+        BIRTH_DATE_INVALID,
+        date()
+          .required()
+          .max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
+      ),
+    ],
+  ],
 });
 
 const BIRTH_DATE_FIELD = createElement({
@@ -205,17 +265,17 @@ const BILLING_COUNTRY_PRESELECTED_OPTION = createElement({
   ],
 });
 
-/**
- * TO DO : REPLACE ['insert_billingCountry']
- * WITH ARRAY OF COUNTRY NAMES
- */
-
-const BILLING_COUNTRY_OPTIONS = ['insert billingCountry'].map((billingCountryName) =>
+const BILLING_COUNTRY_OPTIONS = countries.map(({ Country }) =>
   createElement({
     tagname: 'option',
-    options: [['textContent', billingCountryName]],
+    options: [['textContent', Country]],
   })
 );
+
+const BILLING_COUNTRY_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
 
 const BILLING_COUNTRY_SELECT = createElement({
   tagname: 'select',
@@ -224,11 +284,7 @@ const BILLING_COUNTRY_SELECT = createElement({
     ['className', 'form-control'],
   ],
   childElements: [BILLING_COUNTRY_PRESELECTED_OPTION, ...BILLING_COUNTRY_OPTIONS],
-});
-
-const BILLING_COUNTRY_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [['blur', validateString(BILLING_COUNTRY_INVALID, string().required())]],
 });
 
 const BILLING_COUNTRY_FIELD = createElement({
@@ -246,6 +302,11 @@ const BILLING_POSTAL_CODE_LABEL = createElement({
   ],
 });
 
+const BILLING_POSTAL_CODE_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const BILLING_POSTAL_CODE_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -253,11 +314,7 @@ const BILLING_POSTAL_CODE_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const BILLING_POSTAL_CODE_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [['change', validatePostalCode(BILLING_COUNTRY_SELECT, BILLING_POSTAL_CODE_INVALID)]],
 });
 
 const BILLING_POSTAL_CODE_FIELD = createElement({
@@ -275,6 +332,11 @@ const BILLING_CITY_LABEL = createElement({
   ],
 });
 
+const BILLING_CITY_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const BILLING_CITY_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -282,11 +344,17 @@ const BILLING_CITY_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const BILLING_CITY_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    [
+      'change',
+      validateString(
+        BILLING_CITY_INVALID,
+        string()
+          .min(1, 'this should contain at least 1 character')
+          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      ),
+    ],
+  ],
 });
 
 const BILLING_CITY_FIELD = createElement({
@@ -304,6 +372,11 @@ const BILLING_STREET_LABEL = createElement({
   ],
 });
 
+const BILLING_STREET_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const BILLING_STREET_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -311,11 +384,9 @@ const BILLING_STREET_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const BILLING_STREET_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    ['change', validateString(BILLING_STREET_INVALID, string().min(1, 'this should contain at least 1 character'))],
+  ],
 });
 
 const BILLING_STREET_FIELD = createElement({
@@ -374,17 +445,17 @@ const SHIPPING_COUNTRY_PRESELECTED_OPTION = createElement({
   ],
 });
 
-/**
- * TO DO : REPLACE ['insert_shippingCountry']
- * WITH ARRAY OF COUNTRY NAMES
- */
-
-const SHIPPING_COUNTRY_OPTIONS = ['insert shippingCountry'].map((shippingCountryName) =>
+const SHIPPING_COUNTRY_OPTIONS = countries.map(({ Country }) =>
   createElement({
     tagname: 'option',
-    options: [['textContent', shippingCountryName]],
+    options: [['textContent', Country]],
   })
 );
+
+const SHIPPING_COUNTRY_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
 
 const SHIPPING_COUNTRY_SELECT = createElement({
   tagname: 'select',
@@ -393,11 +464,7 @@ const SHIPPING_COUNTRY_SELECT = createElement({
     ['className', 'form-control'],
   ],
   childElements: [SHIPPING_COUNTRY_PRESELECTED_OPTION, ...SHIPPING_COUNTRY_OPTIONS],
-});
-
-const SHIPPING_COUNTRY_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [['blur', validateString(SHIPPING_COUNTRY_INVALID, string().required())]],
 });
 
 const SHIPPING_COUNTRY_FIELD = createElement({
@@ -415,6 +482,11 @@ const SHIPPING_POSTAL_CODE_LABEL = createElement({
   ],
 });
 
+const SHIPPING_POSTAL_CODE_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const SHIPPING_POSTAL_CODE_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -422,11 +494,7 @@ const SHIPPING_POSTAL_CODE_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const SHIPPING_POSTAL_CODE_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [['change', validatePostalCode(SHIPPING_COUNTRY_SELECT, SHIPPING_POSTAL_CODE_INVALID)]],
 });
 
 const SHIPPING_POSTAL_CODE_FIELD = createElement({
@@ -444,6 +512,11 @@ const SHIPPING_CITY_LABEL = createElement({
   ],
 });
 
+const SHIPPING_CITY_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const SHIPPING_CITY_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -451,11 +524,17 @@ const SHIPPING_CITY_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const SHIPPING_CITY_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    [
+      'change',
+      validateString(
+        SHIPPING_CITY_INVALID,
+        string()
+          .min(1, 'this should contain at least 1 character')
+          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      ),
+    ],
+  ],
 });
 
 const SHIPPING_CITY_FIELD = createElement({
@@ -473,6 +552,11 @@ const SHIPPING_STREET_LABEL = createElement({
   ],
 });
 
+const SHIPPING_STREET_INVALID = createElement({
+  tagname: 'div',
+  options: [['className', 'invalid-feedback']],
+});
+
 const SHIPPING_STREET_INPUT = createElement({
   tagname: 'input',
   options: [
@@ -480,11 +564,9 @@ const SHIPPING_STREET_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-});
-
-const SHIPPING_STREET_INVALID = createElement({
-  tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  events: [
+    ['change', validateString(SHIPPING_STREET_INVALID, string().min(1, 'this should contain at least 1 character'))],
+  ],
 });
 
 const SHIPPING_STREET_FIELD = createElement({
@@ -517,10 +599,77 @@ const REGISTER_BUTTON = createElement({
   ],
 });
 
+const VALIDATIONS_TO_CHECK = [
+  validateString(
+    NAME_INVALID,
+    string()
+      .required()
+      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+  ).bind(NAME_INPUT),
+
+  validateString(
+    LAST_NAME_INVALID,
+    string()
+      .required()
+      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+  ).bind(LAST_NAME_INPUT),
+
+  validateString(EMAIL_INVALID, string().required().email()).bind(EMAIL_INPUT),
+
+  validateString(
+    PASSWORD_INVALID,
+    string()
+      .required()
+      .min(8, 'this should contain at least 8 characters')
+      .matches(/^.*[a-z]+.*$/, 'this should contain at least 1 lowercase letter')
+      .matches(/^.*[A-Z]+.*$/, 'this should contain at least 1 uppercase letter')
+      .matches(/^.*[\d]+.*$/, 'this should contain at least 1 digit')
+  ).bind(PASSWORD_INPUT),
+
+  validateDate(
+    BIRTH_DATE_INVALID,
+    date()
+      .required()
+      .max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
+  ).bind(BIRTH_DATE_INPUT),
+
+  validateString(BILLING_COUNTRY_INVALID, string().required()).bind(BILLING_COUNTRY_SELECT),
+
+  validatePostalCode(BILLING_COUNTRY_SELECT, BILLING_POSTAL_CODE_INVALID).bind(BILLING_POSTAL_CODE_INPUT),
+
+  validateString(
+    BILLING_CITY_INVALID,
+    string()
+      .min(1, 'this should contain at least 1 character')
+      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+  ).bind(BILLING_CITY_INPUT),
+
+  validateString(BILLING_STREET_INVALID, string().min(1, 'this should contain at least 1 character')).bind(
+    BILLING_STREET_INPUT
+  ),
+];
+
+const EXTENDED_LIST = [
+  validateString(SHIPPING_COUNTRY_INVALID, string().required()).bind(SHIPPING_COUNTRY_SELECT),
+
+  validatePostalCode(SHIPPING_COUNTRY_SELECT, SHIPPING_POSTAL_CODE_INVALID).bind(SHIPPING_POSTAL_CODE_INPUT),
+
+  validateString(
+    SHIPPING_CITY_INVALID,
+    string()
+      .min(1, 'this should contain at least 1 character')
+      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+  ).bind(SHIPPING_CITY_INPUT),
+
+  validateString(SHIPPING_STREET_INVALID, string().min(1, 'this should contain at least 1 character')).bind(
+    SHIPPING_STREET_INPUT
+  ),
+];
+
 const FORM = createElement({
   tagname: 'form',
   options: [
-    ['className', 'registration-form needs-validation was-validated'],
+    ['className', 'registration-form needs-validation'],
     ['noValidate', true],
   ],
   childElements: [
@@ -539,25 +688,7 @@ const FORM = createElement({
     HIDDEN_AREA,
     REGISTER_BUTTON,
   ],
+  events: [['submit', submit(VALIDATIONS_TO_CHECK, EXTENDED_LIST, ADDRESS_SWITCH_CHECKBOX)]],
 });
 
 document.body.append(FORM);
-
-// Fetch all the forms we want to apply custom Bootstrap validation styles to
-// const form = document.querySelector('.needs-validation') as HTMLFormElement;
-// const input = form.querySelector('#validationCustom01') as HTMLInputElement;
-// input.onchange = function s() {
-//   input.setCustomValidity('asdsa');
-//   //   form.classList.add('was-validated');
-// };
-// // Loop over them and prevent submission
-
-// form.addEventListener(
-//   'submit',
-//   (event) => {
-//     event.preventDefault();
-//     input.setCustomValidity('');
-//     form.classList.add('was-validated');
-//   },
-//   false
-// );
