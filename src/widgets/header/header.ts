@@ -2,7 +2,11 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import { CreateOptions } from '../../shared/types/types';
 import blackLogo from '../../../public/svg/logo-black.svg';
 import whiteLogo from '../../../public/svg/logo-white.svg';
+import seaSet from '../../../public/image/morskoj-nabor.jpg';
+import sailboat from '../../../public/image/sailboat.jpg';
+import lighthouse from '../../../public/image/lighthouse.jpg';
 import './header.scss';
+// import 'bootstrap';
 
 // --------------------- COMMON HEADER ---------------------
 
@@ -141,7 +145,7 @@ HEADER_BTN_CLOSE.setAttribute('aria-label', 'Close');
 const MAIN_HEADER_LIST_WRAPPER = createElement({
   tagname: 'div',
   options: [
-    ['className', 'offcanvas offcanvas-star'],
+    ['className', 'offcanvas offcanvas-start'],
     ['id', 'navbarHomePage'],
   ],
   childElements: [HEADER_BTN_CLOSE, MAIN_HEADER_LIST],
@@ -149,10 +153,7 @@ const MAIN_HEADER_LIST_WRAPPER = createElement({
 
 const MAIN_HEADER_NAV_BOTTOM = createElement({
   tagname: 'nav',
-  options: [
-    ['className', 'navbar navbar-expand-sm'],
-    ['id', 'navbarHomePage'],
-  ],
+  options: [['className', 'navbar navbar-expand-sm']],
   childElements: [MAIN_HEADER_LIST_WRAPPER],
 });
 MAIN_HEADER_NAV_BOTTOM.setAttribute('data-bs-theme', 'dark');
@@ -188,7 +189,7 @@ const MAIN_HEADER_NAV_IMG = createElement({
 const MAIN_HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
-    ['className', 'navbar-brand logo__link'],
+    ['className', 'navbar-brand logo__link me-auto ms-auto'],
     ['href', '#'],
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
@@ -207,7 +208,7 @@ const MAIN_HEADER_AUTH_BTNS = ['Log in', 'Sign up'].map((text) => {
 
 const MAIN_HEADER_BTN_BOX = createElement({
   tagname: 'div',
-  options: [['className', 'btn-group btn__box']],
+  options: [['className', 'btn-group btn__box position-absolute']],
   childElements: [...MAIN_HEADER_AUTH_BTNS],
 });
 MAIN_HEADER_BTN_BOX.setAttribute('role', 'group');
@@ -254,7 +255,7 @@ const MAIN_HEADER_VIEW_BTN = createElement({
   ],
 });
 
-const MAIN_HEADER_DESC = createElement({
+const MAIN_HEADER_TEXT_COLUMN = createElement({
   tagname: 'div',
   options: [
     [
@@ -265,12 +266,67 @@ const MAIN_HEADER_DESC = createElement({
   childElements: [MAIN_HEADER_TITLE, MAIN_HEADER_TEXT, MAIN_HEADER_VIEW_BTN],
 });
 
-// const
+const headerCarouselImages = [seaSet, sailboat, lighthouse];
+
+const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
+  const HEADER_CAROUSEL_IMAGE = createElement({
+    tagname: 'img',
+    options: [
+      ['className', 'd-block w-100'],
+      ['alt', `${image}`],
+      ['src', image],
+    ],
+  });
+  return HEADER_CAROUSEL_IMAGE;
+});
+
+const HEADER_CAROUSEL_ITEMS = HEADER_CAROUSEL_IMAGES.map((image) => {
+  const HEADER_CAROUSEL_ITEM = createElement({
+    tagname: 'div',
+    options: [['className', 'carousel-item active']],
+    childElements: [image],
+  });
+  return HEADER_CAROUSEL_ITEM;
+});
+
+const HEADER_CAROUSEL_INNER = createElement({
+  tagname: 'div',
+  options: [['className', 'carousel-inner w-75']],
+  childElements: [...HEADER_CAROUSEL_ITEMS],
+});
+
+const HEADER_CAROUSEL = createElement({
+  tagname: 'div',
+  options: [
+    ['className', 'header__carousel carousel slide d-flex justify-content-center'],
+    ['id', 'carouselHeader'],
+  ],
+  childElements: [HEADER_CAROUSEL_INNER],
+});
+HEADER_CAROUSEL.setAttribute('data-bs-ride', 'carousel');
+
+const HEADER_CAROUSEL_COLUMN = createElement({
+  tagname: 'div',
+  options: [['className', 'col col-sm-6 col-12']],
+  childElements: [HEADER_CAROUSEL],
+});
+
+const HEADER_GRID_ROW = createElement({
+  tagname: 'div',
+  options: [['className', 'row header__products-row']],
+  childElements: [MAIN_HEADER_TEXT_COLUMN, HEADER_CAROUSEL_COLUMN],
+});
+
+const MAIN_HEADER_CONTAINER = createElement({
+  tagname: 'div',
+  options: [['className', 'container-xl flex-fill d-flex align-items-center header__products']],
+  childElements: [HEADER_GRID_ROW],
+});
 
 const MAIN_HEADER = createElement({
   tagname: 'header',
   options: [['className', 'header d-flex flex-column']],
-  childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_DESC],
+  childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
 });
 
 document.body.append(MAIN_HEADER);
