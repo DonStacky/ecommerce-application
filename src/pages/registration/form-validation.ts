@@ -47,7 +47,7 @@ const COUNTRY_INFO = {
   Regex: '',
 };
 
-function findCountry(countryName: string) {
+export function findCountry(countryName: string) {
   const foundCountry = countries.filter((country) => country.Country === countryName);
   return foundCountry.length ? foundCountry[0] : COUNTRY_INFO;
 }
