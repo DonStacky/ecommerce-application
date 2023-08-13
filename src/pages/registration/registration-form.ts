@@ -705,7 +705,7 @@ const EXTENDED_LIST = [
   ),
 ];
 
-const FORM = createElement({
+export default createElement({
   tagname: 'form',
   options: [
     ['className', 'registration-form needs-validation'],
@@ -765,5 +765,3 @@ const validationMessages = [
 ];
 
 inputs.forEach((input, idx) => input.setAttribute('aria-describedby', `${validationMessages[idx].id}`));
-
-document.body.append(FORM);
