@@ -39,7 +39,10 @@ const NAME_LABEL = createElement({
 
 const NAME_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'name-validation'],
+  ],
 });
 
 const NAME_INPUT = createElement({
@@ -79,7 +82,10 @@ const LAST_NAME_LABEL = createElement({
 
 const LAST_NAME_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'last-name-validation'],
+  ],
 });
 
 const LAST_NAME_INPUT = createElement({
@@ -128,7 +134,10 @@ const EMAIL_SYMBOL = createElement({
 
 const EMAIL_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'email-validation'],
+  ],
 });
 
 const EMAIL_INPUT = createElement({
@@ -165,7 +174,10 @@ const PASSWORD_LABEL = createElement({
 
 const PASSWORD_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'password-validation'],
+  ],
 });
 
 const PASSWORD_INPUT = createElement({
@@ -208,7 +220,10 @@ const BIRTH_DATE_LABEL = createElement({
 
 const BIRTH_DATE_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'birth-date-validation'],
+  ],
 });
 
 const BIRTH_DATE_INPUT = createElement({
@@ -274,7 +289,10 @@ const BILLING_COUNTRY_OPTIONS = countries.map(({ Country }) =>
 
 const BILLING_COUNTRY_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'billing-country-validation'],
+  ],
 });
 
 const BILLING_COUNTRY_SELECT = createElement({
@@ -304,7 +322,10 @@ const BILLING_POSTAL_CODE_LABEL = createElement({
 
 const BILLING_POSTAL_CODE_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'billing-postal-code-validation'],
+  ],
 });
 
 const BILLING_POSTAL_CODE_INPUT = createElement({
@@ -334,7 +355,10 @@ const BILLING_CITY_LABEL = createElement({
 
 const BILLING_CITY_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'billing-city-validation'],
+  ],
 });
 
 const BILLING_CITY_INPUT = createElement({
@@ -374,7 +398,10 @@ const BILLING_STREET_LABEL = createElement({
 
 const BILLING_STREET_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'billing-street-validation'],
+  ],
 });
 
 const BILLING_STREET_INPUT = createElement({
@@ -454,7 +481,10 @@ const SHIPPING_COUNTRY_OPTIONS = countries.map(({ Country }) =>
 
 const SHIPPING_COUNTRY_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'country-select-validation'],
+  ],
 });
 
 const SHIPPING_COUNTRY_SELECT = createElement({
@@ -484,7 +514,10 @@ const SHIPPING_POSTAL_CODE_LABEL = createElement({
 
 const SHIPPING_POSTAL_CODE_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'shipping-postal-code-validation'],
+  ],
 });
 
 const SHIPPING_POSTAL_CODE_INPUT = createElement({
@@ -514,7 +547,10 @@ const SHIPPING_CITY_LABEL = createElement({
 
 const SHIPPING_CITY_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'shipping-city-validation'],
+  ],
 });
 
 const SHIPPING_CITY_INPUT = createElement({
@@ -554,7 +590,10 @@ const SHIPPING_STREET_LABEL = createElement({
 
 const SHIPPING_STREET_INVALID = createElement({
   tagname: 'div',
-  options: [['className', 'invalid-feedback']],
+  options: [
+    ['className', 'invalid-feedback'],
+    ['id', 'shipping-street-validation'],
+  ],
 });
 
 const SHIPPING_STREET_INPUT = createElement({
@@ -690,5 +729,41 @@ const FORM = createElement({
   ],
   events: [['submit', submit(VALIDATIONS_TO_CHECK, EXTENDED_LIST, ADDRESS_SWITCH_CHECKBOX)]],
 });
+
+// Set aria-describedby for input values
+
+const inputs = [
+  NAME_INPUT,
+  LAST_NAME_INPUT,
+  EMAIL_INPUT,
+  BIRTH_DATE_INPUT,
+  PASSWORD_INPUT,
+  SHIPPING_COUNTRY_SELECT,
+  SHIPPING_POSTAL_CODE_INPUT,
+  SHIPPING_CITY_INPUT,
+  SHIPPING_STREET_INPUT,
+  BILLING_COUNTRY_SELECT,
+  BILLING_POSTAL_CODE_INPUT,
+  BILLING_CITY_INPUT,
+  BILLING_STREET_INPUT,
+];
+
+const validationMessages = [
+  NAME_INVALID,
+  LAST_NAME_INVALID,
+  EMAIL_INVALID,
+  BIRTH_DATE_INVALID,
+  PASSWORD_INVALID,
+  SHIPPING_COUNTRY_INVALID,
+  SHIPPING_POSTAL_CODE_INVALID,
+  SHIPPING_CITY_INVALID,
+  SHIPPING_STREET_INVALID,
+  BILLING_COUNTRY_INVALID,
+  BILLING_POSTAL_CODE_INVALID,
+  BILLING_CITY_INVALID,
+  BILLING_STREET_INVALID,
+];
+
+inputs.forEach((input, idx) => input.setAttribute('aria-describedby', `${validationMessages[idx].id}`));
 
 document.body.append(FORM);
