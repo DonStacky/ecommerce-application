@@ -123,6 +123,7 @@ export default class LoginForm {
     this.FORM = createElement({
       tagname: 'form',
       childElements: [this.CONTAINER_EMAIL, this.CONTAINER_PASSWD, this.CONTAINER_CHECK, this.BUTTON],
+      options: [['className', 'login-form']],
     });
 
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
