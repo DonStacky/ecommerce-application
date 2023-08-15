@@ -1,14 +1,14 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
 .main-section {
   &__products {
     background: url('../../../public/image/talented-designer-working-on-ambitious-project.jpg') 0 0 / cover no-repeat;
-    height: 100vh;
-    background-attachment: fixed;
   }
 
   &__customers {
     background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%), url('../../../public/image/cute-arrangement-dried-plants-table.jpg') 0 0 / cover no-repeat;
-    height: 100vh;
-    background-attachment: fixed;
   }
 
   &__text {
@@ -17,13 +17,18 @@
     background-color: rgba(255,255,255,0.3);
   }
 
-  &__customers &__text {
-    background-color: rgba(0,0,0,0.4);
-  }
-
-  @media (max-width: 575.5px) {
+  &__customers, &__products {
+    background-attachment: fixed;
     padding: 10rem 0;
     height: auto;
+
+    @include media-breakpoint-up(sm) {
+      height: 100vh;
+    }
+  }
+
+  &__customers &__text {
+    background-color: rgba(0,0,0,0.4);
   }
 }
 
@@ -35,11 +40,10 @@
   position: fixed;
   width: 100%;
   transition: 0.3s;
-  transform: translateY(-60px);
+  transform: translateY(-80px);
 }
 
 .element-show {
   transition: 0.3s;
   transform: translateY(0px);
 }
-

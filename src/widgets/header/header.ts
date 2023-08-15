@@ -18,7 +18,7 @@ const headerLinkOptions: CreateOptions<'a'> = {
     ['href', '#'],
   ],
 };
-const headerLinkText: string[] = ['Home', 'Catalog', 'Basket', 'Profile', 'About us'];
+const headerLinkText: string[] = ['Home', 'Catalog', 'Basket', 'About us', 'Log in', 'Sign up'];
 
 const HEADER_LINKS = headerLinkText.map((link) => {
   const HEADER_LINK = createElement(headerLinkOptions);
@@ -94,7 +94,7 @@ const HEADER_CONTAINER = createElement({
 
 export const HEADER = createElement({
   tagname: 'nav',
-  options: [['className', 'header-bottom__nav navbar navbar-expand-sm bg-body-tertiary sticky-top']],
+  options: [['className', 'header-bottom__nav navbar navbar-expand-md bg-body-tertiary sticky-top']],
   childElements: [HEADER_CONTAINER],
 });
 
@@ -154,7 +154,7 @@ const MAIN_HEADER_LIST_WRAPPER = createElement({
 
 const MAIN_HEADER_NAV_BOTTOM = createElement({
   tagname: 'nav',
-  options: [['className', 'navbar navbar-expand-sm']],
+  options: [['className', 'navbar navbar-expand-md']],
   childElements: [MAIN_HEADER_LIST_WRAPPER],
 });
 MAIN_HEADER_NAV_BOTTOM.setAttribute('data-bs-theme', 'dark');
@@ -196,28 +196,10 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   childElements: [MAIN_HEADER_NAV_IMG],
 });
 
-const MAIN_HEADER_AUTH_BTNS = ['Log in', 'Sign up'].map((text) => {
-  const MAIN_HEADER_AUTH_BTN = createElement({
-    tagname: 'button',
-    options: [
-      ['className', 'btn btn-light'],
-      ['textContent', `${text}`],
-    ],
-  });
-  return MAIN_HEADER_AUTH_BTN;
-});
-
-const MAIN_HEADER_BTN_BOX = createElement({
-  tagname: 'div',
-  options: [['className', 'btn-group btn__box position-absolute']],
-  childElements: [...MAIN_HEADER_AUTH_BTNS],
-});
-MAIN_HEADER_BTN_BOX.setAttribute('role', 'group');
-
 const MAIN_HEADER_NAV_TOP = createElement({
   tagname: 'div',
-  options: [['className', 'navbar navbar-expand-sm']],
-  childElements: [MAIN_HEADER_NAV_BUTTON, MAIN_HEADER_NAV_LOGO, MAIN_HEADER_BTN_BOX],
+  options: [['className', 'navbar navbar-expand-md']],
+  childElements: [MAIN_HEADER_NAV_BUTTON, MAIN_HEADER_NAV_LOGO],
 });
 MAIN_HEADER_NAV_TOP.setAttribute('data-bs-theme', 'dark');
 

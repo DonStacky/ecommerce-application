@@ -1,8 +1,12 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
 .header-bottom__item {
   padding: 0 2rem;
   margin: 0.3rem;
 
-  @media (max-width: 730px) {
+  @include media-breakpoint-down(sm) {
     padding: 0;
     margin: 0;
   }
@@ -33,10 +37,10 @@
   }
 
   &__close {
-    display: none;
+    display: block;
 
-    @media (max-width: 575.5px) {
-      display: block;
+    @include media-breakpoint-up(sm) {
+      display: none;
     }
   }
 
@@ -52,35 +56,30 @@
     }
 
     &__item {
-      @media (max-width: 730px) {
+      @include media-breakpoint-down(sm) {
         padding: 0;
         margin: 0;
       }
-    }
-
-    &__nav {
-      position: absolute;
-      transition: 0.3s;
-      transform: translateY(-60px);
     }
   }
 
 
   &__text {
     padding: 0% 0% 0% 5%;
-    @media (max-width: 575.5px) {
+
+    @include media-breakpoint-down(sm) {
       padding: 0 15%;
     }
   }
 
   &__products {
-    @media (max-width: 575.5px) {
+    @include media-breakpoint-down(sm) {
       height: 100%;
       position: relative;
     }
 
     &-row {
-      @media (max-width: 575.5px) {
+      @include media-breakpoint-down(sm) {
         display: flex;
         flex-direction: column;
         gap: 5rem;
@@ -91,7 +90,7 @@
   }
 
   &__carousel .carousel-inner {
-    @media (max-width: 575.5px) {
+    @include media-breakpoint-down(sm) {
       width: 50% !important;
     }
   }
@@ -145,7 +144,7 @@
   right: 0;
 }
 
-@media (max-width: 575.5px) {
+@include media-breakpoint-down(sm) {
   .header, .our-products, .our-clients {
     height: auto;
   }
