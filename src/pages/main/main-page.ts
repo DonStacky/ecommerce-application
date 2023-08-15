@@ -1,6 +1,6 @@
 import { createElement, findDomElement } from '../../shared/helpers/dom-utilites';
-import sailboat from '../../../public/image/sailboat.jpg';
-import happyWoman from '../../../public/image/happy-woman.jpg';
+import sailboat from '@image/sailboat.jpg';
+import happyWoman from '@image/happy-woman.jpg';
 import { HEADER, MAIN_HEADER } from '../../widgets/header/header';
 import FOOTER from '../../widgets/footer/footer';
 import './main-page.scss';

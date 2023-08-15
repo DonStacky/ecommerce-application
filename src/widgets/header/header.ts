@@ -1,13 +1,12 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { CreateOptions } from '../../shared/types/types';
-import blackLogo from '../../../public/svg/logo-black.svg';
-import whiteLogo from '../../../public/svg/logo-white.svg';
-import deer from '../../../public/image/deer.jpg';
-import seaSet from '../../../public/image/morskoj-nabor.jpg';
-import lights from '../../../public/image/lights.jpg';
-import lighthouse from '../../../public/image/lighthouse.jpg';
+import blackLogo from '@svg/logo-black.svg';
+import whiteLogo from '@svg/logo-white.svg';
+import deer from '@image/deer.jpg';
+import seaSet from '@image/morskoj-nabor.jpg';
+import lights from '@image/lights.jpg';
+import lighthouse from '@image/lighthouse.jpg';
 import './header.scss';
-// import 'bootstrap';
 
 // --------------------- COMMON HEADER ---------------------
 

@@ -17,7 +17,7 @@
   transform-style: inherit;
   transition: 1s;
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1)), url('../../../public/image/carpenter-tool-collection.jpg') 0 0 / cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1)), url('@image/carpenter-tool-collection.jpg') 0 0 / cover no-repeat;
   background-attachment: fixed;
 
   &__item {

@@ -1,5 +1,6 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { CreateOptions } from '../../shared/types/types';
+import rssLogo from '@svg/logo_rs_text.svg';
 import './footer.scss';
 
 // --------------------- FOOTER COMPANY ---------------------
@@ -75,15 +76,18 @@ const FOOTER_CUSTOMERS_TITLE = createElement({
 // --------------------- FOOTER CONTACTS ---------------------
 
 const footerContactsText: string[][] = [
-  [' span_team@gmail.com', 'fa-solid fa-envelope'],
-  [' 132-456-78-28', 'fa-solid fa-mobile-screen'],
-  [' 756-456-34-57', 'fa-solid fa-mobile-screen'],
+  ['rustikka@yandex.ru', 'fa-solid fa-envelope', 'mailto:rustikka@yandex.ru'],
+  ['+7 911-220-60-48', 'fa-solid fa-mobile-screen', 'tel:89112206048'],
+  ['@rustikka_decor', 'fa-brands fa-instagram', 'https://www.instagram.com/rustikka_decor'],
+  ['gserdg', 'fa-brands fa-github', 'https://github.com/gserdg'],
+  ['user42022', 'fa-brands fa-github', 'https://github.com/user42022'],
+  ['donstacky', 'fa-brands fa-github', 'https://github.com/DonStacky'],
 ];
 
-const FOOTER_CONTACTS_LINKS = footerContactsText.map(([text, icon]) => {
+const FOOTER_CONTACTS_LINKS = footerContactsText.map(([text, icon, link]) => {
   const FOOTER_CONTACTS_LINK = createElement({
     tagname: 'a',
-    options: [['href', '#']],
+    options: [['href', link]],
   });
   FOOTER_CONTACTS_LINK.innerHTML = `<i class="${icon}"></i> ${text}`;
   return FOOTER_CONTACTS_LINK;
@@ -108,50 +112,55 @@ const FOOTER_CONTACTS_TITLE = createElement({
   tagname: 'h4',
   options: [
     ['className', 'footer__title'],
-    ['textContent', 'For customers'],
+    ['textContent', 'Contacts'],
   ],
 });
 
 // --------------------- FOOTER SOCIALS ---------------------
 
-const footerSocialText: string[] = [
-  'fa-brands fa-facebook',
-  'fa-brands fa-youtube',
-  'fa-brands fa-instagram',
-  'fa-brands fa-vk',
-];
+// const footerSocialText: string[] = [
+//   'fa-brands fa-facebook',
+//   'fa-brands fa-youtube',
+//   'fa-brands fa-instagram',
+//   'fa-brands fa-vk',
+// ];
 
-const FOOTER_SOCIAL_LINKS = footerSocialText.map((style) => {
-  const FOOTER_SOCIAL_LINK = createElement({
-    tagname: 'a',
-    options: [['href', 'https://rs.school/js/']],
-  });
-  FOOTER_SOCIAL_LINK.innerHTML = `<i class="${style}"></i>`;
-  return FOOTER_SOCIAL_LINK;
-});
-
-const FOOTER_SOCIAL_ITEMS = FOOTER_SOCIAL_LINKS.map((link) => {
-  const FOOTER_SOCIAL_ITEM = createElement({
-    tagname: 'li',
-    options: [['className', 'footer__item']],
-    childElements: [link],
-  });
-  return FOOTER_SOCIAL_ITEM;
-});
-
-const FOOTER_SOCIAL_LIST = createElement({
-  tagname: 'ul',
-  options: [['className', 'footer__list footer__socials']],
-  childElements: [...FOOTER_SOCIAL_ITEMS],
-});
-
-const FOOTER_SOCIAL_TITLE = createElement({
-  tagname: 'h4',
+const RSS_LOGO = createElement({
+  tagname: 'img',
   options: [
-    ['className', 'footer__title'],
-    ['textContent', 'For customers'],
+    ['src', rssLogo],
+    ['className', 'rss-logo'],
   ],
 });
+
+const FOOTER_RSS_LOGO = createElement({
+  tagname: 'a',
+  options: [['href', 'https://rs.school/js/']],
+  childElements: [RSS_LOGO],
+});
+
+// const FOOTER_SOCIAL_ITEMS = FOOTER_SOCIAL_LINKS.map((link) => {
+//   const FOOTER_SOCIAL_ITEM = createElement({
+//     tagname: 'li',
+//     options: [['className', 'footer__item']],
+//     childElements: [link],
+//   });
+//   return FOOTER_SOCIAL_ITEM;
+// });
+
+// const FOOTER_SOCIAL_LIST = createElement({
+//   tagname: 'ul',
+//   options: [['className', 'footer__list footer__socials']],
+//   childElements: [...FOOTER_SOCIAL_ITEMS],
+// });
+
+// const FOOTER_SOCIAL_TITLE = createElement({
+//   tagname: 'h4',
+//   options: [
+//     ['className', 'footer__title'],
+//     ['textContent', 'For customers'],
+//   ],
+// });
 
 // --------------------- FOOTER LAYOUT ---------------------
 
@@ -159,7 +168,7 @@ const FOOTER_GRID_COLUMNS = [
   [FOOTER_COMPANY_TITLE, FOOTER_COMPANY_LIST],
   [FOOTER_CUSTOMERS_TITLE, FOOTER_CUSTOMERS_LIST],
   [FOOTER_CONTACTS_TITLE, FOOTER_CONTACTS_LIST],
-  [FOOTER_SOCIAL_TITLE, FOOTER_SOCIAL_LIST],
+  [FOOTER_RSS_LOGO],
 ].map((content) => {
   const FOOTER_COLUMN = createElement({
     tagname: 'div',

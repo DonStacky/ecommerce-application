@@ -4,11 +4,11 @@
 
 .main-section {
   &__products {
-    background: url('../../../public/image/talented-designer-working-on-ambitious-project.jpg') 0 0 / cover no-repeat;
+    background: url('@image/talented-designer-working-on-ambitious-project.jpg') 0 0 / cover no-repeat;
   }
 
   &__customers {
-    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%), url('../../../public/image/cute-arrangement-dried-plants-table.jpg') 0 0 / cover no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%), url('@image/cute-arrangement-dried-plants-table.jpg') 0 0 / cover no-repeat;
   }
 
   &__text {

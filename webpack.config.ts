@@ -70,6 +70,10 @@ const baseConfig: Configuration = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@image': path.resolve(__dirname, 'public/image'),
+      '@svg': path.resolve(__dirname, 'public/svg'),
+    },
   },
   output: {
     filename: 'index.js',
