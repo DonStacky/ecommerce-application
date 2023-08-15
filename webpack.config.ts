@@ -6,6 +6,7 @@ import { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
 import devConfig from './webpack.dev.config';
 import prodConfig from './webpack.prod.config';
+import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 
 const baseConfig: Configuration = {
   entry: path.resolve(__dirname, './src/app/app'),
@@ -82,6 +83,7 @@ const baseConfig: Configuration = {
       filename: 'index.html',
     }),
     new CleanWebpackPlugin(),
+    new FaviconsWebpackPlugin('./public/icon/favicon.png'),
   ],
 };
 
