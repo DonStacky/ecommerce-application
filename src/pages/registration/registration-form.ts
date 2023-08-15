@@ -52,17 +52,6 @@ const NAME_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-  events: [
-    [
-      'change',
-      validateString(
-        NAME_INVALID,
-        string()
-          .required()
-          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
-      ),
-    ],
-  ],
 });
 
 const NAME_FIELD = createElement({
@@ -94,17 +83,6 @@ const LAST_NAME_INPUT = createElement({
     ['id', 'lastName'],
     ['className', 'form-control'],
     ['type', 'text'],
-  ],
-  events: [
-    [
-      'change',
-      validateString(
-        LAST_NAME_INVALID,
-        string()
-          .required()
-          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
-      ),
-    ],
   ],
 });
 
@@ -147,7 +125,6 @@ const EMAIL_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-  events: [['change', validateString(EMAIL_INVALID, string().required().email())]],
 });
 EMAIL_INPUT.setAttribute('aria-describedby', 'inputGroupPrepend');
 
@@ -187,20 +164,6 @@ const PASSWORD_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'password'],
   ],
-  events: [
-    [
-      'change',
-      validateString(
-        PASSWORD_INVALID,
-        string()
-          .required()
-          .min(8, 'this should contain at least 8 characters')
-          .matches(/^.*[a-z]+.*$/, 'this should contain at least 1 lowercase letter')
-          .matches(/^.*[A-Z]+.*$/, 'this should contain at least 1 uppercase letter')
-          .matches(/^.*[\d]+.*$/, 'this should contain at least 1 digit')
-      ),
-    ],
-  ],
 });
 
 const PASSWORD_FIELD = createElement({
@@ -232,26 +195,6 @@ const BIRTH_DATE_INPUT = createElement({
     ['id', 'birthDate'],
     ['className', 'form-control'],
     ['type', 'date'],
-  ],
-  events: [
-    [
-      'change',
-      validateDate(
-        BIRTH_DATE_INVALID,
-        date()
-          .required()
-          .max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
-      ),
-    ],
-    [
-      'blur',
-      validateDate(
-        BIRTH_DATE_INVALID,
-        date()
-          .required()
-          .max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
-      ),
-    ],
   ],
 });
 
@@ -302,7 +245,6 @@ const BILLING_COUNTRY_SELECT = createElement({
     ['className', 'form-control'],
   ],
   childElements: [BILLING_COUNTRY_PRESELECTED_OPTION, ...BILLING_COUNTRY_OPTIONS],
-  events: [['blur', validateString(BILLING_COUNTRY_INVALID, string().required())]],
 });
 
 const BILLING_COUNTRY_FIELD = createElement({
@@ -335,7 +277,6 @@ const BILLING_POSTAL_CODE_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-  events: [['change', validatePostalCode(BILLING_COUNTRY_SELECT, BILLING_POSTAL_CODE_INVALID)]],
 });
 
 const BILLING_POSTAL_CODE_FIELD = createElement({
@@ -368,17 +309,6 @@ const BILLING_CITY_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-  events: [
-    [
-      'change',
-      validateString(
-        BILLING_CITY_INVALID,
-        string()
-          .min(1, 'this should contain at least 1 character')
-          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
-      ),
-    ],
-  ],
 });
 
 const BILLING_CITY_FIELD = createElement({
@@ -410,9 +340,6 @@ const BILLING_STREET_INPUT = createElement({
     ['id', 'billingStreet'],
     ['className', 'form-control'],
     ['type', 'text'],
-  ],
-  events: [
-    ['change', validateString(BILLING_STREET_INVALID, string().min(1, 'this should contain at least 1 character'))],
   ],
 });
 
@@ -494,7 +421,6 @@ const SHIPPING_COUNTRY_SELECT = createElement({
     ['className', 'form-control'],
   ],
   childElements: [SHIPPING_COUNTRY_PRESELECTED_OPTION, ...SHIPPING_COUNTRY_OPTIONS],
-  events: [['blur', validateString(SHIPPING_COUNTRY_INVALID, string().required())]],
 });
 
 const SHIPPING_COUNTRY_FIELD = createElement({
@@ -527,7 +453,6 @@ const SHIPPING_POSTAL_CODE_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-  events: [['change', validatePostalCode(SHIPPING_COUNTRY_SELECT, SHIPPING_POSTAL_CODE_INVALID)]],
 });
 
 const SHIPPING_POSTAL_CODE_FIELD = createElement({
@@ -559,17 +484,6 @@ const SHIPPING_CITY_INPUT = createElement({
     ['id', 'shippingCity'],
     ['className', 'form-control'],
     ['type', 'text'],
-  ],
-  events: [
-    [
-      'change',
-      validateString(
-        SHIPPING_CITY_INVALID,
-        string()
-          .min(1, 'this should contain at least 1 character')
-          .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
-      ),
-    ],
   ],
 });
 
@@ -603,9 +517,6 @@ const SHIPPING_STREET_INPUT = createElement({
     ['className', 'form-control'],
     ['type', 'text'],
   ],
-  events: [
-    ['change', validateString(SHIPPING_STREET_INVALID, string().min(1, 'this should contain at least 1 character'))],
-  ],
 });
 
 const SHIPPING_STREET_FIELD = createElement({
@@ -638,7 +549,7 @@ const REGISTER_BUTTON = createElement({
   ],
 });
 
-const VALIDATIONS_TO_CHECK = [
+const VALIDATIONS = [
   validateString(
     NAME_INVALID,
     string()
@@ -688,7 +599,7 @@ const VALIDATIONS_TO_CHECK = [
   ),
 ];
 
-const EXTENDED_LIST = [
+const VALIDATIONS_EXTENDED = [
   validateString(SHIPPING_COUNTRY_INVALID, string().required()).bind(SHIPPING_COUNTRY_SELECT),
 
   validatePostalCode(SHIPPING_COUNTRY_SELECT, SHIPPING_POSTAL_CODE_INVALID).bind(SHIPPING_POSTAL_CODE_INPUT),
@@ -704,6 +615,45 @@ const EXTENDED_LIST = [
     SHIPPING_STREET_INPUT
   ),
 ];
+
+// Set aria-describedby for input values
+
+const inputs = [
+  NAME_INPUT,
+  LAST_NAME_INPUT,
+  EMAIL_INPUT,
+  PASSWORD_INPUT,
+  BIRTH_DATE_INPUT,
+  BILLING_COUNTRY_SELECT,
+  BILLING_POSTAL_CODE_INPUT,
+  BILLING_CITY_INPUT,
+  BILLING_STREET_INPUT,
+  SHIPPING_COUNTRY_SELECT,
+  SHIPPING_POSTAL_CODE_INPUT,
+  SHIPPING_CITY_INPUT,
+  SHIPPING_STREET_INPUT,
+];
+
+const validationMessages = [
+  NAME_INVALID,
+  LAST_NAME_INVALID,
+  EMAIL_INVALID,
+  BIRTH_DATE_INVALID,
+  PASSWORD_INVALID,
+  BILLING_COUNTRY_INVALID,
+  BILLING_POSTAL_CODE_INVALID,
+  BILLING_CITY_INVALID,
+  BILLING_STREET_INVALID,
+  SHIPPING_COUNTRY_INVALID,
+  SHIPPING_POSTAL_CODE_INVALID,
+  SHIPPING_CITY_INVALID,
+  SHIPPING_STREET_INVALID,
+];
+
+inputs.forEach((input, idx) => {
+  input.setAttribute('aria-describedby', `${validationMessages[idx].id}`);
+  input.addEventListener('input', [...VALIDATIONS, ...VALIDATIONS_EXTENDED][idx]);
+});
 
 export default createElement({
   tagname: 'form',
@@ -727,41 +677,5 @@ export default createElement({
     HIDDEN_AREA,
     REGISTER_BUTTON,
   ],
-  events: [['submit', submit(VALIDATIONS_TO_CHECK, EXTENDED_LIST, ADDRESS_SWITCH_CHECKBOX)]],
+  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX)]],
 });
-
-// Set aria-describedby for input values
-
-const inputs = [
-  NAME_INPUT,
-  LAST_NAME_INPUT,
-  EMAIL_INPUT,
-  BIRTH_DATE_INPUT,
-  PASSWORD_INPUT,
-  SHIPPING_COUNTRY_SELECT,
-  SHIPPING_POSTAL_CODE_INPUT,
-  SHIPPING_CITY_INPUT,
-  SHIPPING_STREET_INPUT,
-  BILLING_COUNTRY_SELECT,
-  BILLING_POSTAL_CODE_INPUT,
-  BILLING_CITY_INPUT,
-  BILLING_STREET_INPUT,
-];
-
-const validationMessages = [
-  NAME_INVALID,
-  LAST_NAME_INVALID,
-  EMAIL_INVALID,
-  BIRTH_DATE_INVALID,
-  PASSWORD_INVALID,
-  SHIPPING_COUNTRY_INVALID,
-  SHIPPING_POSTAL_CODE_INVALID,
-  SHIPPING_CITY_INVALID,
-  SHIPPING_STREET_INVALID,
-  BILLING_COUNTRY_INVALID,
-  BILLING_POSTAL_CODE_INVALID,
-  BILLING_CITY_INVALID,
-  BILLING_STREET_INVALID,
-];
-
-inputs.forEach((input, idx) => input.setAttribute('aria-describedby', `${validationMessages[idx].id}`));
