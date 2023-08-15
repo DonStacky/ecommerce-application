@@ -94,7 +94,7 @@ const HEADER_CONTAINER = createElement({
 
 export const HEADER = createElement({
   tagname: 'nav',
-  options: [['className', 'header-bottom__nav navbar navbar-expand-sm bg-body-tertiary sticky-top element-show']],
+  options: [['className', 'header-bottom__nav navbar navbar-expand-sm bg-body-tertiary sticky-top']],
   childElements: [HEADER_CONTAINER],
 });
 
