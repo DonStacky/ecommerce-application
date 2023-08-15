@@ -1,21 +1,31 @@
 import { findCountry } from '../pages/registration/form-validation';
 
-it('Should find details for provided country', () => {
-  expect(findCountry('Russia')).toEqual({
-    Note: 'Placed on a line of its own.',
-    Country: 'Russia',
-    ISO: 'RU',
-    Format: 'NNNNNN',
-    Regex: '^\\d{6}$',
-  });
-});
+describe('findCountry', () => {
+  it('Should find details for provided country', () => {
+    const detailsRussia = {
+      Note: 'Placed on a line of its own.',
+      Country: 'Russia',
+      ISO: 'RU',
+      Format: 'NNNNNN',
+      Regex: '^\\d{6}$',
+    };
 
-it('Should return empty template in case of missing searching country', () => {
-  expect(findCountry('invalid country')).toEqual({
-    Note: '',
-    Country: '',
-    ISO: '',
-    Format: '',
-    Regex: '',
+    const foundDetails = findCountry('Russia');
+
+    expect(foundDetails).toEqual(detailsRussia);
+  });
+
+  it('Should return empty template in case of missing searching country', () => {
+    const emptyDetails = {
+      Note: '',
+      Country: '',
+      ISO: '',
+      Format: '',
+      Regex: '',
+    };
+
+    const foundDetails = findCountry('invalid Country');
+
+    expect(foundDetails).toEqual(emptyDetails);
   });
 });

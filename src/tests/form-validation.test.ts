@@ -10,7 +10,9 @@ describe('validateString', () => {
     const inputElement = document.createElement('input');
     const errorElement = document.createElement('div');
     const schema = string().required();
+
     await validateString(errorElement, schema).apply(inputElement);
+
     expect(inputElement.checkValidity()).toBe(false);
   });
 
@@ -19,7 +21,9 @@ describe('validateString', () => {
     inputElement.value = 'inputExample';
     const errorElement = document.createElement('div');
     const schema = string().required();
+
     await validateString(errorElement, schema).apply(inputElement);
+
     expect(inputElement.checkValidity()).toBe(true);
   });
 
@@ -27,7 +31,9 @@ describe('validateString', () => {
     const inputElement = document.createElement('input');
     const errorElement = document.createElement('div');
     const schema = string().required();
+
     await validateString(errorElement, schema).apply(inputElement);
+
     expect(errorElement.textContent).toBe('this is a required field');
   });
 
@@ -36,7 +42,9 @@ describe('validateString', () => {
     inputElement.value = 'inputExample';
     const errorElement = document.createElement('div');
     const schema = string().required();
+
     await validateString(errorElement, schema).apply(inputElement);
+
     expect(errorElement.textContent).toBe('');
   });
 });
@@ -46,7 +54,9 @@ describe('ValidateDate', () => {
     const inputElement = document.createElement('input');
     const errorElement = document.createElement('div');
     const schema = date().required();
+
     await validateDate(errorElement, schema).apply(inputElement);
+
     expect(inputElement.checkValidity()).toBe(false);
   });
 
@@ -55,7 +65,9 @@ describe('ValidateDate', () => {
     inputElement.value = '2000-12-11';
     const errorElement = document.createElement('div');
     const schema = date().required();
+
     await validateDate(errorElement, schema).apply(inputElement);
+
     expect(inputElement.checkValidity()).toBe(true);
   });
 
@@ -63,7 +75,9 @@ describe('ValidateDate', () => {
     const inputElement = document.createElement('input');
     const errorElement = document.createElement('div');
     const schema = date().required();
+
     await validateDate(errorElement, schema).apply(inputElement);
+
     expect(errorElement.textContent).toBe(
       'this must be a `date` type, but the final value was: `Invalid Date` (cast from the value `Invalid Date`).'
     );
@@ -74,7 +88,9 @@ describe('ValidateDate', () => {
     inputElement.value = '2000-12-11';
     const errorElement = document.createElement('div');
     const schema = date().required();
+
     await validateDate(errorElement, schema).apply(inputElement);
+
     expect(errorElement.textContent).toBe('');
   });
 });
@@ -86,11 +102,11 @@ describe('validatePostalCode', () => {
     const preselectedOption = document.createElement('option');
     const errorElement = document.createElement('div');
     selectElement.append(preselectedOption);
-
     inputElement.value = 'invalid postal code';
     preselectedOption.value = 'Russia';
 
     await validatePostalCode(selectElement, errorElement).apply(inputElement);
+
     expect(inputElement.checkValidity()).toBe(false);
   });
 
@@ -100,11 +116,11 @@ describe('validatePostalCode', () => {
     const preselectedOption = document.createElement('option');
     const errorElement = document.createElement('div');
     selectElement.append(preselectedOption);
-
     inputElement.value = '123456';
     preselectedOption.value = 'Russia';
 
     await validatePostalCode(selectElement, errorElement).apply(inputElement);
+
     expect(inputElement.checkValidity()).toBe(true);
   });
 
@@ -114,11 +130,11 @@ describe('validatePostalCode', () => {
     const preselectedOption = document.createElement('option');
     const errorElement = document.createElement('div');
     selectElement.append(preselectedOption);
-
     inputElement.value = 'invalid postal code';
     preselectedOption.value = 'Russia';
 
     await validatePostalCode(selectElement, errorElement).apply(inputElement);
+
     expect(errorElement.textContent).toBe('this should be a format of NNNNNN');
   });
 
@@ -128,11 +144,11 @@ describe('validatePostalCode', () => {
     const preselectedOption = document.createElement('option');
     const errorElement = document.createElement('div');
     selectElement.append(preselectedOption);
-
     inputElement.value = '123456';
     preselectedOption.value = 'Russia';
 
     await validatePostalCode(selectElement, errorElement).apply(inputElement);
+
     expect(errorElement.textContent).toBe('');
   });
 });
