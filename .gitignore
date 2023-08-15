@@ -18,3 +18,6 @@ dist/
 
 # Optional eslint cache
 .eslintcache
+
+# Jest coverage report
+/coverage
