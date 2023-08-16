@@ -31,7 +31,11 @@ export function validateDate(errorElement: HTMLElement, schema: DateSchema) {
     } catch (err) {
       if (err instanceof ValidationError) {
         this.setCustomValidity('invalid');
-        boundedElement.textContent = err.message;
+        boundedElement.textContent =
+          err.message ===
+          'this must be a `date` type, but the final value was: `Invalid Date` (cast from the value `Invalid Date`).'
+            ? 'Please enter correct date'
+            : err.message;
         return false;
       }
     }
@@ -60,7 +64,9 @@ export function validatePostalCode(selectElement: HTMLSelectElement, errorElemen
       await string()
         .matches(
           new RegExp(findCountry(selectElement.value).Regex),
-          `this should be a format of ${findCountry(selectElement.value).Format}`
+          `Please enter correct postal code. Postal code should be a format of ${
+            findCountry(selectElement.value).Format
+          }`
         )
         .validate(this.value);
 
