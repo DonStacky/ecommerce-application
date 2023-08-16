@@ -1,6 +1,5 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { ErrorObject, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-// import ctpClient from '../../shared/helpers/BuildClient';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { LoginValidation } from '../../shared/types/types';
@@ -228,31 +227,36 @@ export default class LoginForm {
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
 
-    // TODO разобраться - как правильно получать токены (каждый раз при входе или нет)
-    /* if (!this.ctpClient) {
-      this.ctpClient = this.buildClient();
-    } */
     this.ctpClient = this.buildClient();
 
     const apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
       projectKey: 'span_team-ecom_app',
     });
+
     const loginCustomer = () => {
       return apiRoot
         .login()
         .post({ body: { email: this.INPUT_EMAIL.value, password: this.INPUT_PASSWD.value } })
         .execute();
     };
-    // TODO Более точно обрабатывать конкретные ошибки сервера
+
     loginCustomer()
       .then(() => {
+        this.HELP_PASSWD.innerText = '';
+        this.INPUT_EMAIL.value = '';
+        this.INPUT_PASSWD.value = '';
+
         console.log('Valid');
       })
-      .catch((err) => {
+      .catch((err: ErrorObject) => {
+        if (err.body?.statusCode === 400) {
+          this.HELP_PASSWD.innerText = 'Wrong email or password';
+          this.INPUT_EMAIL.classList.add('form-control_validation');
+          this.INPUT_PASSWD.classList.add('form-control_validation');
+        } else {
+          this.HELP_PASSWD.innerText = 'server error';
+        }
         console.error(err);
-        this.HELP_PASSWD.innerText = 'Wrong email or password';
-        this.INPUT_EMAIL.classList.add('form-control_validation');
-        this.INPUT_PASSWD.classList.add('form-control_validation');
       });
   }
 
