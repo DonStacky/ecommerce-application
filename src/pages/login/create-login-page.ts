@@ -1,3 +1,6 @@
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+// import ctpClient from '../../shared/helpers/BuildClient';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { LoginValidation } from '../../shared/types/types';
@@ -29,6 +32,8 @@ export default class LoginForm {
   BUTTON: HTMLButtonElement;
 
   FORM: HTMLFormElement;
+
+  ctpClient: unknown;
 
   constructor() {
     this.LABEL_EMAIL = createElement({
@@ -129,6 +134,7 @@ export default class LoginForm {
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
     this.BUTTON.setAttribute('disabled', '');
     this.addEvents();
+    this.ctpClient = null;
   }
 
   private addEvents() {
@@ -163,6 +169,7 @@ export default class LoginForm {
     );
 
     this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
+    this.BUTTON.addEventListener('click', this.submit.bind(this));
   }
 
   private liveValidation(event: KeyboardEvent) {
@@ -170,6 +177,12 @@ export default class LoginForm {
     if (target.tagName !== 'INPUT') return;
 
     const text = target.value;
+
+    if (this.HELP_PASSWD.innerText === 'Wrong email or password') {
+      this.HELP_PASSWD.innerText = '';
+      this.INPUT_EMAIL.classList.remove('form-control_validation');
+      this.INPUT_PASSWD.classList.remove('form-control_validation');
+    }
 
     if (target.id === 'InputEmail') {
       const validation = loginValidation({ login: text });
@@ -205,18 +218,69 @@ export default class LoginForm {
   private createBtnStatus(obj: LoginValidation) {
     if (obj.login && obj.password) {
       this.BUTTON.removeAttribute('disabled');
-      this.BUTTON.addEventListener('click', this.submit);
     } else {
       this.BUTTON.setAttribute('disabled', '');
-      this.BUTTON.removeEventListener('click', this.submit);
     }
   }
 
-  // TODO Дописать сабмит формы на сервер
   private submit(event: MouseEvent) {
     const target = event.target as HTMLButtonElement;
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
-    console.log('submit');
+
+    // TODO разобраться - как правильно получать токены (каждый раз при входе или нет)
+    /* if (!this.ctpClient) {
+      this.ctpClient = this.buildClient();
+    } */
+    this.ctpClient = this.buildClient();
+
+    const apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
+      projectKey: 'span_team-ecom_app',
+    });
+    const loginCustomer = () => {
+      return apiRoot
+        .login()
+        .post({ body: { email: this.INPUT_EMAIL.value, password: this.INPUT_PASSWD.value } })
+        .execute();
+    };
+    // TODO Более точно обрабатывать конкретные ошибки сервера
+    loginCustomer()
+      .then(() => {
+        console.log('Valid');
+      })
+      .catch((err) => {
+        console.error(err);
+        this.HELP_PASSWD.innerText = 'Wrong email or password';
+        this.INPUT_EMAIL.classList.add('form-control_validation');
+        this.INPUT_PASSWD.classList.add('form-control_validation');
+      });
+  }
+
+  private buildClient() {
+    const httpMiddlewareOptions: HttpMiddlewareOptions = {
+      host: 'https://api.europe-west1.gcp.commercetools.com',
+      fetch,
+    };
+
+    const options: PasswordAuthMiddlewareOptions = {
+      host: 'https://auth.europe-west1.gcp.commercetools.com',
+      projectKey: 'span_team-ecom_app',
+      credentials: {
+        clientId: 'Scq0SI2cNZ3UmMQe-JDrJxcX',
+        clientSecret: 'IiGuI_e0am_PA8Dcds_9xMkhIc0eIvn_',
+        user: {
+          username: this.INPUT_EMAIL.value,
+          password: this.INPUT_PASSWD.value,
+        },
+      },
+      scopes: [`manage_project:span_team-ecom_app`],
+      fetch,
+    };
+
+    return new ClientBuilder()
+      .withPasswordFlow(options)
+      .withHttpMiddleware(httpMiddlewareOptions)
+      .withLoggerMiddleware()
+      .build();
   }
 }
