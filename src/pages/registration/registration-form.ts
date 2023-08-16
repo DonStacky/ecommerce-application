@@ -553,65 +553,72 @@ const VALIDATIONS = [
   validateString(
     NAME_INVALID,
     string()
-      .required()
-      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      .required('Please enter your first name. First name field is required')
+      .matches(/^[a-zA-Z]+$/, 'First name should not contain any special symbols or numbers')
   ).bind(NAME_INPUT),
 
   validateString(
     LAST_NAME_INVALID,
     string()
-      .required()
-      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      .required('Please enter your last name. Last name field is required')
+      .matches(/^[a-zA-Z]+$/, 'Last name should not contain any special symbols or numbers')
   ).bind(LAST_NAME_INPUT),
 
-  validateString(EMAIL_INVALID, string().required().email()).bind(EMAIL_INPUT),
+  validateString(
+    EMAIL_INVALID,
+    string().required('Please enter your email. Email field is required').email('Please input correct email')
+  ).bind(EMAIL_INPUT),
 
   validateString(
     PASSWORD_INVALID,
     string()
-      .required()
-      .min(8, 'this should contain at least 8 characters')
-      .matches(/^.*[a-z]+.*$/, 'this should contain at least 1 lowercase letter')
-      .matches(/^.*[A-Z]+.*$/, 'this should contain at least 1 uppercase letter')
-      .matches(/^.*[\d]+.*$/, 'this should contain at least 1 digit')
+      .required('Please enter your password. Password field is required')
+      .min(8, 'Password should contain at least 8 characters')
+      .matches(/^.*[a-z]+.*$/, 'Password should contain at least 1 lowercase letter')
+      .matches(/^.*[A-Z]+.*$/, 'Password should contain at least 1 uppercase letter')
+      .matches(/^.*[\d]+.*$/, 'Password should contain at least 1 digit')
   ).bind(PASSWORD_INPUT),
 
   validateDate(
     BIRTH_DATE_INVALID,
-    date()
-      .required()
-      .max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
+    date().max(new Date(Date.now() - MIN_AGE_MILISEC), 'You must be older than 13 y.o.')
   ).bind(BIRTH_DATE_INPUT),
 
-  validateString(BILLING_COUNTRY_INVALID, string().required()).bind(BILLING_COUNTRY_SELECT),
+  validateString(
+    BILLING_COUNTRY_INVALID,
+    string().required('Please enter your country. Country field is required')
+  ).bind(BILLING_COUNTRY_SELECT),
 
   validatePostalCode(BILLING_COUNTRY_SELECT, BILLING_POSTAL_CODE_INVALID).bind(BILLING_POSTAL_CODE_INPUT),
 
   validateString(
     BILLING_CITY_INVALID,
     string()
-      .min(1, 'this should contain at least 1 character')
-      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      .min(1, 'City field should contain at least 1 character')
+      .matches(/^[a-zA-Z]+$/, 'City field should not contain any special symbols or numbers')
   ).bind(BILLING_CITY_INPUT),
 
-  validateString(BILLING_STREET_INVALID, string().min(1, 'this should contain at least 1 character')).bind(
+  validateString(BILLING_STREET_INVALID, string().min(1, 'Street field should contain at least 1 character')).bind(
     BILLING_STREET_INPUT
   ),
 ];
 
 const VALIDATIONS_EXTENDED = [
-  validateString(SHIPPING_COUNTRY_INVALID, string().required()).bind(SHIPPING_COUNTRY_SELECT),
+  validateString(
+    SHIPPING_COUNTRY_INVALID,
+    string().required('Please enter your country. Country field is required')
+  ).bind(SHIPPING_COUNTRY_SELECT),
 
   validatePostalCode(SHIPPING_COUNTRY_SELECT, SHIPPING_POSTAL_CODE_INVALID).bind(SHIPPING_POSTAL_CODE_INPUT),
 
   validateString(
     SHIPPING_CITY_INVALID,
     string()
-      .min(1, 'this should contain at least 1 character')
-      .matches(/^[a-zA-Z]+$/, 'this should not contain any special symbols or numbers')
+      .min(1, 'City field should contain at least 1 character')
+      .matches(/^[a-zA-Z]+$/, 'City field should not contain any special symbols or numbers')
   ).bind(SHIPPING_CITY_INPUT),
 
-  validateString(SHIPPING_STREET_INVALID, string().min(1, 'this should contain at least 1 character')).bind(
+  validateString(SHIPPING_STREET_INVALID, string().min(1, 'Street field should contain at least 1 character')).bind(
     SHIPPING_STREET_INPUT
   ),
 ];

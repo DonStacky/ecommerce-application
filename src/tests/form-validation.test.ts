@@ -78,9 +78,7 @@ describe('ValidateDate', () => {
 
     await validateDate(errorElement, schema).apply(inputElement);
 
-    expect(errorElement.textContent).toBe(
-      'this must be a `date` type, but the final value was: `Invalid Date` (cast from the value `Invalid Date`).'
-    );
+    expect(errorElement.textContent).toBe('Please enter correct date');
   });
 
   it('Should change error element text with validation error ', async () => {
@@ -135,7 +133,7 @@ describe('validatePostalCode', () => {
 
     await validatePostalCode(selectElement, errorElement).apply(inputElement);
 
-    expect(errorElement.textContent).toBe('this should be a format of NNNNNN');
+    expect(errorElement.textContent).toBe('Please enter correct postal code. Postal code should be a format of NNNNNN');
   });
 
   it('Should change error element text with validation error ', async () => {
