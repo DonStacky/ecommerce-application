@@ -1,5 +1,4 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { CreateOptions } from '../../shared/types/types';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import deer from '@image/deer.jpg';
@@ -10,20 +9,29 @@ import './header.scss';
 
 // --------------------- COMMON HEADER ---------------------
 
-const headerLinkOptions: CreateOptions<'a'> = {
-  tagname: 'a',
-  options: [
-    ['className', 'header-bottom__link active nav-link'],
-    ['href', '#'],
-  ],
-};
-const headerLinkText: string[] = ['Home', 'Catalog', 'Basket', 'About us', 'Log in', 'Sign up'];
+const headerLinkText: string[][] = [
+  ['Home', '/home'],
+  ['Catalog', '/catalog'],
+  ['Basket', '/basket'],
+  ['About us', '/about'],
+  ['Log in', '/log'],
+  ['Sign up', '/sign'],
+];
 
-const HEADER_LINKS = headerLinkText.map((link) => {
-  const HEADER_LINK = createElement(headerLinkOptions);
-  HEADER_LINK.textContent = link;
+const HEADER_LINKS = headerLinkText.map(([text, link]) => {
+  const HEADER_LINK = createElement({
+    tagname: 'a',
+    options: [
+      ['className', 'header-bottom__link active nav-link'],
+      ['href', link],
+      ['textContent', text],
+    ],
+  });
+  HEADER_LINK.dataset.navigo = 'true';
+
   return HEADER_LINK;
 });
+
 HEADER_LINKS[0].setAttribute('aria-current', 'page');
 const HEADER_ITEMS = HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({
@@ -31,6 +39,7 @@ const HEADER_ITEMS = HEADER_LINKS.map((link) => {
     options: [['className', 'header-bottom__item nav-item']],
     childElements: [link],
   });
+
   return HEADER_ITEM;
 });
 
@@ -99,17 +108,17 @@ export const HEADER = createElement({
 
 // --------------------- MAIN PAGE HEADER-STARTLINE ---------------------
 
-const mainHeaderLinkOptions: CreateOptions<'a'> = {
-  tagname: 'a',
-  options: [
-    ['className', 'nav-link header__link active'],
-    ['href', '#'],
-  ],
-};
+const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
+  const MAIN_HEADER_LINK = createElement({
+    tagname: 'a',
+    options: [
+      ['className', 'nav-link header__link active'],
+      ['href', link],
+      ['textContent', text],
+    ],
+  });
+  MAIN_HEADER_LINK.dataset.navigo = 'true';
 
-const MAIN_HEADER_LINKS = headerLinkText.map((link) => {
-  const MAIN_HEADER_LINK = createElement(mainHeaderLinkOptions);
-  MAIN_HEADER_LINK.textContent = link;
   return MAIN_HEADER_LINK;
 });
 
@@ -236,6 +245,8 @@ const MAIN_HEADER_VIEW_BTN = createElement({
     ['textContent', 'View more'],
   ],
 });
+MAIN_HEADER_VIEW_BTN.setAttribute('href', '/catalog');
+MAIN_HEADER_VIEW_BTN.dataset.navigo = 'true';
 
 const MAIN_HEADER_TEXT_COLUMN = createElement({
   tagname: 'div',

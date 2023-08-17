@@ -1,10 +1,12 @@
-import LoginForm from '../pages/login/create-login-page';
 import '../pages/login/login-validation';
 import 'bootstrap';
 import './index.scss';
-import MAIN_PAGE from '../pages/main/main-page';
+import startRouting from './router/router';
+// import MAIN_PAGE from '../pages/main/main-page';
+import { PAGE } from '../pages/main/main-page';
 
-document.body.append(MAIN_PAGE);
+document.body.append(PAGE);
 
-const loginForm = new LoginForm();
-document.body.append(loginForm.FORM);
+document.body.append();
+
+window.addEventListener('load', startRouting);

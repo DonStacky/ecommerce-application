@@ -33,6 +33,8 @@ const PRODUCTS_BUTTON = createElement({
     ['textContent', 'View more'],
   ],
 });
+PRODUCTS_BUTTON.setAttribute('href', '/catalog');
+PRODUCTS_BUTTON.dataset.navigo = 'true';
 
 const PRODUCTS_DESC_COLUMN = createElement({
   tagname: 'div',
@@ -95,6 +97,8 @@ const CUSTOMERS_BUTTON = createElement({
     ['textContent', 'View more'],
   ],
 });
+CUSTOMERS_BUTTON.setAttribute('href', '/catalog');
+CUSTOMERS_BUTTON.dataset.navigo = 'true';
 
 const CUSTOMERS_DESC_COLUMN = createElement({
   tagname: 'div',
@@ -129,9 +133,19 @@ const CUSTOMERS_SECTION = createElement({
   childElements: [CUSTOMERS_CONTAINER],
 });
 
-const MAIN_PAGE = createElement({
+export const MAIN_INNER = createElement({
+  tagname: 'div',
+  childElements: [MAIN_HEADER, PRODUCTS_SECTION, CUSTOMERS_SECTION],
+});
+
+export const MAIN = createElement({
   tagname: 'main',
-  childElements: [HEADER, MAIN_HEADER, PRODUCTS_SECTION, CUSTOMERS_SECTION, FOOTER],
+  childElements: [MAIN_INNER],
+});
+
+export const PAGE = createElement({
+  tagname: 'div',
+  childElements: [HEADER, MAIN, FOOTER],
 });
 
 function toggleHeader() {
@@ -144,5 +158,3 @@ function toggleHeader() {
 }
 
 window.addEventListener('scroll', toggleHeader);
-
-export default MAIN_PAGE;
