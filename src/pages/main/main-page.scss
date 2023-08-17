@@ -37,6 +37,11 @@
   width: 100%;
   transition: 0.3s;
   transform: translateY(-80px);
+
+  &--common {
+    position: static;
+    transform: translateY(0px);
+  }
 }
 
 .element-show {

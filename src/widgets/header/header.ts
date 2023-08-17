@@ -14,8 +14,8 @@ const headerLinkText: string[][] = [
   ['Catalog', '/catalog'],
   ['Basket', '/basket'],
   ['About us', '/about'],
-  ['Log in', '/log'],
-  ['Sign up', '/sign'],
+  ['Log in', '/login'],
+  ['Sign up', '/registration'],
 ];
 
 const HEADER_LINKS = headerLinkText.map(([text, link]) => {
@@ -96,7 +96,7 @@ const HEADER_NAV_LOGO = createElement({
 
 const HEADER_CONTAINER = createElement({
   tagname: 'div',
-  options: [['className', 'container-fluid']],
+  options: [['className', 'container-xl container-fluid']],
   childElements: [HEADER_NAV_LOGO, HEADER_NAV_BUTTON, HEADER_LIST_WRAPPER],
 });
 
