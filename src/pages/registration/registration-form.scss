@@ -1,0 +1,30 @@
+.registration-form {
+    --bs-bg-opacity: .2;
+    @extend .m-5;
+    @extend .form-control-sm;
+    @extend .bg-primary;
+    @extend .border;
+    @extend .border-primary;
+    @extend .rounded;
+}
+
+.form-header {
+    @extend .text-center;
+}
+
+.address-header {
+    @extend .ms-5;
+    @extend .h4;
+}
+
+.form-field {
+    @extend .mx-3;
+    @extend .mb-1;
+}
+
+.submit-button {
+    @extend .btn;
+    @extend .btn-primary;
+    @extend .mx-auto;
+    @extend .d-block;
+}
