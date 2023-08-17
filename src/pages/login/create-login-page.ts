@@ -1,5 +1,6 @@
 import { ErrorObject, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import { StatusCodes } from 'http-status-codes';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { LoginValidation } from '../../shared/types/types';
@@ -230,7 +231,7 @@ export default class LoginForm {
     this.ctpClient = this.buildClient();
 
     const apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
-      projectKey: 'span_team-ecom_app',
+      projectKey: process.env.CTP_PROJECT_KEY as string,
     });
 
     const loginCustomer = () => {
@@ -249,7 +250,7 @@ export default class LoginForm {
         console.log('Valid');
       })
       .catch((err: ErrorObject) => {
-        if (err.body?.statusCode === 400) {
+        if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
           this.HELP_PASSWD.innerText = 'Wrong email or password';
           this.INPUT_EMAIL.classList.add('form-control_validation');
           this.INPUT_PASSWD.classList.add('form-control_validation');
@@ -262,22 +263,22 @@ export default class LoginForm {
 
   private buildClient() {
     const httpMiddlewareOptions: HttpMiddlewareOptions = {
-      host: 'https://api.europe-west1.gcp.commercetools.com',
+      host: process.env.CTP_API_URL as string,
       fetch,
     };
 
     const options: PasswordAuthMiddlewareOptions = {
-      host: 'https://auth.europe-west1.gcp.commercetools.com',
-      projectKey: 'span_team-ecom_app',
+      host: process.env.CTP_AUTH_URL as string,
+      projectKey: process.env.CTP_PROJECT_KEY as string,
       credentials: {
-        clientId: 'Scq0SI2cNZ3UmMQe-JDrJxcX',
-        clientSecret: 'IiGuI_e0am_PA8Dcds_9xMkhIc0eIvn_',
+        clientId: process.env.CTP_CLIENT_ID as string,
+        clientSecret: process.env.CTP_CLIENT_SECRET as string,
         user: {
           username: this.INPUT_EMAIL.value,
           password: this.INPUT_PASSWD.value,
         },
       },
-      scopes: [`manage_project:span_team-ecom_app`],
+      scopes: [process.env.CTP_SCOPES as string],
       fetch,
     };
 
