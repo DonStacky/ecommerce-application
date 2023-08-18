@@ -1,19 +1,23 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { CreateOptions } from '../../shared/types/types';
 import rssLogo from '@svg/logo_rs_text.svg';
 import './footer.scss';
 
 // --------------------- FOOTER COMPANY ---------------------
 
-const headerLinkOptions: CreateOptions<'a'> = {
-  tagname: 'a',
-  options: [['href', '#']],
-};
-const footerCompanyText: string[] = ['Home', 'Catalog', 'About us'];
+const footerCompanyText: string[][] = [
+  ['Home', 'home'],
+  ['Catalog', 'catalog'],
+  ['About us', 'about'],
+];
 
-const FOOTER_COMPANY_LINKS = footerCompanyText.map((text) => {
-  const FOOTER_COMPANY_LINK = createElement(headerLinkOptions);
+const FOOTER_COMPANY_LINKS = footerCompanyText.map(([text, link]) => {
+  const FOOTER_COMPANY_LINK = createElement({
+    tagname: 'a',
+    options: [['href', `/${link}`]],
+  });
   FOOTER_COMPANY_LINK.textContent = text;
+  FOOTER_COMPANY_LINK.dataset.navigo = 'true';
+
   return FOOTER_COMPANY_LINK;
 });
 
@@ -42,11 +46,20 @@ const FOOTER_COMPANY_TITLE = createElement({
 
 // --------------------- FOOTER CUSTOMERS ---------------------
 
-const footerCustomersText: string[] = ['Profile', 'Basket', 'Discounts', 'Promo codes'];
+const footerCustomersText: string[][] = [
+  ['Basket', 'basket'],
+  ['Discounts', '/discounts'],
+  ['Promo codes', '/promo'],
+];
 
-const FOOTER_CUSTOMERS_LINKS = footerCustomersText.map((text) => {
-  const FOOTER_CUSTOMER_LINK = createElement(headerLinkOptions);
+const FOOTER_CUSTOMERS_LINKS = footerCustomersText.map(([text, link]) => {
+  const FOOTER_CUSTOMER_LINK = createElement({
+    tagname: 'a',
+    options: [['href', `/${link}`]],
+  });
   FOOTER_CUSTOMER_LINK.textContent = text;
+  FOOTER_CUSTOMER_LINK.dataset.navigo = 'true';
+
   return FOOTER_CUSTOMER_LINK;
 });
 

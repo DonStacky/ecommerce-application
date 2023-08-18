@@ -8,13 +8,15 @@ import LoginForm from '../../pages/login/create-login-page';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import NOT_FOUND from '../../pages/not_found/not_found';
 import REG_PAGE from '../../pages/registration/registration-form';
+import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
+import PROMO_PAGE from '../../pages/promo/promo';
 
 const loginForm = new LoginForm();
 
 const render = (content: HTMLElement, linkID?: string) => {
-  if (linkID) {
-    HEADER_LINKS.forEach((link) => link.classList.remove('active'));
+  HEADER_LINKS.forEach((link) => link.classList.remove('active'));
 
+  if (linkID) {
     const navLink = findDomElement(document.body, linkID);
     navLink.classList.add('active');
   }
@@ -56,6 +58,12 @@ const startRouting = () => {
     })
     .on('/registration', () => {
       render(REG_PAGE, '#registration');
+    })
+    .on('/discounts', () => {
+      render(DISCOUNTS_PAGE);
+    })
+    .on('/promo', () => {
+      render(PROMO_PAGE);
     })
     .notFound(() => {
       render(NOT_FOUND);
