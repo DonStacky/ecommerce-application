@@ -10,20 +10,21 @@ import './header.scss';
 // --------------------- COMMON HEADER ---------------------
 
 const headerLinkText: string[][] = [
-  ['Home', '/home'],
-  ['Catalog', '/catalog'],
-  ['Basket', '/basket'],
-  ['About us', '/about'],
-  ['Log in', '/login'],
-  ['Sign up', '/registration'],
+  ['Home', 'home'],
+  ['Catalog', 'catalog'],
+  ['Basket', 'basket'],
+  ['About us', 'about'],
+  ['Log in', 'login'],
+  ['Sign up', 'registration'],
 ];
 
 const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   const HEADER_LINK = createElement({
     tagname: 'a',
     options: [
-      ['className', 'header-bottom__link active nav-link'],
-      ['href', link],
+      ['className', 'header-bottom__link nav-link'],
+      ['href', `/${link}`],
+      ['id', link],
       ['textContent', text],
     ],
   });
@@ -31,8 +32,8 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
 
   return HEADER_LINK;
 });
+// HEADER_LINKS[0].setAttribute('aria-current', 'page');
 
-HEADER_LINKS[0].setAttribute('aria-current', 'page');
 const HEADER_ITEMS = HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({
     tagname: 'li',
@@ -89,7 +90,7 @@ const HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand'],
-    ['href', '#'],
+    ['href', '/home'],
   ],
   childElements: [HEADER_NAV_IMG],
 });
@@ -112,7 +113,7 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
   const MAIN_HEADER_LINK = createElement({
     tagname: 'a',
     options: [
-      ['className', 'nav-link header__link active'],
+      ['className', 'nav-link header__link'],
       ['href', link],
       ['textContent', text],
     ],
@@ -121,10 +122,10 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
 
   return MAIN_HEADER_LINK;
 });
-
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
+// MAIN_HEADER_LINKS[0].classList.add('active');
 
-const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
+export const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({
     tagname: 'li',
     options: [['className', 'nav-item header__item']],
@@ -132,7 +133,6 @@ const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
   });
   return HEADER_ITEM;
 });
-
 MAIN_HEADER_ITEMS[0].classList.add('active');
 
 const MAIN_HEADER_LIST = createElement({
@@ -199,7 +199,7 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand logo__link me-auto ms-auto'],
-    ['href', '#'],
+    ['href', '/home'],
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
 });

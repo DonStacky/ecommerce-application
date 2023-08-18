@@ -98,7 +98,7 @@
     background-color: aliceblue;
   }
 
-  &.active .header__link.active {
+  &.active .header__link {
     transition: 0.3s;
     color: #111;
   }
