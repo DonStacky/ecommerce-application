@@ -18,7 +18,7 @@ const headerLinkText: string[][] = [
   ['Sign up', 'registration'],
 ];
 
-const HEADER_LINKS = headerLinkText.map(([text, link]) => {
+export const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   const HEADER_LINK = createElement({
     tagname: 'a',
     options: [

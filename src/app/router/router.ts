@@ -1,23 +1,23 @@
 import { MAIN_INNER, PAGE, MAIN } from '../../pages/main/main-page';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-import { HEADER, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
+import { HEADER, HEADER_LINKS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import BASKET_PAGE from '../../pages/basket/basket';
 import REG_PAGE from '../../pages/registration/registrarion';
 import LoginForm from '../../pages/login/create-login-page';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
+import NOT_FOUND from '../../pages/not_found/not_found';
 
 const loginForm = new LoginForm();
 
-const render = (content: HTMLElement, linkID: string) => {
-  const activeLink = findDomElement(document.body, '.active');
-  activeLink.classList.remove('active');
+const render = (content: HTMLElement, linkID?: string) => {
+  if (linkID) {
+    HEADER_LINKS.forEach((link) => link.classList.remove('active'));
 
-  console.log(activeLink);
-  const navLink = findDomElement(document.body, linkID);
-  navLink.classList.add('active');
-  console.log(navLink);
+    const navLink = findDomElement(document.body, linkID);
+    navLink.classList.add('active');
+  }
 
   HEADER.classList.add('header-bottom__nav--common');
   MAIN.innerHTML = '';
@@ -40,6 +40,11 @@ const startRouting = () => {
       HEADER.classList.remove('header-bottom__nav--common');
       MAIN_HEADER_ITEMS[0].classList.add('active');
     })
+    .on(() => {
+      render(MAIN_INNER, '#home');
+      HEADER.classList.remove('header-bottom__nav--common');
+      MAIN_HEADER_ITEMS[0].classList.add('active');
+    })
     .on('/catalog', () => {
       render(CATALOG_PAGE, '#catalog');
     })
@@ -51,6 +56,9 @@ const startRouting = () => {
     })
     .on('/registration', () => {
       render(REG_PAGE, '#registration');
+    })
+    .notFound(() => {
+      render(NOT_FOUND);
     })
     .resolve();
 };

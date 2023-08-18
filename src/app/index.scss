@@ -6,7 +6,7 @@ html {
   font-size: 10px;
   box-sizing: border-box;
 
-  @media (max-width: 530px) {
+  @include media-breakpoint-down(sm) {
     font-size: 7px;
   }
 }
