@@ -1,5 +1,4 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import deer from '@image/deer.jpg';
 import seaSet from '@image/morskoj-nabor.jpg';
@@ -18,7 +17,7 @@ const headerLinkText: string[][] = [
   ['Sign up', 'registration'],
 ];
 
-export const HEADER_LINKS = headerLinkText.map(([text, link]) => {
+const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   const HEADER_LINK = createElement({
     tagname: 'a',
     options: [
@@ -32,9 +31,9 @@ export const HEADER_LINKS = headerLinkText.map(([text, link]) => {
 
   return HEADER_LINK;
 });
-// HEADER_LINKS[0].setAttribute('aria-current', 'page');
+HEADER_LINKS[0].setAttribute('aria-current', 'page');
 
-const HEADER_ITEMS = HEADER_LINKS.map((link) => {
+export const HEADER_ITEMS = HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({
     tagname: 'li',
     options: [['className', 'header-bottom__item nav-item']],
@@ -81,7 +80,7 @@ HEADER_NAV_BUTTON.setAttribute('aria-label', 'Toggle navigation');
 const HEADER_NAV_IMG = createElement({
   tagname: 'img',
   options: [
-    ['src', blackLogo],
+    ['src', whiteLogo],
     ['alt', 'logo'],
   ],
 });
@@ -103,7 +102,7 @@ const HEADER_CONTAINER = createElement({
 
 export const HEADER = createElement({
   tagname: 'nav',
-  options: [['className', 'header-bottom__nav navbar navbar-expand-md bg-body-tertiary sticky-top']],
+  options: [['className', 'header-bottom__nav navbar navbar-expand-md bg-gradient sticky-top']],
   childElements: [HEADER_CONTAINER],
 });
 

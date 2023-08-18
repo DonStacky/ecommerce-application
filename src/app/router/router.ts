@@ -1,7 +1,7 @@
 import { MAIN_INNER, PAGE, MAIN } from '../../pages/main/main-page';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-import { HEADER, HEADER_LINKS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
+import { HEADER, HEADER_ITEMS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import BASKET_PAGE from '../../pages/basket/basket';
 import LoginForm from '../../pages/login/create-login-page';
@@ -14,11 +14,13 @@ import PROMO_PAGE from '../../pages/promo/promo';
 const loginForm = new LoginForm();
 
 const render = (content: HTMLElement, linkID?: string) => {
-  HEADER_LINKS.forEach((link) => link.classList.remove('active'));
+  HEADER_ITEMS.forEach((item) => item.classList.remove('active'));
 
   if (linkID) {
     const navLink = findDomElement(document.body, linkID);
-    navLink.classList.add('active');
+    if (navLink.parentElement) {
+      navLink.parentElement.classList.add('active');
+    }
   }
 
   HEADER.classList.add('header-bottom__nav--common');
