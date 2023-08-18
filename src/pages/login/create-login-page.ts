@@ -1,9 +1,9 @@
-import { ErrorObject, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import { ErrorObject } from '@commercetools/platform-sdk';
+// import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { StatusCodes } from 'http-status-codes';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import checkEnvVariables from '../../shared/helpers/utilites';
+import loginCustomer from '../../shared/helpers/login-customer';
 import { LoginValidation } from '../../shared/types/types';
 import { loginValidation, passwordValidation } from './login-validation';
 
@@ -34,7 +34,7 @@ export default class LoginForm {
 
   FORM: HTMLFormElement;
 
-  ctpClient: unknown;
+  // ctpClient: unknown;
 
   constructor() {
     this.LABEL_EMAIL = createElement({
@@ -135,7 +135,7 @@ export default class LoginForm {
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
     this.BUTTON.setAttribute('disabled', '');
     this.addEvents();
-    this.ctpClient = null;
+    // this.ctpClient = null;
   }
 
   private addEvents() {
@@ -229,20 +229,7 @@ export default class LoginForm {
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
 
-    this.ctpClient = this.buildClient();
-
-    const apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
-      projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-    });
-
-    const loginCustomer = () => {
-      return apiRoot
-        .login()
-        .post({ body: { email: this.INPUT_EMAIL.value, password: this.INPUT_PASSWD.value } })
-        .execute();
-    };
-
-    loginCustomer()
+    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)()
       .then(() => {
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';
@@ -260,33 +247,5 @@ export default class LoginForm {
         }
         console.error(err);
       });
-  }
-
-  private buildClient() {
-    const httpMiddlewareOptions: HttpMiddlewareOptions = {
-      host: checkEnvVariables(process.env.CTP_API_URL),
-      fetch,
-    };
-
-    const options: PasswordAuthMiddlewareOptions = {
-      host: checkEnvVariables(process.env.CTP_AUTH_URL),
-      projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-      credentials: {
-        clientId: checkEnvVariables(process.env.CTP_CLIENT_ID),
-        clientSecret: checkEnvVariables(process.env.CTP_CLIENT_SECRET),
-        user: {
-          username: this.INPUT_EMAIL.value,
-          password: this.INPUT_PASSWD.value,
-        },
-      },
-      scopes: [process.env.CTP_SCOPES as string],
-      fetch,
-    };
-
-    return new ClientBuilder()
-      .withPasswordFlow(options)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware()
-      .build();
   }
 }
