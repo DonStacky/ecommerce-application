@@ -665,7 +665,7 @@ inputs.forEach((input, idx) => {
 export default createElement({
   tagname: 'form',
   options: [
-    ['className', 'registration-form needs-validation'],
+    ['className', 'registration-form needs-validation container-xl me-auto ms-auto col-10 col-sm-8 col-md-6'],
     ['noValidate', true],
   ],
   childElements: [

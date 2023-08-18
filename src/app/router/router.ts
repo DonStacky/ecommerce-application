@@ -4,10 +4,10 @@ import ABOUT_PAGE from '../../pages/about/about';
 import { HEADER, HEADER_LINKS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import BASKET_PAGE from '../../pages/basket/basket';
-import REG_PAGE from '../../pages/registration/registrarion';
 import LoginForm from '../../pages/login/create-login-page';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import NOT_FOUND from '../../pages/not_found/not_found';
+import REG_PAGE from '../../pages/registration/registration-form';
 
 const loginForm = new LoginForm();
 
