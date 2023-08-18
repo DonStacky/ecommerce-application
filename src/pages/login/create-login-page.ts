@@ -3,6 +3,7 @@ import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } f
 import { StatusCodes } from 'http-status-codes';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import checkEnvVariables from '../../shared/helpers/utilites';
 import { LoginValidation } from '../../shared/types/types';
 import { loginValidation, passwordValidation } from './login-validation';
 
@@ -231,7 +232,7 @@ export default class LoginForm {
     this.ctpClient = this.buildClient();
 
     const apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
-      projectKey: process.env.CTP_PROJECT_KEY as string,
+      projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
     });
 
     const loginCustomer = () => {
@@ -263,16 +264,16 @@ export default class LoginForm {
 
   private buildClient() {
     const httpMiddlewareOptions: HttpMiddlewareOptions = {
-      host: process.env.CTP_API_URL as string,
+      host: checkEnvVariables(process.env.CTP_API_URL),
       fetch,
     };
 
     const options: PasswordAuthMiddlewareOptions = {
-      host: process.env.CTP_AUTH_URL as string,
-      projectKey: process.env.CTP_PROJECT_KEY as string,
+      host: checkEnvVariables(process.env.CTP_AUTH_URL),
+      projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
       credentials: {
-        clientId: process.env.CTP_CLIENT_ID as string,
-        clientSecret: process.env.CTP_CLIENT_SECRET as string,
+        clientId: checkEnvVariables(process.env.CTP_CLIENT_ID),
+        clientSecret: checkEnvVariables(process.env.CTP_CLIENT_SECRET),
         user: {
           username: this.INPUT_EMAIL.value,
           password: this.INPUT_PASSWD.value,
