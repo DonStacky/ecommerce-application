@@ -17,7 +17,7 @@ export default [
     Note: 'References: http://www.post.lt/en/help/postal-code-search. Previously 9999 which was actually the old Soviet 999999 format code with the first 2 digits dropped.',
     Country: 'Lithuania',
     ISO: 'LT',
-    Format: 'LT-NNNNN',
+    Format: 'Lt-NNNNN',
     Regex: '^Lt[-]{1}\\d{5}$',
   },
   {
