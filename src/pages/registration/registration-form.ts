@@ -605,11 +605,11 @@ const HIDDEN_AREA = createElement({
 });
 
 const REGISTER_BUTTON = createElement({
-  tagname: 'input',
+  tagname: 'button',
   options: [
     ['className', 'submit-button m-3'],
     ['type', 'submit'],
-    ['value', 'Register'],
+    ['textContent', 'Register'],
   ],
 });
 
