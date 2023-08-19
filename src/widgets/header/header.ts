@@ -1,5 +1,4 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { CreateOptions } from '../../shared/types/types';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import deer from '@image/deer.jpg';
@@ -10,27 +9,38 @@ import './header.scss';
 
 // --------------------- COMMON HEADER ---------------------
 
-const headerLinkOptions: CreateOptions<'a'> = {
-  tagname: 'a',
-  options: [
-    ['className', 'header-bottom__link active nav-link'],
-    ['href', '#'],
-  ],
-};
-const headerLinkText: string[] = ['Home', 'Catalog', 'Basket', 'About us', 'Log in', 'Sign up'];
+const headerLinkText: string[][] = [
+  ['Home', 'home'],
+  ['Catalog', 'catalog'],
+  ['Basket', 'basket'],
+  ['About us', 'about'],
+  ['Log in', 'login'],
+  ['Sign up', 'registration'],
+];
 
-const HEADER_LINKS = headerLinkText.map((link) => {
-  const HEADER_LINK = createElement(headerLinkOptions);
-  HEADER_LINK.textContent = link;
+const HEADER_LINKS = headerLinkText.map(([text, link]) => {
+  const HEADER_LINK = createElement({
+    tagname: 'a',
+    options: [
+      ['className', 'header-bottom__link nav-link'],
+      ['href', `/${link}`],
+      ['id', link],
+      ['textContent', text],
+    ],
+  });
+  HEADER_LINK.dataset.navigo = 'true';
+
   return HEADER_LINK;
 });
 HEADER_LINKS[0].setAttribute('aria-current', 'page');
-const HEADER_ITEMS = HEADER_LINKS.map((link) => {
+
+export const HEADER_ITEMS = HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({
     tagname: 'li',
     options: [['className', 'header-bottom__item nav-item']],
     childElements: [link],
   });
+
   return HEADER_ITEM;
 });
 
@@ -80,42 +90,41 @@ const HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand'],
-    ['href', '#'],
+    ['href', '/home'],
   ],
   childElements: [HEADER_NAV_IMG],
 });
 
 const HEADER_CONTAINER = createElement({
   tagname: 'div',
-  options: [['className', 'container-fluid']],
+  options: [['className', 'container-xl container-fluid']],
   childElements: [HEADER_NAV_LOGO, HEADER_NAV_BUTTON, HEADER_LIST_WRAPPER],
 });
 
 export const HEADER = createElement({
   tagname: 'nav',
-  options: [['className', 'header-bottom__nav navbar navbar-expand-md bg-body-tertiary sticky-top']],
+  options: [['className', 'header-bottom__nav navbar navbar-expand-md bg-gradient sticky-top']],
   childElements: [HEADER_CONTAINER],
 });
 
 // --------------------- MAIN PAGE HEADER-STARTLINE ---------------------
 
-const mainHeaderLinkOptions: CreateOptions<'a'> = {
-  tagname: 'a',
-  options: [
-    ['className', 'nav-link header__link active'],
-    ['href', '#'],
-  ],
-};
+const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
+  const MAIN_HEADER_LINK = createElement({
+    tagname: 'a',
+    options: [
+      ['className', 'nav-link header__link'],
+      ['href', link],
+      ['textContent', text],
+    ],
+  });
+  MAIN_HEADER_LINK.dataset.navigo = 'true';
 
-const MAIN_HEADER_LINKS = headerLinkText.map((link) => {
-  const MAIN_HEADER_LINK = createElement(mainHeaderLinkOptions);
-  MAIN_HEADER_LINK.textContent = link;
   return MAIN_HEADER_LINK;
 });
-
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
 
-const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
+export const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({
     tagname: 'li',
     options: [['className', 'nav-item header__item']],
@@ -123,7 +132,6 @@ const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
   });
   return HEADER_ITEM;
 });
-
 MAIN_HEADER_ITEMS[0].classList.add('active');
 
 const MAIN_HEADER_LIST = createElement({
@@ -190,7 +198,7 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand logo__link me-auto ms-auto'],
-    ['href', '#'],
+    ['href', '/home'],
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
 });
@@ -236,6 +244,8 @@ const MAIN_HEADER_VIEW_BTN = createElement({
     ['textContent', 'View more'],
   ],
 });
+MAIN_HEADER_VIEW_BTN.setAttribute('href', '/catalog');
+MAIN_HEADER_VIEW_BTN.dataset.navigo = 'true';
 
 const MAIN_HEADER_TEXT_COLUMN = createElement({
   tagname: 'div',
