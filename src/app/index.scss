@@ -4,11 +4,27 @@
 @import "./../pages/registration/registration-form.scss";
 
 html {
-  font-size: 10px;
+  font-size: 7px;
   box-sizing: border-box;
 
-  @media (max-width: 530px) {
-    font-size: 7px;
+  @include media-breakpoint-up(sm) {
+    font-size: 9px;
+  }
+
+  @include media-breakpoint-up(md) {
+    font-size: 10px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    font-size: 10px;
+  }
+
+  @include media-breakpoint-up(xl) {
+    font-size: 11px;
+  }
+
+  @include media-breakpoint-up(xxl) {
+    font-size: 12px;
   }
 }
 

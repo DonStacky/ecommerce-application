@@ -4,12 +4,23 @@ import { MIN_AGE_MILISEC, submit, validateDate, validatePostalCode, validateStri
 import { date, string } from 'yup';
 import countries from './postal-codes';
 
-const REGISTRATION_HEADER = createElement({
-  tagname: 'h1',
+const LINK_TO_LOGIN = createElement({
+  tagname: 'a',
   options: [
-    ['textContent', 'Registration'],
-    ['className', 'form-header'],
+    ['textContent', 'Login'],
+    ['href', `/login`],
+    ['className', 'link-login'],
   ],
+});
+LINK_TO_LOGIN.dataset.navigo = 'true';
+
+const REDIRECT_TO_LOGIN = createElement({
+  tagname: 'span',
+  options: [
+    ['textContent', 'Already have an account? '],
+    ['className', 'form-field form-label'],
+  ],
+  childElements: [LINK_TO_LOGIN],
 });
 
 const ADDRESS_HEADER_BILLING = createElement({
@@ -250,7 +261,7 @@ const BILLING_COUNTRY_SELECT = createElement({
 const BILLING_COUNTRY_FIELD = createElement({
   tagname: 'div',
   options: [['className', 'form-field']],
-  childElements: [BILLING_COUNTRY_LABEL, BILLING_COUNTRY_SELECT, BILLING_COUNTRY_INVALID],
+  childElements: [ADDRESS_HEADER_BILLING, BILLING_COUNTRY_LABEL, BILLING_COUNTRY_SELECT, BILLING_COUNTRY_INVALID],
 });
 
 const BILLING_POSTAL_CODE_LABEL = createElement({
@@ -543,9 +554,9 @@ const HIDDEN_AREA = createElement({
 const REGISTER_BUTTON = createElement({
   tagname: 'input',
   options: [
-    ['className', 'submit-button'],
+    ['className', 'submit-button m-3'],
     ['type', 'submit'],
-    ['textContent', 'Register'],
+    ['innerHTML', 'Register'],
   ],
 });
 
@@ -665,17 +676,19 @@ inputs.forEach((input, idx) => {
 export default createElement({
   tagname: 'form',
   options: [
-    ['className', 'registration-form needs-validation'],
+    [
+      'className',
+      'registration-form form-style needs-validation container-xl me-auto ms-auto col-10 col-sm-8 col-md-6',
+    ],
     ['noValidate', true],
   ],
   childElements: [
-    REGISTRATION_HEADER,
+    REDIRECT_TO_LOGIN,
     NAME_FIELD,
     LAST_NAME_FIELD,
     EMAIL_FIELD,
     PASSWORD_FIELD,
     BIRTH_DATE_FIELD,
-    ADDRESS_HEADER_BILLING,
     BILLING_COUNTRY_FIELD,
     BILLING_POSTAL_CODE_FIELD,
     BILLING_CITY_FIELD,
