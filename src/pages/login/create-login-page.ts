@@ -123,7 +123,7 @@ class LoginForm {
     this.FORM = createElement({
       tagname: 'form',
       childElements: [this.CONTAINER_EMAIL, this.CONTAINER_PASSWD, this.CONTAINER_CHECK, this.BUTTON],
-      options: [['className', 'login-form']],
+      options: [['className', 'login-form form-style']],
     });
 
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');

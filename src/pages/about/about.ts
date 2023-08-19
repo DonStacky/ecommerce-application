@@ -7,7 +7,7 @@ const ABOUT_TITLE = createElement({
 
 const ABOUT_PAGE = createElement({
   tagname: 'section',
-  options: [['className', 'about d-flex justify-content-center align-items-center']],
+  options: [['className', 'about d-flex justify-content-center']],
   childElements: [ABOUT_TITLE],
 });
 

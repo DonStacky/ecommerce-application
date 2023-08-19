@@ -123,7 +123,6 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
   return MAIN_HEADER_LINK;
 });
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
-// MAIN_HEADER_LINKS[0].classList.add('active');
 
 export const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
   const HEADER_ITEM = createElement({

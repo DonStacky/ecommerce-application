@@ -7,18 +7,19 @@
   }
 }
 
-.login-form {
+.form-style {
   display: flex;
   flex-direction: column;
   position: relative;
-  max-width: 150rem;
+  max-width: 40rem;
+  width: 40rem;
   margin: 40px auto;
   z-index: 1;
   backdrop-filter: blur(3px);
   padding: 40px;
   border: 2px solid rgba(0, 0, 0, 0.3);
   border-radius: 1rem;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.7);
   gap: 2rem;
 }
 
@@ -32,11 +33,15 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  // background: url('@image/wooden-tool-box.jpg') 0% 50% / cover no-repeat;
 }
 
-.form-label, .form-check-label {
+.form-label, .form-check-label, .address-header {
   color: #f8f9fa;
+}
+
+.address-header {
+  text-align: center;
+  margin: 0;
 }
 
 .form-check-input, .form-check-label {

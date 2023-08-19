@@ -10,8 +10,23 @@ import NOT_FOUND from '../../pages/not_found/not_found';
 import REG_PAGE from '../../pages/registration/registration-form';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import PROMO_PAGE from '../../pages/promo/promo';
+import loginBack from '@image/hand-holding-string.jpg';
+import regBack from '@image/flower-decorating.jpg';
+import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
+import FOOTER from '../../widgets/footer/footer';
 
 const render = (content: HTMLElement, linkID?: string) => {
+  if (content === LOGIN_PAGE) {
+    document.body.style.background = `url(${loginBack}) 0 0 / cover`;
+    FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))`;
+  } else if (content === REG_PAGE) {
+    document.body.style.background = `url(${regBack}) 0 0 / cover`;
+    FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))`;
+  } else {
+    document.body.style.background = 'transparent';
+    FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${footerBack}) 0 100% / cover no-repeat`;
+  }
+
   HEADER_ITEMS.forEach((item) => item.classList.remove('active'));
 
   if (linkID) {
@@ -27,7 +42,6 @@ const render = (content: HTMLElement, linkID?: string) => {
   PAGE.style.display = 'flex';
   PAGE.style.flexDirection = 'column';
   PAGE.style.justifyContent = 'space-between';
-  MAIN.style.flexGrow = '1';
   MAIN.append(content);
 };
 
