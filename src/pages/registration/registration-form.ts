@@ -360,6 +360,32 @@ const BILLING_STREET_FIELD = createElement({
   childElements: [BILLING_STREET_LABEL, BILLING_STREET_INPUT, BILLING_STREET_INVALID],
 });
 
+const BILLING_SET_DEFAULT = createElement({
+  tagname: 'input',
+  options: [
+    ['className', 'form-check-input'],
+    ['id', 'billingDefault'],
+    ['type', 'checkbox'],
+  ],
+});
+
+const BILLING_DEFAULT_OPTIONS = createElement({
+  tagname: 'div',
+  options: [['className', 'form-field form-check form-switch']],
+  childElements: [
+    BILLING_SET_DEFAULT,
+
+    createElement({
+      tagname: 'label',
+      options: [
+        ['className', 'form-check-label'],
+        ['htmlFor', 'billingDefault'],
+        ['textContent', 'Set as default'],
+      ],
+    }),
+  ],
+});
+
 const ADDRESS_SWITCH_CHECKBOX = createElement({
   tagname: 'input',
   options: [
@@ -536,6 +562,32 @@ const SHIPPING_STREET_FIELD = createElement({
   childElements: [SHIPPING_STREET_LABEL, SHIPPING_STREET_INPUT, SHIPPING_STREET_INVALID],
 });
 
+const SHIPPING_SET_DEFAULT = createElement({
+  tagname: 'input',
+  options: [
+    ['className', 'form-check-input'],
+    ['id', 'shippingDefault'],
+    ['type', 'checkbox'],
+  ],
+});
+
+const SHIPPING_DEFAULT_OPTIONS = createElement({
+  tagname: 'div',
+  options: [['className', 'form-field form-check form-switch']],
+  childElements: [
+    SHIPPING_SET_DEFAULT,
+
+    createElement({
+      tagname: 'label',
+      options: [
+        ['className', 'form-check-label'],
+        ['htmlFor', 'shippingDefault'],
+        ['textContent', 'Set as default'],
+      ],
+    }),
+  ],
+});
+
 const HIDDEN_AREA = createElement({
   tagname: 'div',
   options: [
@@ -548,15 +600,16 @@ const HIDDEN_AREA = createElement({
     SHIPPING_POSTAL_CODE_FIELD,
     SHIPPING_CITY_FIELD,
     SHIPPING_STREET_FIELD,
+    SHIPPING_DEFAULT_OPTIONS,
   ],
 });
 
 const REGISTER_BUTTON = createElement({
-  tagname: 'input',
+  tagname: 'button',
   options: [
     ['className', 'submit-button m-3'],
     ['type', 'submit'],
-    ['innerHTML', 'Register'],
+    ['textContent', 'Register'],
   ],
 });
 
@@ -577,17 +630,29 @@ const VALIDATIONS = [
 
   validateString(
     EMAIL_INVALID,
-    string().required('Please enter your email. Email field is required').email('Please input correct email')
+    string()
+      .required('Email addres is required')
+      .matches(/^\S+$/, 'Email address must not contain leading or trailing whitespace')
+      .matches(/^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*/, 'Email address must contain username')
+      .matches(/@/, 'Email address must contain an "@" symbol separating local part and domain name')
+      .matches(
+        /@([a-z0-9]([a-z0-9]{0,61}[-a-z0-9])?\.)(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$/,
+        'Email address must contain a domain name (e.g., example.com)'
+      )
+      .email('Email address must be properly formatted (e.g., user@example.com)')
   ).bind(EMAIL_INPUT),
 
   validateString(
     PASSWORD_INVALID,
     string()
-      .required('Please enter your password. Password field is required')
-      .min(8, 'Password should contain at least 8 characters')
-      .matches(/^.*[a-z]+.*$/, 'Password should contain at least 1 lowercase letter')
-      .matches(/^.*[A-Z]+.*$/, 'Password should contain at least 1 uppercase letter')
-      .matches(/^.*[\d]+.*$/, 'Password should contain at least 1 digit')
+      .required('Password is required')
+      .min(8, 'Password too short')
+      .max(16, 'Password too long')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter (A-Z)')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter (a-z)')
+      .matches(/[0-9]/, 'Password must contain at least one digit (0-9)')
+      .matches(/[\W_]/, 'Password must contain at least one special character (e.g., !@#$%^&*-)')
+      .matches(/^\S+\S+$/, 'Password must not contain leading or trailing whitespace')
   ).bind(PASSWORD_INPUT),
 
   validateDate(
@@ -693,6 +758,7 @@ export default createElement({
     BILLING_POSTAL_CODE_FIELD,
     BILLING_CITY_FIELD,
     BILLING_STREET_FIELD,
+    BILLING_DEFAULT_OPTIONS,
     ADDRESS_SWITCH,
     HIDDEN_AREA,
     REGISTER_BUTTON,
