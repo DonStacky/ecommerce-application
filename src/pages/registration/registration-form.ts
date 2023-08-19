@@ -543,7 +543,7 @@ const HIDDEN_AREA = createElement({
 const REGISTER_BUTTON = createElement({
   tagname: 'input',
   options: [
-    ['className', 'submit-button'],
+    ['className', 'submit-button m-3'],
     ['type', 'submit'],
     ['textContent', 'Register'],
   ],

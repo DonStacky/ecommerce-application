@@ -1,6 +1,6 @@
 .header-bottom {
   &__link {
-    color: #bbb;
+    color: #555;
     transition: 0.3s;
     text-decoration: none;
   }
@@ -21,7 +21,7 @@
   }
 
   &__nav {
-    background-color: #291d14;
+    background-color: #e0e0e0;
   }
 
   @include media-breakpoint-down(lg) {
@@ -97,7 +97,7 @@
 .navbar-nav .nav-item {
   &.active {
     border-radius: 0.5rem;
-    background-color: aliceblue;
+    background-color: rgb(255, 255, 255);
   }
 
   &.active .header__link {
@@ -112,7 +112,7 @@
 
   &:hover {
     transition: 0.3s;
-    background-color: aliceblue;
+    background-color: rgb(255, 255, 255);
     border-radius: 0.5rem;
 
     & .header__link, & .nav-link {

@@ -8,6 +8,37 @@
 }
 
 .login-form {
-  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 150rem;
   margin: 40px auto;
+  z-index: 1;
+  backdrop-filter: blur(3px);
+  padding: 40px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  background-color: rgba(0, 0, 0, 0.4);
+  gap: 2rem;
+}
+
+.login-btn {
+  align-self: center;
+  font-size: 1.3rem;
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  // background: url('@image/wooden-tool-box.jpg') 0% 50% / cover no-repeat;
+}
+
+.form-label, .form-check-label {
+  color: #f8f9fa;
+}
+
+.form-check-input, .form-check-label {
+  cursor: pointer;
 }

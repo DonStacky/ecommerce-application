@@ -3,7 +3,7 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import { LoginValidation } from '../../shared/types/types';
 import { loginValidation, passwordValidation } from './login-validation';
 
-export default class LoginForm {
+class LoginForm {
   LABEL_EMAIL: HTMLLabelElement;
 
   INPUT_EMAIL: HTMLInputElement;
@@ -57,7 +57,7 @@ export default class LoginForm {
     this.CONTAINER_EMAIL = createElement({
       tagname: 'div',
       childElements: [this.LABEL_EMAIL, this.INPUT_EMAIL, this.HELP_EMAIL],
-      options: [['className', 'mb-3']],
+      options: [['className', '']],
     });
 
     this.LABEL_PASSWD = createElement({
@@ -86,7 +86,7 @@ export default class LoginForm {
     this.CONTAINER_PASSWD = createElement({
       tagname: 'div',
       childElements: [this.LABEL_PASSWD, this.INPUT_PASSWD, this.HELP_PASSWD],
-      options: [['className', 'mb-3']],
+      options: [['className', '']],
     });
 
     this.INPUT_CHECK = createElement({
@@ -114,7 +114,7 @@ export default class LoginForm {
     this.BUTTON = createElement({
       tagname: 'button',
       options: [
-        ['className', 'btn btn-primary'],
+        ['className', 'btn btn-light login-btn'],
         ['type', 'submit'],
         ['textContent', 'Submit'],
       ],
@@ -220,3 +220,13 @@ export default class LoginForm {
     console.log('submit');
   }
 }
+
+const loginForm = new LoginForm();
+
+const LOGIN_PAGE = createElement({
+  tagname: 'div',
+  options: [['className', 'login-wrapper']],
+  childElements: [loginForm.FORM],
+});
+
+export default LOGIN_PAGE;

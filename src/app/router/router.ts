@@ -4,14 +4,12 @@ import ABOUT_PAGE from '../../pages/about/about';
 import { HEADER, HEADER_ITEMS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import BASKET_PAGE from '../../pages/basket/basket';
-import LoginForm from '../../pages/login/create-login-page';
+import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import NOT_FOUND from '../../pages/not_found/not_found';
 import REG_PAGE from '../../pages/registration/registration-form';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import PROMO_PAGE from '../../pages/promo/promo';
-
-const loginForm = new LoginForm();
 
 const render = (content: HTMLElement, linkID?: string) => {
   HEADER_ITEMS.forEach((item) => item.classList.remove('active'));
@@ -29,6 +27,7 @@ const render = (content: HTMLElement, linkID?: string) => {
   PAGE.style.display = 'flex';
   PAGE.style.flexDirection = 'column';
   PAGE.style.justifyContent = 'space-between';
+  MAIN.style.flexGrow = '1';
   MAIN.append(content);
 };
 
@@ -56,7 +55,7 @@ const startRouting = () => {
       render(BASKET_PAGE, '#basket');
     })
     .on('/login', () => {
-      render(loginForm.FORM, '#login');
+      render(LOGIN_PAGE, '#login');
     })
     .on('/registration', () => {
       render(REG_PAGE, '#registration');

@@ -1,4 +1,5 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
+import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import deer from '@image/deer.jpg';
 import seaSet from '@image/morskoj-nabor.jpg';
@@ -80,7 +81,7 @@ HEADER_NAV_BUTTON.setAttribute('aria-label', 'Toggle navigation');
 const HEADER_NAV_IMG = createElement({
   tagname: 'img',
   options: [
-    ['src', whiteLogo],
+    ['src', blackLogo],
     ['alt', 'logo'],
   ],
 });

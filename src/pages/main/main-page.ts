@@ -77,7 +77,7 @@ const CUSTOMERS_TEXT = createElement({
     ['className', 'text-light m-5'],
     [
       'textContent',
-      'The company\'s customers appreciate it for the high quality of products, individual approach to each order and efficiency of work. Company "SpanTeam" is a reliable partner for many companies and individuals who are looking for quality and original wooden gifts.',
+      'The company\'s customers appreciate it for the high quality of products, individual approach to each order and efficiency of work. Company "Rustikka" is a reliable partner for many companies and individuals who are looking for quality and original wooden gifts.',
     ],
   ],
 });
