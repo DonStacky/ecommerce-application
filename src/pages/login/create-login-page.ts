@@ -229,7 +229,7 @@ export default class LoginForm {
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
 
-    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)()
+    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
       .then(() => {
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';

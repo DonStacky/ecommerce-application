@@ -8,7 +8,7 @@ export default function loginCustomer(email: string, password: string) {
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
 
-  return () => {
-    return apiRoot.me().login().post({ body: { email, password } }).execute();
-  };
+  // return () => {
+  return apiRoot.me().login().post({ body: { email, password } }).execute();
+  // };
 }
