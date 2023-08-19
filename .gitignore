@@ -21,3 +21,9 @@ dist/
 
 # Jest coverage report
 /coverage
+
+# Optional eslint cache
+.eslintcache
+
+# env file
+.env
