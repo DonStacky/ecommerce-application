@@ -1,6 +1,9 @@
 import '../pages/login/login-validation';
 import 'bootstrap';
 import './index.scss';
-import startRouting from './router/router';
+import getRoutes from './router/routes';
+import ROUTER from './router/router';
 
-window.addEventListener('load', startRouting);
+window.addEventListener('load', () => {
+  getRoutes(ROUTER);
+});

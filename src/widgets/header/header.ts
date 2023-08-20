@@ -136,6 +136,10 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
   MAIN_HEADER_LINK.dataset.bsDismiss = 'offcanvas';
   MAIN_HEADER_LINK.dataset.bsTarget = '#navbarHomePage';
 
+  if (link === 'home') {
+    MAIN_HEADER_LINK.setAttribute('href', '');
+  }
+
   return MAIN_HEADER_LINK;
 });
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
