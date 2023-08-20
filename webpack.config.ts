@@ -1,4 +1,5 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 import EslingPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
@@ -90,6 +91,7 @@ const baseConfig: Configuration = {
       favicon: path.resolve(__dirname, './public/icon/favicon.png'),
     }),
     new CleanWebpackPlugin(),
+    new Dotenv(),
   ],
 };
 

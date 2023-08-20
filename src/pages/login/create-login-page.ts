@@ -1,5 +1,9 @@
+import { ErrorObject } from '@commercetools/platform-sdk';
+// import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import { StatusCodes } from 'http-status-codes';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import loginCustomer from '../../shared/helpers/login-customer';
 import { LoginValidation } from '../../shared/types/types';
 import { loginValidation, passwordValidation } from './login-validation';
 
@@ -33,6 +37,8 @@ class LoginForm {
   BUTTON: HTMLButtonElement;
 
   FORM: HTMLFormElement;
+
+  // ctpClient: unknown;
 
   constructor() {
     this.LINK_TO_REG = createElement({
@@ -156,6 +162,7 @@ class LoginForm {
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
     this.BUTTON.setAttribute('disabled', '');
     this.addEvents();
+    // this.ctpClient = null;
   }
 
   private addEvents() {
@@ -190,6 +197,7 @@ class LoginForm {
     );
 
     this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
+    this.BUTTON.addEventListener('click', this.submit.bind(this));
   }
 
   private liveValidation(event: KeyboardEvent) {
@@ -197,6 +205,12 @@ class LoginForm {
     if (target.tagName !== 'INPUT') return;
 
     const text = target.value;
+
+    if (this.HELP_PASSWD.innerText === 'Wrong email or password') {
+      this.HELP_PASSWD.innerText = '';
+      this.INPUT_EMAIL.classList.remove('form-control_validation');
+      this.INPUT_PASSWD.classList.remove('form-control_validation');
+    }
 
     if (target.id === 'InputEmail') {
       const validation = loginValidation({ login: text });
@@ -232,19 +246,34 @@ class LoginForm {
   private createBtnStatus(obj: LoginValidation) {
     if (obj.login && obj.password) {
       this.BUTTON.removeAttribute('disabled');
-      this.BUTTON.addEventListener('click', this.submit);
     } else {
       this.BUTTON.setAttribute('disabled', '');
-      this.BUTTON.removeEventListener('click', this.submit);
     }
   }
 
-  // TODO Дописать сабмит формы на сервер
   private submit(event: MouseEvent) {
     const target = event.target as HTMLButtonElement;
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
-    console.log('submit');
+
+    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
+      .then(() => {
+        this.HELP_PASSWD.innerText = '';
+        this.INPUT_EMAIL.value = '';
+        this.INPUT_PASSWD.value = '';
+
+        console.log('Valid');
+      })
+      .catch((err: ErrorObject) => {
+        if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
+          this.HELP_PASSWD.innerText = 'Wrong email or password';
+          this.INPUT_EMAIL.classList.add('form-control_validation');
+          this.INPUT_PASSWD.classList.add('form-control_validation');
+        } else {
+          this.HELP_PASSWD.innerText = 'server error';
+        }
+        console.error(err);
+      });
   }
 }
 
