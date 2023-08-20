@@ -1,13 +1,9 @@
-import { ErrorObject } from '@commercetools/platform-sdk';
-// import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { StatusCodes } from 'http-status-codes';
 import loginValidationResults from '../../shared/helpers/data';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import loginCustomer from '../../shared/helpers/login-customer';
 import { LoginValidation } from '../../shared/types/types';
 import { loginValidation, passwordValidation } from './login-validation';
 
-export default class LoginForm {
+class LoginForm {
   LABEL_EMAIL: HTMLLabelElement;
 
   INPUT_EMAIL: HTMLInputElement;
@@ -33,8 +29,6 @@ export default class LoginForm {
   BUTTON: HTMLButtonElement;
 
   FORM: HTMLFormElement;
-
-  // ctpClient: unknown;
 
   constructor() {
     this.LABEL_EMAIL = createElement({
@@ -63,7 +57,7 @@ export default class LoginForm {
     this.CONTAINER_EMAIL = createElement({
       tagname: 'div',
       childElements: [this.LABEL_EMAIL, this.INPUT_EMAIL, this.HELP_EMAIL],
-      options: [['className', 'mb-3']],
+      options: [['className', '']],
     });
 
     this.LABEL_PASSWD = createElement({
@@ -92,7 +86,7 @@ export default class LoginForm {
     this.CONTAINER_PASSWD = createElement({
       tagname: 'div',
       childElements: [this.LABEL_PASSWD, this.INPUT_PASSWD, this.HELP_PASSWD],
-      options: [['className', 'mb-3']],
+      options: [['className', '']],
     });
 
     this.INPUT_CHECK = createElement({
@@ -120,7 +114,7 @@ export default class LoginForm {
     this.BUTTON = createElement({
       tagname: 'button',
       options: [
-        ['className', 'btn btn-primary'],
+        ['className', 'btn btn-light login-btn'],
         ['type', 'submit'],
         ['textContent', 'Submit'],
       ],
@@ -129,13 +123,12 @@ export default class LoginForm {
     this.FORM = createElement({
       tagname: 'form',
       childElements: [this.CONTAINER_EMAIL, this.CONTAINER_PASSWD, this.CONTAINER_CHECK, this.BUTTON],
-      options: [['className', 'login-form']],
+      options: [['className', 'login-form form-style']],
     });
 
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
     this.BUTTON.setAttribute('disabled', '');
     this.addEvents();
-    // this.ctpClient = null;
   }
 
   private addEvents() {
@@ -170,7 +163,6 @@ export default class LoginForm {
     );
 
     this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
-    this.BUTTON.addEventListener('click', this.submit.bind(this));
   }
 
   private liveValidation(event: KeyboardEvent) {
@@ -178,12 +170,6 @@ export default class LoginForm {
     if (target.tagName !== 'INPUT') return;
 
     const text = target.value;
-
-    if (this.HELP_PASSWD.innerText === 'Wrong email or password') {
-      this.HELP_PASSWD.innerText = '';
-      this.INPUT_EMAIL.classList.remove('form-control_validation');
-      this.INPUT_PASSWD.classList.remove('form-control_validation');
-    }
 
     if (target.id === 'InputEmail') {
       const validation = loginValidation({ login: text });
@@ -219,33 +205,28 @@ export default class LoginForm {
   private createBtnStatus(obj: LoginValidation) {
     if (obj.login && obj.password) {
       this.BUTTON.removeAttribute('disabled');
+      this.BUTTON.addEventListener('click', this.submit);
     } else {
       this.BUTTON.setAttribute('disabled', '');
+      this.BUTTON.removeEventListener('click', this.submit);
     }
   }
 
+  // TODO Дописать сабмит формы на сервер
   private submit(event: MouseEvent) {
     const target = event.target as HTMLButtonElement;
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
-
-    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
-      .then(() => {
-        this.HELP_PASSWD.innerText = '';
-        this.INPUT_EMAIL.value = '';
-        this.INPUT_PASSWD.value = '';
-
-        console.log('Valid');
-      })
-      .catch((err: ErrorObject) => {
-        if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
-          this.HELP_PASSWD.innerText = 'Wrong email or password';
-          this.INPUT_EMAIL.classList.add('form-control_validation');
-          this.INPUT_PASSWD.classList.add('form-control_validation');
-        } else {
-          this.HELP_PASSWD.innerText = 'server error';
-        }
-        console.error(err);
-      });
+    console.log('submit');
   }
 }
+
+const loginForm = new LoginForm();
+
+const LOGIN_PAGE = createElement({
+  tagname: 'div',
+  options: [['className', 'login-wrapper']],
+  childElements: [loginForm.FORM],
+});
+
+export default LOGIN_PAGE;

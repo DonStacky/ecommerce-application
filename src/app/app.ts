@@ -1,9 +1,12 @@
 import '../pages/login/login-validation';
 import 'bootstrap';
 import './index.scss';
-import startRouting from './router/router';
+import getRoutes from './router/routes';
 import { PAGE } from '../pages/main/main-page';
+import ROUTER from './router/router';
 
 document.body.append(PAGE);
-
-window.addEventListener('load', startRouting);
+// ROUTER.navigate('/home');
+window.addEventListener('load', () => {
+  getRoutes(ROUTER);
+});

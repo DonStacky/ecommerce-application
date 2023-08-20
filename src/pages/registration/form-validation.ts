@@ -82,19 +82,3 @@ export function validatePostalCode(selectElement: HTMLSelectElement, errorElemen
     return true;
   };
 }
-
-export function submit(
-  toDoList: (() => Promise<boolean>)[],
-  extendedList: (() => Promise<boolean>)[],
-  markerToExtend: HTMLInputElement
-) {
-  return async function submitForm(this: HTMLFormElement, e: Event) {
-    e.preventDefault();
-    this.classList.add('was-validated');
-
-    const resultList = !markerToExtend.checked ? toDoList.concat(...extendedList) : toDoList;
-    const results = await Promise.all(resultList.map((validation) => validation()));
-    const validationResult = results.every((result) => result === true);
-    console.log('validation result:', validationResult);
-  };
-}

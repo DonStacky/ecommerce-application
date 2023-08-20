@@ -1,8 +1,9 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import 'bootstrap';
-import { MIN_AGE_MILISEC, submit, validateDate, validatePostalCode, validateString } from './form-validation';
+import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
 import { date, string } from 'yup';
 import countries from './postal-codes';
+import submit from './costumer-registration';
 
 const LINK_TO_LOGIN = createElement({
   tagname: 'a',
@@ -738,6 +739,29 @@ inputs.forEach((input, idx) => {
   input.addEventListener('input', [...VALIDATIONS, ...VALIDATIONS_EXTENDED][idx]);
 });
 
+const COSTUMER_TEMPLATE = {
+  isCommonAddress: ADDRESS_SWITCH_CHECKBOX,
+  isBillingDefault: BILLING_SET_DEFAULT,
+  isShippingDefault: SHIPPING_SET_DEFAULT,
+  firstName: NAME_INPUT,
+  lastName: LAST_NAME_INPUT,
+  email: EMAIL_INPUT,
+  password: PASSWORD_INPUT,
+  birthDate: BIRTH_DATE_INPUT,
+  billingAddress: {
+    country: BILLING_COUNTRY_SELECT,
+    city: BILLING_CITY_INPUT,
+    streetName: BILLING_STREET_INPUT,
+    postalCode: BILLING_POSTAL_CODE_INPUT,
+  },
+  shippingAddress: {
+    country: SHIPPING_COUNTRY_SELECT,
+    city: SHIPPING_CITY_INPUT,
+    streetName: SHIPPING_STREET_INPUT,
+    postalCode: SHIPPING_POSTAL_CODE_INPUT,
+  },
+};
+
 export default createElement({
   tagname: 'form',
   options: [
@@ -763,5 +787,5 @@ export default createElement({
     HIDDEN_AREA,
     REGISTER_BUTTON,
   ],
-  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX)]],
+  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX, COSTUMER_TEMPLATE)]],
 });

@@ -6,6 +6,7 @@ import { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
 import devConfig from './webpack.dev.config';
 import prodConfig from './webpack.prod.config';
+import Dotenv from 'dotenv-webpack';
 
 const baseConfig: Configuration = {
   entry: path.resolve(__dirname, './src/app/app'),
@@ -90,6 +91,7 @@ const baseConfig: Configuration = {
       favicon: path.resolve(__dirname, './public/icon/favicon.png'),
     }),
     new CleanWebpackPlugin(),
+    new Dotenv(),
   ],
 };
 
