@@ -1,6 +1,6 @@
 import { ErrorObject } from '@commercetools/platform-sdk';
 import { StatusCodes } from 'http-status-codes';
-import ROUTER from '../../app/router/router_new';
+// import ROUTER from '../../app/router/router_new';
 import loginCustomer from '../../shared/api/login-customer';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import loginValidationResults from './data';
@@ -231,7 +231,7 @@ class LoginForm {
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';
         this.INPUT_PASSWD.value = '';
-        ROUTER.navigate('/home');
+        // ROUTER.navigate('');
       })
       .catch((err: ErrorObject) => {
         if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
