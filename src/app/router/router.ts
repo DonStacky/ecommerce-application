@@ -38,24 +38,17 @@ const render = (content: HTMLElement, linkID?: string) => {
 
   HEADER.classList.add('header-bottom__nav--common');
   MAIN.innerHTML = '';
-  PAGE.style.height = '100vh';
-  PAGE.style.display = 'flex';
-  PAGE.style.flexDirection = 'column';
-  PAGE.style.justifyContent = 'space-between';
   MAIN.append(content);
 };
 
 const startRouting = () => {
   const router = new Navigo('/');
 
+  document.body.append(PAGE);
+
   router
     .on('/about', () => {
       render(ABOUT_PAGE, '#about');
-    })
-    .on('/home', () => {
-      render(MAIN_INNER, '#home');
-      HEADER.classList.remove('header-bottom__nav--common');
-      MAIN_HEADER_ITEMS[0].classList.add('active');
     })
     .on(() => {
       render(MAIN_INNER, '#home');

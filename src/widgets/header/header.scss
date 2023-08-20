@@ -1,14 +1,20 @@
 .header-bottom {
   &__link {
+    display: inline-block;
     color: #555;
     transition: 0.3s;
     text-decoration: none;
+    padding: 0 2rem;
+    margin: 0.3rem;
+  }
+
+  &__list {
+    @include media-breakpoint-down(md) {
+      align-items: center;
+    }
   }
 
   &__item {
-    padding: 0 2rem;
-    margin: 0.3rem;
-
     &.active .nav-link {
       transition: 0.3s;
       color: #111;
@@ -39,7 +45,6 @@
   background-attachment: fixed;
 
   &__item {
-    padding: 0 2rem;
     margin: 0.3rem;
   }
 
@@ -57,7 +62,7 @@
   &__close {
     display: block;
 
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(md) {
       display: none;
     }
   }
@@ -95,6 +100,8 @@
 }
 
 .navbar-nav .nav-item {
+  margin: 0.3rem;
+
   &.active {
     border-radius: 0.5rem;
     background-color: rgb(255, 255, 255);
@@ -108,6 +115,8 @@
   & .header__link, .footer__item {
     transition: 0.3s;
     color: aliceblue;
+    padding: 0 2rem;
+    margin: 0.3rem;
   }
 
   &:hover {
