@@ -29,6 +29,8 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
     ],
   });
   HEADER_LINK.dataset.navigo = 'true';
+  HEADER_LINK.dataset.bsToggle = 'collapse';
+  HEADER_LINK.dataset.bsTarget = '#navbarHeaderBottom';
 
   return HEADER_LINK;
 });
@@ -85,6 +87,9 @@ const HEADER_NAV_IMG = createElement({
     ['alt', 'logo'],
   ],
 });
+HEADER_NAV_IMG.addEventListener('click', () => {
+  HEADER_LIST_WRAPPER.classList.remove('show');
+});
 
 const HEADER_NAV_LOGO = createElement({
   tagname: 'a',
@@ -94,6 +99,7 @@ const HEADER_NAV_LOGO = createElement({
   ],
   childElements: [HEADER_NAV_IMG],
 });
+HEADER_NAV_LOGO.dataset.navigo = 'true';
 
 const HEADER_CONTAINER = createElement({
   tagname: 'div',
@@ -119,6 +125,8 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
     ],
   });
   MAIN_HEADER_LINK.dataset.navigo = 'true';
+  MAIN_HEADER_LINK.dataset.bsToggle = 'offcanvas';
+  MAIN_HEADER_LINK.dataset.bsTarget = '#navbarHomePage';
 
   return MAIN_HEADER_LINK;
 });
@@ -202,6 +210,7 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
 });
+MAIN_HEADER_NAV_LOGO.dataset.navigo = 'true';
 
 const MAIN_HEADER_NAV_TOP = createElement({
   tagname: 'div',
