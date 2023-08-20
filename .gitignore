@@ -21,3 +21,6 @@ dist/
 
 # env file
 .env
+
+# Jest coverage report
+/coverage
