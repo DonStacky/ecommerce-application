@@ -129,7 +129,7 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
     ],
   });
   MAIN_HEADER_LINK.dataset.navigo = 'true';
-  MAIN_HEADER_LINK.dataset.bsToggle = 'offcanvas';
+  MAIN_HEADER_LINK.dataset.bsDismiss = 'offcanvas';
   MAIN_HEADER_LINK.dataset.bsTarget = '#navbarHomePage';
 
   return MAIN_HEADER_LINK;
