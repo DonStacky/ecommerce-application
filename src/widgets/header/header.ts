@@ -29,8 +29,6 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
     ],
   });
   HEADER_LINK.dataset.navigo = 'true';
-  HEADER_LINK.dataset.bsToggle = 'collapse';
-  HEADER_LINK.dataset.bsTarget = '#navbarHeaderBottom';
 
   return HEADER_LINK;
 });
@@ -59,6 +57,12 @@ const HEADER_LIST_WRAPPER = createElement({
     ['id', 'navbarHeaderBottom'],
   ],
   childElements: [HEADER_LIST],
+});
+
+HEADER_LINKS.forEach((link) => {
+  link.addEventListener('click', () => {
+    HEADER_LIST_WRAPPER.classList.remove('show');
+  });
 });
 
 const HEADER_NAV_BUTTON = createElement({

@@ -38,10 +38,6 @@ const render = (content: HTMLElement, linkID?: string) => {
 
   HEADER.classList.add('header-bottom__nav--common');
   MAIN.innerHTML = '';
-  // PAGE.style.height = '100vh';
-  // PAGE.style.display = 'flex';
-  // PAGE.style.flexDirection = 'column';
-  // PAGE.style.justifyContent = 'space-between';
   MAIN.append(content);
 };
 
