@@ -1,11 +1,11 @@
 import { ErrorObject } from '@commercetools/platform-sdk';
-// import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { StatusCodes } from 'http-status-codes';
-import loginValidationResults from '../../shared/helpers/data';
+import ROUTER from '../../app/router/router_new';
+import loginCustomer from '../../shared/api/login-customer';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import loginCustomer from '../../shared/helpers/login-customer';
-import { LoginValidation } from '../../shared/types/types';
+import loginValidationResults from './data';
 import { loginValidation, passwordValidation } from './login-validation';
+import { LoginValidation } from './types';
 
 class LoginForm {
   LABEL_EMAIL: HTMLLabelElement;
@@ -33,8 +33,6 @@ class LoginForm {
   BUTTON: HTMLButtonElement;
 
   FORM: HTMLFormElement;
-
-  // ctpClient: unknown;
 
   constructor() {
     this.LABEL_EMAIL = createElement({
@@ -135,7 +133,6 @@ class LoginForm {
     this.INPUT_EMAIL.setAttribute('aria-describedby', 'emailHelp');
     this.BUTTON.setAttribute('disabled', '');
     this.addEvents();
-    // this.ctpClient = null;
   }
 
   private addEvents() {
@@ -216,8 +213,8 @@ class LoginForm {
     this.createBtnStatus(loginValidationResults);
   }
 
-  private createBtnStatus(obj: LoginValidation) {
-    if (obj.login && obj.password) {
+  private createBtnStatus(validationData: LoginValidation) {
+    if (validationData.login && validationData.password) {
       this.BUTTON.removeAttribute('disabled');
     } else {
       this.BUTTON.setAttribute('disabled', '');
@@ -234,8 +231,7 @@ class LoginForm {
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';
         this.INPUT_PASSWD.value = '';
-
-        console.log('Valid');
+        ROUTER.navigate('/home');
       })
       .catch((err: ErrorObject) => {
         if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {

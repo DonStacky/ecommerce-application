@@ -1,9 +1,9 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import buildClient from './build-client';
-import checkEnvVariables from './utilites';
+import checkEnvVariables from '../helpers/utilites';
+import buildClientWithPassowrdFlow from './build-client';
 
 export default function loginCustomer(email: string, password: string) {
-  const ctpClient = buildClient(email, password);
+  const ctpClient = buildClientWithPassowrdFlow(email, password);
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });

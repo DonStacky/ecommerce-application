@@ -1,8 +1,8 @@
-import '../pages/login/login-validation';
 import 'bootstrap';
+import '../pages/login/login-validation';
+import { PAGE } from '../pages/main/main-page';
 import './index.scss';
 import startRouting from './router/router';
-import { PAGE } from '../pages/main/main-page';
 
 document.body.append(PAGE);
 
