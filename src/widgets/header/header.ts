@@ -30,6 +30,10 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   });
   HEADER_LINK.dataset.navigo = 'true';
 
+  if (link === 'home') {
+    HEADER_LINK.setAttribute('href', '');
+  }
+
   return HEADER_LINK;
 });
 HEADER_LINKS[0].setAttribute('aria-current', 'page');
@@ -99,7 +103,7 @@ const HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand'],
-    ['href', '/home'],
+    ['href', ''],
   ],
   childElements: [HEADER_NAV_IMG],
 });
@@ -210,7 +214,7 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand logo__link me-auto ms-auto'],
-    ['href', '/home'],
+    ['href', ''],
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
 });

@@ -50,11 +50,6 @@ const startRouting = () => {
     .on('/about', () => {
       render(ABOUT_PAGE, '#about');
     })
-    .on('/home', () => {
-      render(MAIN_INNER, '#home');
-      HEADER.classList.remove('header-bottom__nav--common');
-      MAIN_HEADER_ITEMS[0].classList.add('active');
-    })
     .on(() => {
       render(MAIN_INNER, '#home');
       HEADER.classList.remove('header-bottom__nav--common');

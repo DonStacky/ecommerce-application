@@ -18,6 +18,10 @@ const FOOTER_COMPANY_LINKS = footerCompanyText.map(([text, link]) => {
   FOOTER_COMPANY_LINK.textContent = text;
   FOOTER_COMPANY_LINK.dataset.navigo = 'true';
 
+  if (link === 'home') {
+    FOOTER_COMPANY_LINK.setAttribute('href', '');
+  }
+
   return FOOTER_COMPANY_LINK;
 });
 

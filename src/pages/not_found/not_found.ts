@@ -24,7 +24,7 @@ const NOT_FOUND_BUTTON = createElement({
     ['textContent', 'Go to home page'],
   ],
 });
-NOT_FOUND_BUTTON.setAttribute('href', '/home');
+NOT_FOUND_BUTTON.setAttribute('href', '');
 NOT_FOUND_BUTTON.dataset.navigo = 'true';
 
 const NOT_FOUND_DESC_COLUMN = createElement({
