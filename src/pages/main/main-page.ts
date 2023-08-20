@@ -140,7 +140,6 @@ export const MAIN_INNER = createElement({
 
 export const MAIN = createElement({
   tagname: 'main',
-  childElements: [MAIN_INNER],
 });
 
 export const PAGE = createElement({

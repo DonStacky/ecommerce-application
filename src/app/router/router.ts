@@ -48,6 +48,8 @@ const render = (content: HTMLElement, linkID?: string) => {
 const startRouting = () => {
   const router = new Navigo('/');
 
+  document.body.append(PAGE);
+
   router
     .on('/about', () => {
       render(ABOUT_PAGE, '#about');
