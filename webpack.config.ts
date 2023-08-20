@@ -6,6 +6,7 @@ import { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
 import devConfig from './webpack.dev.config';
 import prodConfig from './webpack.prod.config';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const baseConfig: Configuration = {
   entry: path.resolve(__dirname, './src/app/app'),
@@ -90,6 +91,14 @@ const baseConfig: Configuration = {
       favicon: path.resolve(__dirname, './public/icon/favicon.png'),
     }),
     new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, './public/_redirects'),
+          to: path.resolve(__dirname, './dist'),
+        },
+      ],
+    }),
   ],
 };
 
