@@ -1,5 +1,6 @@
 import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import checkEnvVariables from '../helpers/utilites';
+import MyTokenCache from './token-cache';
 
 export default function buildClientWithPassowrdFlow(email: string, password: string) {
   const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -19,6 +20,7 @@ export default function buildClientWithPassowrdFlow(email: string, password: str
       },
     },
     scopes: [checkEnvVariables(process.env.CTP_SCOPES)],
+    tokenCache: new MyTokenCache(),
     fetch,
   };
 
