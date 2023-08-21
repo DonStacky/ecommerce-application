@@ -1,7 +1,11 @@
-import loginValidationResults from '../../shared/helpers/data';
+import { ErrorObject } from '@commercetools/platform-sdk';
+import { StatusCodes } from 'http-status-codes';
+import ROUTER from '../../app/router/router';
+import loginCustomer from '../../shared/api/login-customer';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { LoginValidation } from '../../shared/types/types';
+import loginValidationResults from './data';
 import { loginValidation, passwordValidation } from './login-validation';
+import { LoginValidation } from './types';
 
 class LoginForm {
   LINK_TO_REG: HTMLAnchorElement;
@@ -190,6 +194,7 @@ class LoginForm {
     );
 
     this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
+    this.BUTTON.addEventListener('click', this.submit.bind(this));
   }
 
   private liveValidation(event: KeyboardEvent) {
@@ -197,6 +202,12 @@ class LoginForm {
     if (target.tagName !== 'INPUT') return;
 
     const text = target.value;
+
+    if (this.HELP_PASSWD.innerText === 'Wrong email or password') {
+      this.HELP_PASSWD.innerText = '';
+      this.INPUT_EMAIL.classList.remove('form-control_validation');
+      this.INPUT_PASSWD.classList.remove('form-control_validation');
+    }
 
     if (target.id === 'InputEmail') {
       const validation = loginValidation({ login: text });
@@ -229,22 +240,36 @@ class LoginForm {
     this.createBtnStatus(loginValidationResults);
   }
 
-  private createBtnStatus(obj: LoginValidation) {
-    if (obj.login && obj.password) {
+  private createBtnStatus(validationData: LoginValidation) {
+    if (validationData.login && validationData.password) {
       this.BUTTON.removeAttribute('disabled');
-      this.BUTTON.addEventListener('click', this.submit);
     } else {
       this.BUTTON.setAttribute('disabled', '');
-      this.BUTTON.removeEventListener('click', this.submit);
     }
   }
 
-  // TODO Дописать сабмит формы на сервер
   private submit(event: MouseEvent) {
     const target = event.target as HTMLButtonElement;
     if (target.tagName !== 'BUTTON') return;
     event.preventDefault();
-    console.log('submit');
+
+    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
+      .then(() => {
+        this.HELP_PASSWD.innerText = '';
+        this.INPUT_EMAIL.value = '';
+        this.INPUT_PASSWD.value = '';
+        ROUTER.navigate('/');
+      })
+      .catch((err: ErrorObject) => {
+        if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
+          this.HELP_PASSWD.innerText = 'Wrong email or password';
+          this.INPUT_EMAIL.classList.add('form-control_validation');
+          this.INPUT_PASSWD.classList.add('form-control_validation');
+        } else {
+          this.HELP_PASSWD.innerText = 'server error';
+        }
+        console.error(err);
+      });
   }
 }
 
