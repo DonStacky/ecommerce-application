@@ -175,6 +175,7 @@ const PASSWORD_INPUT = createElement({
     ['id', 'password'],
     ['className', 'form-control'],
     ['type', 'password'],
+    ['autocomplete', true],
   ],
 });
 

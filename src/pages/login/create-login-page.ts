@@ -99,6 +99,7 @@ class LoginForm {
         ['className', 'form-control'],
         ['type', 'password'],
         ['id', 'InputPassword'],
+        ['autocomplete', true],
       ],
     });
     this.HELP_PASSWD = createElement({
