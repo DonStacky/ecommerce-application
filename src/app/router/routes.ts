@@ -13,10 +13,26 @@ import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
-import { HEADER, HEADER_ITEMS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
+import {
+  HEADER,
+  HEADER_ITEMS,
+  MAIN_HEADER_ITEMS,
+  HEADER_LIST,
+  LOG_OUT_ITEM,
+  addLogoutBtn,
+} from '../../widgets/header/header';
 import ROUTER from './router';
 
 const render = (content: HTMLElement, linkID?: string) => {
+  if (localStorage.getItem('tokenCache')) {
+    if (linkID === '#home') {
+      addLogoutBtn();
+    } else {
+      LOG_OUT_ITEM.classList.remove('logout--main');
+      HEADER_LIST.append(LOG_OUT_ITEM);
+    }
+  }
+
   if (content === LOGIN_PAGE) {
     document.body.style.background = `url(${loginBack}) 0 0 / cover`;
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))`;
