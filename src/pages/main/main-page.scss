@@ -1,3 +1,10 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .main-section {
   &__products {
     background: url('@image/talented-designer-working-on-ambitious-project.jpg') 0 0 / cover no-repeat;
@@ -39,7 +46,6 @@
   transform: translateY(-80px);
 
   &--common {
-    position: static;
     transform: translateY(0px);
   }
 }

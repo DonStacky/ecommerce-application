@@ -8,6 +8,10 @@ import { loginValidation, passwordValidation } from './login-validation';
 import { LoginValidation } from './types';
 
 class LoginForm {
+  LINK_TO_REG: HTMLAnchorElement;
+
+  REDIRECT_TO_REG: HTMLSpanElement;
+
   LABEL_EMAIL: HTMLLabelElement;
 
   INPUT_EMAIL: HTMLInputElement;
@@ -35,6 +39,23 @@ class LoginForm {
   FORM: HTMLFormElement;
 
   constructor() {
+    this.LINK_TO_REG = createElement({
+      tagname: 'a',
+      options: [
+        ['textContent', 'Sign up'],
+        ['href', `/registration`],
+        ['className', 'link-login'],
+      ],
+    });
+    this.LINK_TO_REG.dataset.navigo = 'true';
+    this.REDIRECT_TO_REG = createElement({
+      tagname: 'span',
+      options: [
+        ['textContent', `Don't have an account yet? `],
+        ['className', 'form-label'],
+      ],
+      childElements: [this.LINK_TO_REG],
+    });
     this.LABEL_EMAIL = createElement({
       tagname: 'label',
       options: [
@@ -126,7 +147,13 @@ class LoginForm {
 
     this.FORM = createElement({
       tagname: 'form',
-      childElements: [this.CONTAINER_EMAIL, this.CONTAINER_PASSWD, this.CONTAINER_CHECK, this.BUTTON],
+      childElements: [
+        this.REDIRECT_TO_REG,
+        this.CONTAINER_EMAIL,
+        this.CONTAINER_PASSWD,
+        this.CONTAINER_CHECK,
+        this.BUTTON,
+      ],
       options: [['className', 'login-form form-style']],
     });
 

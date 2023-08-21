@@ -30,6 +30,10 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   });
   HEADER_LINK.dataset.navigo = 'true';
 
+  if (link === 'home') {
+    HEADER_LINK.setAttribute('href', '');
+  }
+
   return HEADER_LINK;
 });
 HEADER_LINKS[0].setAttribute('aria-current', 'page');
@@ -59,6 +63,12 @@ const HEADER_LIST_WRAPPER = createElement({
   childElements: [HEADER_LIST],
 });
 
+HEADER_LINKS.forEach((link) => {
+  link.addEventListener('click', () => {
+    HEADER_LIST_WRAPPER.classList.remove('show');
+  });
+});
+
 const HEADER_NAV_BUTTON = createElement({
   tagname: 'button',
   options: [
@@ -85,15 +95,19 @@ const HEADER_NAV_IMG = createElement({
     ['alt', 'logo'],
   ],
 });
+HEADER_NAV_IMG.addEventListener('click', () => {
+  HEADER_LIST_WRAPPER.classList.remove('show');
+});
 
 const HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand'],
-    ['href', '/home'],
+    ['href', ''],
   ],
   childElements: [HEADER_NAV_IMG],
 });
+HEADER_NAV_LOGO.dataset.navigo = 'true';
 
 const HEADER_CONTAINER = createElement({
   tagname: 'div',
@@ -119,6 +133,8 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
     ],
   });
   MAIN_HEADER_LINK.dataset.navigo = 'true';
+  MAIN_HEADER_LINK.dataset.bsDismiss = 'offcanvas';
+  MAIN_HEADER_LINK.dataset.bsTarget = '#navbarHomePage';
 
   return MAIN_HEADER_LINK;
 });
@@ -198,10 +214,11 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand logo__link me-auto ms-auto'],
-    ['href', '/home'],
+    ['href', ''],
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
 });
+MAIN_HEADER_NAV_LOGO.dataset.navigo = 'true';
 
 const MAIN_HEADER_NAV_TOP = createElement({
   tagname: 'div',
