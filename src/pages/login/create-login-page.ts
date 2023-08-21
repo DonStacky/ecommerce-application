@@ -258,7 +258,7 @@ class LoginForm {
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';
         this.INPUT_PASSWD.value = '';
-        ROUTER.navigate('');
+        ROUTER.navigate('/');
       })
       .catch((err: ErrorObject) => {
         if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
