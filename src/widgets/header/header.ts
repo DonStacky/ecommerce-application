@@ -48,7 +48,7 @@ export const HEADER_ITEMS = HEADER_LINKS.map((link) => {
   return HEADER_ITEM;
 });
 
-const HEADER_LIST = createElement({
+export const HEADER_LIST = createElement({
   tagname: 'ul',
   options: [['className', 'header-bottom__list navbar-nav me-auto mb-2 mb-lg-0']],
   childElements: [...HEADER_ITEMS],
@@ -154,7 +154,7 @@ export const MAIN_HEADER_ITEMS = MAIN_HEADER_LINKS.map((link) => {
 });
 MAIN_HEADER_ITEMS[0].classList.add('active');
 
-const MAIN_HEADER_LIST = createElement({
+export const MAIN_HEADER_LIST = createElement({
   tagname: 'ul',
   options: [['className', 'navbar-nav header__list me-auto ms-auto mb-2 mb-lg-0 top-menu text-center']],
   childElements: [...MAIN_HEADER_ITEMS],
@@ -341,3 +341,38 @@ export const MAIN_HEADER = createElement({
   options: [['className', 'header d-flex flex-column']],
   childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
 });
+
+const LOG_OUT_LINK = createElement({
+  tagname: 'a',
+  options: [
+    ['className', 'header-bottom__link nav-link text-success logout'],
+    ['href', `/`],
+    ['id', 'logout'],
+  ],
+});
+LOG_OUT_LINK.innerHTML = `<i class="fa-solid fa-arrow-right-from-bracket" style="color: #218b5a;"></i> Log out`;
+LOG_OUT_LINK.dataset.navigo = 'true';
+
+export const LOG_OUT_ITEM = createElement({
+  tagname: 'li',
+  options: [['className', 'header-bottom__item nav-item']],
+  childElements: [LOG_OUT_LINK],
+});
+
+function logout() {
+  localStorage.removeItem('tokenCache');
+  LOG_OUT_ITEM.remove();
+}
+
+LOG_OUT_LINK.addEventListener('click', logout);
+
+export function addLogoutBtn() {
+  if (localStorage.getItem('tokenCache')) {
+    LOG_OUT_ITEM.classList.add('logout--main');
+    MAIN_HEADER_LIST.append(LOG_OUT_ITEM);
+  }
+}
+
+if (localStorage.getItem('tokenCache')) {
+  addLogoutBtn();
+}

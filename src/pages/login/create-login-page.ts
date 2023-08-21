@@ -6,6 +6,7 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import loginValidationResults from './data';
 import { loginValidation, passwordValidation } from './login-validation';
 import { LoginValidation } from './types';
+import { addLogoutBtn } from '../../widgets/header/header';
 
 class LoginForm {
   LINK_TO_REG: HTMLAnchorElement;
@@ -260,6 +261,7 @@ class LoginForm {
         this.INPUT_EMAIL.value = '';
         this.INPUT_PASSWD.value = '';
         ROUTER.navigate('/');
+        addLogoutBtn();
       })
       .catch((err: ErrorObject) => {
         if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
