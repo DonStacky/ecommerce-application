@@ -24,9 +24,5 @@ export default function buildClientWithPassowrdFlow(email: string, password: str
     fetch,
   };
 
-  return new ClientBuilder()
-    .withPasswordFlow(options)
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware()
-    .build();
+  return new ClientBuilder().withPasswordFlow(options).withHttpMiddleware(httpMiddlewareOptions).build();
 }
