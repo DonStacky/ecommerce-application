@@ -92,7 +92,9 @@ const baseConfig: Configuration = {
       favicon: path.resolve(__dirname, './public/icon/favicon.png'),
     }),
     new CleanWebpackPlugin(),
-    new Dotenv(),
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
 };
 
