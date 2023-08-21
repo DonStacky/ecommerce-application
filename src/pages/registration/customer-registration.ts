@@ -60,8 +60,10 @@ async function registerCustomer(customerData: CustomerData) {
   } catch (err) {
     if (err instanceof Error) {
       showModal(false, err.message);
+      return false;
     }
   }
+  return true;
 }
 
 export default function submit(
@@ -78,7 +80,16 @@ export default function submit(
     const results = await Promise.all(resultList.map((validation) => validation()));
     const validationResult = results.every((result) => result === true);
     if (validationResult) {
-      registerCustomer(customerTemplate);
+      const success = await registerCustomer(customerTemplate);
+      if (success) {
+        this.reset();
+        markerToExtend.setAttribute('checked', '');
+        // eslint-disable-next-line no-param-reassign
+        customerTemplate.billingAddress.country.value = '';
+        // eslint-disable-next-line no-param-reassign
+        customerTemplate.shippingAddress.country.value = '';
+        this.classList.remove('was-validated');
+      }
     }
   };
 }
