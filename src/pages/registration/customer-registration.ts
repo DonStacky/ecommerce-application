@@ -1,13 +1,13 @@
 import { CustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { CustomerData } from '../../shared/types/types';
-import checkEnvVariables from '../../shared/helpers/utilites';
-import { findCountry } from './form-validation';
-import buildCommonClient from '../../shared/helpers/create-client';
-import showModal from './modal-window';
 import ROUTER from '../../app/router/router';
-import loginCustomer from '../../shared/helpers/login-customer';
+import buildCommonClient from '../../shared/api/create-common-client';
+import loginCustomer from '../../shared/api/login-customer';
+import checkEnvVariables from '../../shared/helpers/utilites';
+import { CustomerData } from '../../shared/types/types';
+import { findCountry } from './form-validation';
+import showModal from './modal-window';
 
-function createCostumer(customerData: CustomerData): CustomerDraft {
+function createCustomerFromTemlate(customerData: CustomerData): CustomerDraft {
   const billingAddress = {
     country: findCountry(customerData.billingAddress.country.value).ISO,
     streetName: customerData.billingAddress.streetName.value,
@@ -45,7 +45,7 @@ function createCostumer(customerData: CustomerData): CustomerDraft {
 }
 
 async function registerCustomer(customerData: CustomerData) {
-  const newCustomer = createCostumer(customerData);
+  const newCustomer = createCustomerFromTemlate(customerData);
 
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
@@ -68,7 +68,7 @@ export default function submit(
   toDoList: (() => Promise<boolean>)[],
   extendedList: (() => Promise<boolean>)[],
   markerToExtend: HTMLInputElement,
-  costumerTemplate: CustomerData
+  customerTemplate: CustomerData
 ) {
   return async function submitForm(this: HTMLFormElement, e: Event) {
     e.preventDefault();
@@ -77,9 +77,8 @@ export default function submit(
     const resultList = !markerToExtend.checked ? toDoList.concat(...extendedList) : toDoList;
     const results = await Promise.all(resultList.map((validation) => validation()));
     const validationResult = results.every((result) => result === true);
-    console.log('validation result:', validationResult);
     if (validationResult) {
-      registerCustomer(costumerTemplate);
+      registerCustomer(customerTemplate);
     }
   };
 }

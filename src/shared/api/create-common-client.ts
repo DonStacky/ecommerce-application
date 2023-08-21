@@ -1,5 +1,5 @@
 import { AuthMiddlewareOptions, ClientBuilder, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import checkEnvVariables from './utilites';
+import checkEnvVariables from '../helpers/utilites';
 
 export default function buildCommonClient() {
   const httpMiddlewareOptions: HttpMiddlewareOptions = {

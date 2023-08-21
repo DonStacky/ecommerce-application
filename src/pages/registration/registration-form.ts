@@ -3,7 +3,7 @@ import 'bootstrap';
 import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
 import { date, string } from 'yup';
 import countries from './postal-codes';
-import submit from './costumer-registration';
+import submit from './customer-registration';
 
 const LINK_TO_LOGIN = createElement({
   tagname: 'a',
@@ -722,8 +722,8 @@ const validationMessages = [
   NAME_INVALID,
   LAST_NAME_INVALID,
   EMAIL_INVALID,
-  BIRTH_DATE_INVALID,
   PASSWORD_INVALID,
+  BIRTH_DATE_INVALID,
   BILLING_COUNTRY_INVALID,
   BILLING_POSTAL_CODE_INVALID,
   BILLING_CITY_INVALID,
@@ -739,7 +739,7 @@ inputs.forEach((input, idx) => {
   input.addEventListener('input', [...VALIDATIONS, ...VALIDATIONS_EXTENDED][idx]);
 });
 
-const COSTUMER_TEMPLATE = {
+const CUSTOMER_TEMPLATE = {
   isCommonAddress: ADDRESS_SWITCH_CHECKBOX,
   isBillingDefault: BILLING_SET_DEFAULT,
   isShippingDefault: SHIPPING_SET_DEFAULT,
@@ -787,5 +787,5 @@ export default createElement({
     HIDDEN_AREA,
     REGISTER_BUTTON,
   ],
-  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX, COSTUMER_TEMPLATE)]],
+  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX, CUSTOMER_TEMPLATE)]],
 });
