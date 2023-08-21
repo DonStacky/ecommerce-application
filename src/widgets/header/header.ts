@@ -1,10 +1,10 @@
-import { createElement } from '../../shared/helpers/dom-utilites';
+import deer from '@image/deer.jpg';
+import lighthouse from '@image/lighthouse.jpg';
+import lights from '@image/lights.jpg';
+import seaSet from '@image/morskoj-nabor.jpg';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
-import deer from '@image/deer.jpg';
-import seaSet from '@image/morskoj-nabor.jpg';
-import lights from '@image/lights.jpg';
-import lighthouse from '@image/lighthouse.jpg';
+import { createElement } from '../../shared/helpers/dom-utilites';
 import './header.scss';
 
 // --------------------- COMMON HEADER ---------------------
@@ -31,7 +31,7 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   HEADER_LINK.dataset.navigo = 'true';
 
   if (link === 'home') {
-    HEADER_LINK.setAttribute('href', '');
+    HEADER_LINK.setAttribute('href', '/');
   }
 
   return HEADER_LINK;
@@ -103,7 +103,7 @@ const HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand'],
-    ['href', ''],
+    ['href', '/'],
   ],
   childElements: [HEADER_NAV_IMG],
 });
@@ -135,6 +135,10 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
   MAIN_HEADER_LINK.dataset.navigo = 'true';
   MAIN_HEADER_LINK.dataset.bsDismiss = 'offcanvas';
   MAIN_HEADER_LINK.dataset.bsTarget = '#navbarHomePage';
+
+  if (link === 'home') {
+    MAIN_HEADER_LINK.setAttribute('href', '/');
+  }
 
   return MAIN_HEADER_LINK;
 });
@@ -214,7 +218,7 @@ const MAIN_HEADER_NAV_LOGO = createElement({
   tagname: 'a',
   options: [
     ['className', 'navbar-brand logo__link me-auto ms-auto'],
-    ['href', ''],
+    ['href', '/'],
   ],
   childElements: [MAIN_HEADER_NAV_IMG],
 });
