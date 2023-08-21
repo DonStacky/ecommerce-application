@@ -52,8 +52,8 @@ const FOOTER_COMPANY_TITLE = createElement({
 
 const footerCustomersText: string[][] = [
   ['Basket', 'basket'],
-  ['Discounts', '/discounts'],
-  ['Promo codes', '/promo'],
+  ['Discounts', 'discounts'],
+  ['Promo codes', 'promo'],
 ];
 
 const FOOTER_CUSTOMERS_LINKS = footerCustomersText.map(([text, link]) => {

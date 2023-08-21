@@ -6,6 +6,7 @@ import checkEnvVariables from '../../shared/helpers/utilites';
 import { CustomerData } from '../../shared/types/types';
 import { findCountry } from './form-validation';
 import showModal from './modal-window';
+import { addLogoutBtn } from '../../widgets/header/header';
 
 function createCustomerFromTemlate(customerData: CustomerData): CustomerDraft {
   const billingAddress = {
@@ -56,6 +57,7 @@ async function registerCustomer(customerData: CustomerData) {
     await apiRoot.customers().post({ body: newCustomer }).execute();
     await loginCustomer(customerData.email.value, customerData.password.value);
     ROUTER.navigate('/');
+    addLogoutBtn();
     showModal(true);
   } catch (err) {
     if (err instanceof Error) {

@@ -82,6 +82,7 @@ const baseConfig: Configuration = {
     filename: 'index.js',
     path: path.resolve(__dirname, './dist'),
     assetModuleFilename: 'assets/[hash][ext]',
+    publicPath: '/',
   },
   plugins: [
     new EslingPlugin({ extensions: ['ts'] }),
