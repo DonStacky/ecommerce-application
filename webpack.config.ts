@@ -1,5 +1,4 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import Dotenv from 'dotenv-webpack';
 import EslingPlugin from 'eslint-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
@@ -7,6 +6,7 @@ import { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
 import devConfig from './webpack.dev.config';
 import prodConfig from './webpack.prod.config';
+import Dotenv from 'dotenv-webpack';
 
 const baseConfig: Configuration = {
   entry: path.resolve(__dirname, './src/app/app'),

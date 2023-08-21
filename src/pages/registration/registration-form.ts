@@ -1,8 +1,9 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import 'bootstrap';
-import { MIN_AGE_MILISEC, submit, validateDate, validatePostalCode, validateString } from './form-validation';
+import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
 import { date, string } from 'yup';
 import countries from './postal-codes';
+import submit from './customer-registration';
 
 const LINK_TO_LOGIN = createElement({
   tagname: 'a',
@@ -174,6 +175,7 @@ const PASSWORD_INPUT = createElement({
     ['id', 'password'],
     ['className', 'form-control'],
     ['type', 'password'],
+    ['autocomplete', true],
   ],
 });
 
@@ -721,8 +723,8 @@ const validationMessages = [
   NAME_INVALID,
   LAST_NAME_INVALID,
   EMAIL_INVALID,
-  BIRTH_DATE_INVALID,
   PASSWORD_INVALID,
+  BIRTH_DATE_INVALID,
   BILLING_COUNTRY_INVALID,
   BILLING_POSTAL_CODE_INVALID,
   BILLING_CITY_INVALID,
@@ -737,6 +739,29 @@ inputs.forEach((input, idx) => {
   input.setAttribute('aria-describedby', `${validationMessages[idx].id}`);
   input.addEventListener('input', [...VALIDATIONS, ...VALIDATIONS_EXTENDED][idx]);
 });
+
+const CUSTOMER_TEMPLATE = {
+  isCommonAddress: ADDRESS_SWITCH_CHECKBOX,
+  isBillingDefault: BILLING_SET_DEFAULT,
+  isShippingDefault: SHIPPING_SET_DEFAULT,
+  firstName: NAME_INPUT,
+  lastName: LAST_NAME_INPUT,
+  email: EMAIL_INPUT,
+  password: PASSWORD_INPUT,
+  birthDate: BIRTH_DATE_INPUT,
+  billingAddress: {
+    country: BILLING_COUNTRY_SELECT,
+    city: BILLING_CITY_INPUT,
+    streetName: BILLING_STREET_INPUT,
+    postalCode: BILLING_POSTAL_CODE_INPUT,
+  },
+  shippingAddress: {
+    country: SHIPPING_COUNTRY_SELECT,
+    city: SHIPPING_CITY_INPUT,
+    streetName: SHIPPING_STREET_INPUT,
+    postalCode: SHIPPING_POSTAL_CODE_INPUT,
+  },
+};
 
 export default createElement({
   tagname: 'form',
@@ -763,5 +788,5 @@ export default createElement({
     HIDDEN_AREA,
     REGISTER_BUTTON,
   ],
-  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX)]],
+  events: [['submit', submit(VALIDATIONS, VALIDATIONS_EXTENDED, ADDRESS_SWITCH_CHECKBOX, CUSTOMER_TEMPLATE)]],
 });
