@@ -68,7 +68,11 @@ const getRoutes = (router: Navigo) => {
       }
     })
     .on('/registration', () => {
-      render(REG_PAGE, '#registration');
+      if (localStorage.getItem('tokenCache')) {
+        ROUTER.navigate('/');
+      } else {
+        render(REG_PAGE, '#registration');
+      }
     })
     .on('/discounts', () => {
       render(DISCOUNTS_PAGE);
