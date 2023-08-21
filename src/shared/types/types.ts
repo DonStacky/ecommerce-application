@@ -7,11 +7,6 @@ export interface CreateOptions<T extends keyof HTMLElementTagNameMap> {
 
 export type ElementOptions<T> = [keyof T, T[keyof T]][];
 
-export interface LoginValidation {
-  login: boolean;
-  password: boolean;
-}
-
 export type Address = {
   country: HTMLSelectElement;
   streetName: HTMLInputElement;

@@ -140,12 +140,18 @@ export const MAIN_INNER = createElement({
 
 export const MAIN = createElement({
   tagname: 'main',
-  childElements: [MAIN_INNER],
+  options: [['className', 'main']],
+});
+
+export const STUB = createElement({
+  tagname: 'div',
+  options: [['className', 'stub']],
 });
 
 export const PAGE = createElement({
   tagname: 'div',
-  childElements: [HEADER, MAIN, FOOTER],
+  options: [['className', 'page']],
+  childElements: [HEADER, STUB, MAIN, FOOTER],
 });
 
 function toggleHeader() {

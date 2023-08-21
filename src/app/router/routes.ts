@@ -1,19 +1,20 @@
-import { MAIN_INNER, MAIN } from '../../pages/main/main-page';
+import regBack from '@image/flower-decorating.jpg';
+import loginBack from '@image/hand-holding-string.jpg';
+import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-import { HEADER, HEADER_ITEMS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
-import CATALOG_PAGE from '../../pages/catalog/catalog';
 import BASKET_PAGE from '../../pages/basket/basket';
-import LOGIN_PAGE from '../../pages/login/create-login-page';
-import { findDomElement } from '../../shared/helpers/dom-utilites';
-import NOT_FOUND from '../../pages/not_found/not_found';
-import REG_PAGE from '../../pages/registration/registration-form';
+import CATALOG_PAGE from '../../pages/catalog/catalog';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
+import LOGIN_PAGE from '../../pages/login/create-login-page';
+import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
+import NOT_FOUND from '../../pages/not_found/not_found';
 import PROMO_PAGE from '../../pages/promo/promo';
-import loginBack from '@image/hand-holding-string.jpg';
-import regBack from '@image/flower-decorating.jpg';
-import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
+import REG_PAGE from '../../pages/registration/registration-form';
+import { findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
+import { HEADER, HEADER_ITEMS, MAIN_HEADER_ITEMS } from '../../widgets/header/header';
+import ROUTER from './router';
 
 const render = (content: HTMLElement, linkID?: string) => {
   if (content === LOGIN_PAGE) {
@@ -41,7 +42,9 @@ const render = (content: HTMLElement, linkID?: string) => {
   MAIN.append(content);
 };
 
-export default function getRoutes(router: Navigo) {
+const getRoutes = (router: Navigo) => {
+  document.body.append(PAGE);
+
   router
     .on('/about', () => {
       render(ABOUT_PAGE, '#about');
@@ -58,7 +61,11 @@ export default function getRoutes(router: Navigo) {
       render(BASKET_PAGE, '#basket');
     })
     .on('/login', () => {
-      render(LOGIN_PAGE, '#login');
+      if (localStorage.getItem('tokenCache')) {
+        ROUTER.navigate('/');
+      } else {
+        render(LOGIN_PAGE, '#login');
+      }
     })
     .on('/registration', () => {
       render(REG_PAGE, '#registration');
@@ -73,4 +80,6 @@ export default function getRoutes(router: Navigo) {
       render(NOT_FOUND);
     })
     .resolve();
-}
+};
+
+export default getRoutes;

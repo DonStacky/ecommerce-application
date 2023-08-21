@@ -1,5 +1,5 @@
-import { createElement } from '../../shared/helpers/dom-utilites';
 import rssLogo from '@svg/logo_rs_text.svg';
+import { createElement } from '../../shared/helpers/dom-utilites';
 import './footer.scss';
 
 // --------------------- FOOTER COMPANY ---------------------
@@ -17,6 +17,10 @@ const FOOTER_COMPANY_LINKS = footerCompanyText.map(([text, link]) => {
   });
   FOOTER_COMPANY_LINK.textContent = text;
   FOOTER_COMPANY_LINK.dataset.navigo = 'true';
+
+  if (link === 'home') {
+    FOOTER_COMPANY_LINK.setAttribute('href', '/');
+  }
 
   return FOOTER_COMPANY_LINK;
 });
