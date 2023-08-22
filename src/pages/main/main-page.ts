@@ -3,6 +3,7 @@ import sailboat from '@image/sailboat.jpg';
 import happyWoman from '@image/happy-woman.jpg';
 import { HEADER, MAIN_HEADER } from '../../widgets/header/header';
 import FOOTER from '../../widgets/footer/footer';
+import throttle from '../../shared/helpers/throttle';
 import './main-page.scss';
 
 // ------------- OUR PRODUCTS -------------
@@ -163,4 +164,4 @@ function toggleHeader() {
   }
 }
 
-window.addEventListener('scroll', toggleHeader);
+window.addEventListener('scroll', throttle(toggleHeader, 33));
