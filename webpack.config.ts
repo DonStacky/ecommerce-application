@@ -46,6 +46,7 @@ const baseConfig: Configuration = {
             options: {
               mozjpeg: {
                 progressive: true,
+                quality: 75,
               },
               optipng: {
                 enabled: false,
