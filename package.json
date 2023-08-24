@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --write .",
-    "test": "jest",
+    "test": "jest --coverage",
     "prepare": "husky install"
   },
   "repository": {
@@ -20,12 +20,14 @@
   "author": "Sergey Grebel",
   "license": "ISC",
   "devDependencies": {
+    "@types/bootstrap": "^5.2.6",
+    "@types/dotenv-webpack": "^7.0.4",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^15.0.0",
@@ -36,7 +38,13 @@
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.3",
     "husky": "^8.0.3",
+    "image-webpack-loader": "^8.1.0",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-svgo": "^10.0.1",
     "jest": "^29.6.2",
+    "jest-environment-jsdom": "^29.6.2",
     "prettier": "^2.8.8",
     "sass": "^1.64.2",
     "sass-loader": "^13.3.2",
@@ -50,5 +58,16 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.9.0"
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^5.0.0",
+    "@commercetools/sdk-client-v2": "^2.2.0",
+    "@fortawesome/fontawesome-free": "^6.4.2",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.1",
+    "dotenv": "^16.3.1",
+    "http-status-codes": "^2.2.0",
+    "navigo": "^8.11.1",
+    "yup": "^1.2.0"
   }
 }

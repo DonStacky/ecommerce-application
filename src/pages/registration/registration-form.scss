@@ -1,0 +1,46 @@
+.form-header {
+    @extend .text-center;
+}
+
+.address-header {
+    @extend .h4;
+}
+
+.form-field {
+    @extend .mx-3;
+    @extend .mb-1;
+}
+
+.submit-button {
+    @extend .btn;
+    @extend .btn-light;
+    @extend .mx-auto;
+    @extend .d-block;
+}
+
+.form-label {
+  font-size: 1.5rem;
+}
+
+.form-control {
+  font-size: 1.4rem;
+}
+
+.form-check-label {
+  font-size: 1.3rem;
+}
+
+.submit-button {
+  font-size: 1.4rem;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link-login {
+  cursor: pointer;
+  font-weight: 500;
+}

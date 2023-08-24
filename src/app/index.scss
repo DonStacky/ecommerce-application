@@ -1,0 +1,41 @@
+@import 'bootstrap/scss/bootstrap';
+@import '../pages/login/login.scss';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@import "./../pages/registration/registration-form.scss";
+@import './../pages/registration/modal.scss';
+
+html {
+  font-size: 7px;
+  box-sizing: border-box;
+
+  @include media-breakpoint-up(sm) {
+    font-size: 9px;
+  }
+
+  @include media-breakpoint-up(md) {
+    font-size: 10px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    font-size: 10px;
+  }
+
+  @include media-breakpoint-up(xl) {
+    font-size: 11px;
+  }
+
+  @include media-breakpoint-up(xxl) {
+    font-size: 12px;
+  }
+}
+
+body {
+  min-width: 320px;
+  font-size: 1.6rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}

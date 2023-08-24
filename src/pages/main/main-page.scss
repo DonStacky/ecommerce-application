@@ -1,0 +1,56 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.main-section {
+  &__products {
+    background: url('@image/talented-designer-working-on-ambitious-project.jpg') 0 0 / cover no-repeat;
+  }
+
+  &__customers {
+    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%), url('@image/cute-arrangement-of-dried-plants-on-table.jpg') 0 0 / cover no-repeat;
+  }
+
+  &__text {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: rgba(255,255,255,0.3);
+  }
+
+  &__customers, &__products {
+    background-attachment: fixed;
+    padding: 10rem 0;
+    height: auto;
+
+    @include media-breakpoint-up(sm) {
+      height: 100vh;
+    }
+  }
+
+  &__customers &__text {
+    background-color: rgba(0,0,0,0.4);
+  }
+}
+
+.aside__image {
+  width: 80%;
+}
+
+.header-bottom__nav {
+  position: fixed;
+  width: 100%;
+  transition: 0.3s;
+  transform: translateY(-80px);
+
+  &--common {
+    transform: translateY(0px);
+  }
+}
+
+.element-show {
+  transition: 0.3s;
+  transform: translateY(0px);
+}
