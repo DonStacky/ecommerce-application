@@ -1,9 +1,9 @@
-import { createElement } from '../../shared/helpers/dom-utilites';
 import 'bootstrap';
-import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
 import { date, string } from 'yup';
-import countries from './postal-codes';
+import { createElement } from '../../shared/helpers/dom-utilites';
 import submit from './customer-registration';
+import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
+import countries from './postal-codes';
 
 const LINK_TO_LOGIN = createElement({
   tagname: 'a',
@@ -641,7 +641,10 @@ const VALIDATIONS = [
     string()
       .required('Email addres is required')
       .matches(/^\S+$/, 'Email address must not contain leading or trailing whitespace')
-      .matches(/^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*/, 'Email address must contain username')
+      .matches(
+        /^[-a-z0-9A-Z!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9A-Z!#$%&'*+/=?^_`{|}~]+)*/,
+        'Email address must contain correct username'
+      )
       .matches(/@/, 'Email address must contain an "@" symbol separating local part and domain name')
       .matches(
         /@([a-z0-9]([a-z0-9]{0,61}[-a-z0-9])?\.)(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$/,
@@ -655,7 +658,6 @@ const VALIDATIONS = [
     string()
       .required('Password is required')
       .min(8, 'Password too short')
-      .max(16, 'Password too long')
       .matches(/[A-Z]/, 'Password must contain at least one uppercase letter (A-Z)')
       .matches(/[a-z]/, 'Password must contain at least one lowercase letter (a-z)')
       .matches(/[0-9]/, 'Password must contain at least one digit (0-9)')
