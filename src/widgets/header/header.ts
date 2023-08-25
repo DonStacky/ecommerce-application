@@ -361,6 +361,7 @@ export const LOG_OUT_ITEM = createElement({
 
 function logout() {
   localStorage.removeItem('tokenCache');
+  localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
 }
 

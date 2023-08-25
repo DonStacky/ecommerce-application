@@ -3,10 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 import ROUTER from '../../app/router/router';
 import loginCustomer from '../../shared/api/login-customer';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import { addLogoutBtn } from '../../widgets/header/header';
 import loginValidationResults from './data';
 import { loginValidation, passwordValidation } from './login-validation';
 import { LoginValidation } from './types';
-import { addLogoutBtn } from '../../widgets/header/header';
 
 class LoginForm {
   LINK_TO_REG: HTMLAnchorElement;
@@ -256,7 +256,9 @@ class LoginForm {
     event.preventDefault();
 
     loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
-      .then(() => {
+      .then((body) => {
+        console.log(body);
+        localStorage.setItem('userInformation', JSON.stringify(body));
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';
         this.INPUT_PASSWD.value = '';

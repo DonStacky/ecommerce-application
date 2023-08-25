@@ -1,0 +1,16 @@
+.card__image_width {
+  width: 150px;
+}
+
+.profile__form {
+  &_active {
+    cursor: pointer;
+
+    @include hover {
+      // border: solid #53a351 1px;
+      color: $hover-link;
+      // background-color: aquamarine;
+      // box-shadow: 0px 0px 17px 0px rgba(0, 0, 0, 0.62);
+    }
+  }
+}

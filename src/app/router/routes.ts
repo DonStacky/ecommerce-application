@@ -3,23 +3,25 @@ import loginBack from '@image/hand-holding-string.jpg';
 import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-import BASKET_PAGE from '../../pages/basket/basket';
+// import BASKET_PAGE from '../../pages/basket/basket';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
 import NOT_FOUND from '../../pages/not_found/not_found';
+import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
 import {
+  addLogoutBtn,
   HEADER,
   HEADER_ITEMS,
-  MAIN_HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
-  addLogoutBtn,
+  // eslint-disable-next-line prettier/prettier
+  MAIN_HEADER_ITEMS
 } from '../../widgets/header/header';
 import ROUTER from './router';
 
@@ -74,7 +76,7 @@ const getRoutes = (router: Navigo) => {
       render(CATALOG_PAGE, '#catalog');
     })
     .on('/basket', () => {
-      render(BASKET_PAGE, '#basket');
+      render(new ProfilePage().PROFILE_CONTAINER, '#basket');
     })
     .on('/login', () => {
       if (localStorage.getItem('tokenCache')) {
