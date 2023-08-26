@@ -1,5 +1,6 @@
-import { ClientResponse, Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
-import { createElementBase } from '../../shared/helpers/dom-utilites';
+import { Customer, ErrorObject } from '@commercetools/platform-sdk';
+import updateCustomer from '../../shared/api/update-customer';
+import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 
 export default class ProfilePage {
   userData: Customer | undefined;
@@ -37,7 +38,7 @@ export default class ProfilePage {
     this.userData = this.getUserData();
 
     // Card elements
-    this.PROFILE_CONTAINER = createElementBase('div', ['container']);
+    this.PROFILE_CONTAINER = createElementBase('div', ['container'], 'profile-page');
     this.PROFILE_BODY = createElementBase('div', ['main-body']);
     this.PROFILE_PAGE = createElementBase('div', ['row', 'gutters-sm']);
     this.PROFILE_CARD = createElementBase('div', ['col-md-4', 'mb-3', 'card']);
@@ -62,8 +63,9 @@ export default class ProfilePage {
 
     this.CARD_IMG.setAttribute('alt', 'User image');
     this.CARD_IMG.setAttribute('src', 'https://bootdey.com/img/Content/avatar/avatar7.png');
-    this.BUTTON_LINK.setAttribute('href', '/');
+    // this.BUTTON_LINK.setAttribute('href', '/');
     this.appendElements();
+    this.addEvents();
   }
 
   private createFormBody() {
@@ -72,8 +74,8 @@ export default class ProfilePage {
       this.getFullName(),
       this.userData?.email,
       this.getShippingAddress(),
-      'getBillingAddress()',
-      'my Birthday',
+      this.getBillingAddress(),
+      this.getBirthday(),
     ];
     const ELEMENT = createElementBase('div', ['card-body']);
 
@@ -114,12 +116,9 @@ export default class ProfilePage {
 
   private getUserData() {
     const data = localStorage.getItem('userInformation');
-    let userData: ClientResponse<CustomerSignInResult> | undefined;
 
-    if (data) {
-      userData = JSON.parse(data);
-    }
-    return userData?.body.customer;
+    if (!data) return undefined;
+    return JSON.parse(data);
   }
 
   private getFullName() {
@@ -130,11 +129,8 @@ export default class ProfilePage {
     const shippingAddressId = this.userData?.shippingAddressIds;
     let ids: string;
     if (shippingAddressId) {
-      const [id] = shippingAddressId;
-      ids = id;
+      [ids] = shippingAddressId;
     }
-    console.log(shippingAddressId);
-    console.log(this.userData);
 
     const shippingAddress = this.userData?.addresses.filter((a) => a.id === ids);
     return shippingAddress
@@ -142,115 +138,44 @@ export default class ProfilePage {
       : '';
   }
 
-  /*   private addEvents() {
-    // Показать/скрыть пароль
-    this.INPUT_CHECK.addEventListener('click', (event: MouseEvent) => {
-      const target = event.target as HTMLInputElement;
+  private getBillingAddress() {
+    const billingAddressId = this.userData?.billingAddressIds;
+    let ids: string;
+    if (billingAddressId) {
+      [ids] = billingAddressId;
+    }
 
-      if (target.checked) {
-        this.INPUT_PASSWD.setAttribute('type', 'text');
-      } else {
-        this.INPUT_PASSWD.setAttribute('type', 'password');
-      }
+    const shippingAddress = this.userData?.addresses.filter((a) => a.id === ids);
+    return shippingAddress
+      ? `${shippingAddress[0].country}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}, ${shippingAddress[0].postalCode}`
+      : '';
+  }
+
+  private getBirthday() {
+    const birthdayData = this.userData?.dateOfBirth;
+    const date = birthdayData?.split('-').reverse().join('.');
+    return date || '';
+  }
+
+  private addEvents() {
+    this.BUTTON_LINK.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLAnchorElement;
+      if (target.tagName !== 'A') return;
+
+      updateCustomer()
+        .then(({ body }) => {
+          localStorage.setItem('userInformation', JSON.stringify(body));
+          this.replaseProfilePage();
+          console.log('update', body);
+        })
+        .catch((err: ErrorObject) => {
+          console.error(err.message);
+        });
     });
-
-    // Поле краснеет при первом фокусе на него
-    this.INPUT_EMAIL.addEventListener(
-      'focus',
-      (event: FocusEvent) => {
-        const target = event.target as HTMLInputElement;
-        target.classList.add('form-control_validation');
-      },
-      { once: true }
-    );
-
-    this.INPUT_PASSWD.addEventListener(
-      'focus',
-      (event: FocusEvent) => {
-        const target = event.target as HTMLInputElement;
-        target.classList.add('form-control_validation');
-      },
-      { once: true }
-    );
-
-    this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
-    this.BUTTON.addEventListener('click', this.submit.bind(this));
   }
 
-  private liveValidation(event: KeyboardEvent) {
-    const target = event.target as HTMLInputElement;
-    if (target.tagName !== 'INPUT') return;
-
-    const text = target.value;
-
-    if (this.HELP_PASSWD.innerText === 'Wrong email or password') {
-      this.HELP_PASSWD.innerText = '';
-      this.INPUT_EMAIL.classList.remove('form-control_validation');
-      this.INPUT_PASSWD.classList.remove('form-control_validation');
-    }
-
-    if (target.id === 'InputEmail') {
-      const validation = loginValidation({ login: text });
-
-      if (typeof validation === 'string') {
-        this.HELP_EMAIL.innerText = validation;
-        target.classList.add('form-control_validation');
-        loginValidationResults.login = false;
-      } else {
-        target.classList.remove('form-control_validation');
-        this.HELP_EMAIL.innerText = '';
-        loginValidationResults.login = true;
-      }
-    }
-
-    if (target.id === 'InputPassword') {
-      const validation = passwordValidation({ password: text });
-
-      if (typeof validation === 'string') {
-        this.HELP_PASSWD.innerText = validation;
-        target.classList.add('form-control_validation');
-        loginValidationResults.password = false;
-      } else {
-        target.classList.remove('form-control_validation');
-        this.HELP_PASSWD.innerText = '';
-        loginValidationResults.password = true;
-      }
-    }
-
-    this.createBtnStatus(loginValidationResults);
+  private replaseProfilePage() {
+    const PROFILE_PAGE = findDomElement(document.body, '#profile-page');
+    PROFILE_PAGE.replaceWith(new ProfilePage().PROFILE_CONTAINER);
   }
-
-  private createBtnStatus(validationData: LoginValidation) {
-    if (validationData.login && validationData.password) {
-      this.BUTTON.removeAttribute('disabled');
-    } else {
-      this.BUTTON.setAttribute('disabled', '');
-    }
-  }
-
-  private submit(event: MouseEvent) {
-    const target = event.target as HTMLButtonElement;
-    if (target.tagName !== 'BUTTON') return;
-    event.preventDefault();
-
-    loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
-      .then(() => {
-        this.HELP_PASSWD.innerText = '';
-        this.INPUT_EMAIL.value = '';
-        this.INPUT_PASSWD.value = '';
-        ROUTER.navigate('/');
-        addLogoutBtn();
-      })
-      .catch((err: ErrorObject) => {
-        if (err.body?.statusCode === StatusCodes.BAD_REQUEST) {
-          this.HELP_PASSWD.innerText = 'Wrong email or password';
-          this.INPUT_EMAIL.classList.add('form-control_validation');
-          this.INPUT_PASSWD.classList.add('form-control_validation');
-        } else {
-          this.HELP_PASSWD.innerText = 'server error';
-        }
-        console.error(err);
-      });
-  }
- */
 }
