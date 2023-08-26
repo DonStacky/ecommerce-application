@@ -6,7 +6,7 @@ Welcome to our eCommerce application! This platform replicates real-world shoppi
  - [TypeScript](https://www.typescriptlang.org/)
  - [SASS](https://sass-lang.com/)
  - [Commercetools API](https://docs.commercetools.com/api/)
-
+ - [Bootstrap](https://getbootstrap.com/)
 
 ## Requirements:
 
