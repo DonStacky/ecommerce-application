@@ -1,7 +1,7 @@
 import 'bootstrap';
 import { date, string } from 'yup';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import submit from './customer-registration';
+import { submit } from './customer-registration';
 import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
 import countries from './postal-codes';
 

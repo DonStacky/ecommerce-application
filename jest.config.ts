@@ -3,7 +3,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['src/pages/registration/*.ts'],
+  collectCoverageFrom: ['src/**/*.ts'],
   verbose: true,
   moduleDirectories: ['node_modules'],
   moduleNameMapper: {
