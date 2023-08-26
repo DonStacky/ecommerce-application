@@ -2,4 +2,11 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  collectCoverage: true,
+  collectCoverageFrom: ['src/pages/registration/*.ts'],
+  verbose: true,
+  moduleDirectories: ['node_modules'],
+  moduleNameMapper: {
+    '\\.(jpg|svg|scss)$': '<rootDir>/src/tests/mocks/file-mock',
+  },
 };
