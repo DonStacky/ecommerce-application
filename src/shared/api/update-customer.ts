@@ -2,7 +2,7 @@ import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import checkEnvVariables from '../helpers/utilites';
 import { buildClientUpdate } from './build-client';
 
-function getCustomerId() {
+function getCustomerId(): string | undefined {
   const userInformation = localStorage.getItem('userInformation');
   if (!userInformation) return undefined;
 
@@ -15,10 +15,16 @@ function getToken() {
   return `Bearer ${JSON.parse(token).token}`;
 }
 
+function getVersion(): number {
+  const userInformation = localStorage.getItem('userInformation');
+  if (!userInformation) throw new Error('object "userInformation" not found');
+  return JSON.parse(userInformation).version;
+}
+
 export default function updateCustomer() {
   const token = getToken();
   const customerID = getCustomerId();
-  if (!token || !customerID) throw new Error();
+  if (!token || !customerID) throw new Error('not found Token or UserID');
   const ctpClient = buildClientUpdate(token);
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
@@ -29,15 +35,23 @@ export default function updateCustomer() {
     .withId({ ID: customerID })
     .post({
       body: {
-        version: 8,
+        version: getVersion(),
         actions: [
           {
             action: 'setFirstName',
-            firstName: 'Joe',
+            firstName: 'David',
           },
           {
             action: 'setLastName',
-            lastName: 'Grebel',
+            lastName: 'Moor',
+          },
+          {
+            action: 'changeEmail',
+            email: 'aaa@mail.com',
+          },
+          {
+            action: 'setDateOfBirth',
+            dateOfBirth: '2001-10-13',
           },
         ],
       },

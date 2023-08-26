@@ -257,7 +257,6 @@ class LoginForm {
 
     loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
       .then(({ body: { customer } }) => {
-        console.log('login', customer);
         localStorage.setItem('userInformation', JSON.stringify(customer));
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';

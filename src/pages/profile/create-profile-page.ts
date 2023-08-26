@@ -1,6 +1,7 @@
 import { Customer, ErrorObject } from '@commercetools/platform-sdk';
 import updateCustomer from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
+import ModalProfileChange from './modal-profile-change';
 
 export default class ProfilePage {
   userData: Customer | undefined;
@@ -63,9 +64,11 @@ export default class ProfilePage {
 
     this.CARD_IMG.setAttribute('alt', 'User image');
     this.CARD_IMG.setAttribute('src', 'https://bootdey.com/img/Content/avatar/avatar7.png');
-    // this.BUTTON_LINK.setAttribute('href', '/');
+    this.BUTTON_LINK.setAttribute('data-bs-toggle', 'modal');
+    this.BUTTON_LINK.setAttribute('data-bs-target', '#profileModal');
+
     this.appendElements();
-    this.addEvents();
+    // this.addEvents();
   }
 
   private createFormBody() {
@@ -106,7 +109,7 @@ export default class ProfilePage {
 
     this.BUTTON_CONTAINER.append(this.BUTTON_LINK);
     this.BUTTON_ROW.append(this.BUTTON_CONTAINER);
-    this.FORM_BODY.append(this.BUTTON_ROW);
+    this.FORM_BODY.append(new ModalProfileChange().MODAL_CONTAINER, this.BUTTON_ROW);
     this.PROFILE_FORM.append(this.FORM_BODY);
 
     this.PROFILE_PAGE.append(this.PROFILE_CARD, this.PROFILE_FORM);
@@ -166,7 +169,6 @@ export default class ProfilePage {
         .then(({ body }) => {
           localStorage.setItem('userInformation', JSON.stringify(body));
           this.replaseProfilePage();
-          console.log('update', body);
         })
         .catch((err: ErrorObject) => {
           console.error(err.message);
