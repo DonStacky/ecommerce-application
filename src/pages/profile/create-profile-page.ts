@@ -1,11 +1,10 @@
-import { Customer, ErrorObject } from '@commercetools/platform-sdk';
+import { ErrorObject } from '@commercetools/platform-sdk';
 import updateCustomer from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
-import ModalProfileChange from './modal-profile-change';
+import GetUserData from '../../shared/helpers/get-user-data';
+import ModalProfileChange from './modal-profile';
 
-export default class ProfilePage {
-  userData: Customer | undefined;
-
+export default class ProfilePage extends GetUserData {
   PROFILE_CONTAINER: HTMLDivElement;
 
   PROFILE_BODY: HTMLDivElement;
@@ -35,8 +34,7 @@ export default class ProfilePage {
   BUTTON_LINK: HTMLAnchorElement;
 
   constructor() {
-    // user data
-    this.userData = this.getUserData();
+    super();
 
     // Card elements
     this.PROFILE_CONTAINER = createElementBase('div', ['container'], 'profile-page');
@@ -78,7 +76,7 @@ export default class ProfilePage {
       this.userData?.email,
       this.getShippingAddress(),
       this.getBillingAddress(),
-      this.getBirthday(),
+      this.getBirthdayForUser(),
     ];
     const ELEMENT = createElementBase('div', ['card-body']);
 
@@ -115,49 +113,6 @@ export default class ProfilePage {
     this.PROFILE_PAGE.append(this.PROFILE_CARD, this.PROFILE_FORM);
     this.PROFILE_BODY.append(this.PROFILE_PAGE);
     this.PROFILE_CONTAINER.append(this.PROFILE_BODY);
-  }
-
-  private getUserData() {
-    const data = localStorage.getItem('userInformation');
-
-    if (!data) return undefined;
-    return JSON.parse(data);
-  }
-
-  private getFullName() {
-    return `${this.userData?.firstName} ${this.userData?.lastName}`;
-  }
-
-  private getShippingAddress() {
-    const shippingAddressId = this.userData?.shippingAddressIds;
-    let ids: string;
-    if (shippingAddressId) {
-      [ids] = shippingAddressId;
-    }
-
-    const shippingAddress = this.userData?.addresses.filter((a) => a.id === ids);
-    return shippingAddress
-      ? `${shippingAddress[0].country}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}, ${shippingAddress[0].postalCode}`
-      : '';
-  }
-
-  private getBillingAddress() {
-    const billingAddressId = this.userData?.billingAddressIds;
-    let ids: string;
-    if (billingAddressId) {
-      [ids] = billingAddressId;
-    }
-
-    const shippingAddress = this.userData?.addresses.filter((a) => a.id === ids);
-    return shippingAddress
-      ? `${shippingAddress[0].country}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}, ${shippingAddress[0].postalCode}`
-      : '';
-  }
-
-  private getBirthday() {
-    const birthdayData = this.userData?.dateOfBirth;
-    const date = birthdayData?.split('-').reverse().join('.');
-    return date || '';
   }
 
   private addEvents() {
