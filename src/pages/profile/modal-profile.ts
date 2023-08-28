@@ -1,3 +1,4 @@
+import { Modal } from 'bootstrap';
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 
 export default class ModalProfileChange {
@@ -13,6 +14,8 @@ export default class ModalProfileChange {
 
   SAVE_BUTTON: HTMLButtonElement;
 
+  modal: Modal | undefined;
+
   constructor(element: HTMLElement) {
     this.MODAL_CONTAINER = createElementBase('div', ['modal', 'fade'], 'profileModal');
     this.MODAL_DIALOG = createElementBase('div', ['modal-dialog', 'modal-dialog_width']);
@@ -27,6 +30,10 @@ export default class ModalProfileChange {
     this.CLOSE_BUTTON.setAttribute('data-bs-dismiss', 'modal');
 
     this.appendElements(element);
+
+    setTimeout(() => {
+      this.modal = new Modal(this.MODAL_CONTAINER);
+    });
   }
 
   private appendElements(element: HTMLElement) {

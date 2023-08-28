@@ -21,7 +21,7 @@ function getVersion(): number {
   return JSON.parse(userInformation).version;
 }
 
-export default function updateCustomer() {
+export default function updateCustomer(firstName: string, lastName: string, email: string, dateOfBirth: string) {
   const token = getToken();
   const customerID = getCustomerId();
   if (!token || !customerID) throw new Error('not found Token or UserID');
@@ -39,19 +39,19 @@ export default function updateCustomer() {
         actions: [
           {
             action: 'setFirstName',
-            firstName: 'David',
+            firstName,
           },
           {
             action: 'setLastName',
-            lastName: 'Moor',
+            lastName,
           },
           {
             action: 'changeEmail',
-            email: 'aaa@mail.com',
+            email,
           },
           {
             action: 'setDateOfBirth',
-            dateOfBirth: '2001-10-13',
+            dateOfBirth,
           },
         ],
       },

@@ -1,6 +1,7 @@
-import { createElementBase } from '../../shared/helpers/dom-utilites';
+import { ErrorObject } from '@commercetools/platform-sdk';
+import updateCustomer from '../../shared/api/update-customer';
+import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
-// eslint-disable-next-line import/no-cycle
 import EditProfileForm from './edit-profile-form';
 import ModalProfileChange from './modal-profile';
 
@@ -40,6 +41,12 @@ export default class ProfilePage extends GetUserData {
   PROFILE_FORM_CONTAINER: HTMLDivElement;
 
   PROFILE_FORM_ADDRESS: HTMLDivElement;
+
+  EDIT_PROFILE_FORM: EditProfileForm;
+
+  MODAL_PROFILE_CHANGE: ModalProfileChange;
+
+  // myModal: bootstrap.Modal;
 
   constructor() {
     super();
@@ -86,8 +93,11 @@ export default class ProfilePage extends GetUserData {
     this.BUTTON_LINK.setAttribute('data-bs-toggle', 'modal');
     this.BUTTON_LINK.setAttribute('data-bs-target', '#profileModal');
 
+    this.EDIT_PROFILE_FORM = new EditProfileForm();
+    this.MODAL_PROFILE_CHANGE = new ModalProfileChange(this.EDIT_PROFILE_FORM.FORM);
+
     this.appendElements();
-    // this.addEvents();
+    this.addEvents();
   }
 
   private createUserFormBody() {
@@ -138,7 +148,8 @@ export default class ProfilePage extends GetUserData {
 
     this.BUTTON_CONTAINER.append(this.BUTTON_LINK);
     this.BUTTON_USER.append(this.BUTTON_CONTAINER);
-    this.FORM_BODY_USER.append(new ModalProfileChange(new EditProfileForm().FORM).MODAL_CONTAINER, this.BUTTON_USER);
+    this.FORM_BODY_USER.append(this.MODAL_PROFILE_CHANGE.MODAL_CONTAINER, this.BUTTON_USER);
+
     this.PROFILE_FORM_USER.append(this.FORM_BODY_USER);
     this.PROFILE_FORM_ADDRESS.append(this.FORM_BODY_ADDRESS);
     this.PROFILE_PAGE.append(this.PROFILE_CARD, this.PROFILE_FORM_USER, this.PROFILE_FORM_ADDRESS);
@@ -146,14 +157,20 @@ export default class ProfilePage extends GetUserData {
     this.PROFILE_CONTAINER.append(this.PROFILE_BODY);
   }
 
-  /* private addEvents() {
-    this.BUTTON_LINK.addEventListener('click', (event: MouseEvent) => {
-      const target = event.target as HTMLAnchorElement;
-      if (target.tagName !== 'A') return;
+  private addEvents() {
+    this.EDIT_PROFILE_FORM.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.tagName !== 'BUTTON') return;
 
-      updateCustomer()
+      const firstName = this.EDIT_PROFILE_FORM.NAME_INPUT.value;
+      const lastName = this.EDIT_PROFILE_FORM.LAST_NAME_INPUT.value;
+      const email = this.EDIT_PROFILE_FORM.EMAIL_INPUT.value;
+      const birthday = this.EDIT_PROFILE_FORM.BIRTH_DATE_INPUT.value;
+
+      updateCustomer(firstName, lastName, email, birthday)
         .then(({ body }) => {
           localStorage.setItem('userInformation', JSON.stringify(body));
+          this.MODAL_PROFILE_CHANGE.modal?.hide();
           this.replaseProfilePage();
         })
         .catch((err: ErrorObject) => {
@@ -165,5 +182,5 @@ export default class ProfilePage extends GetUserData {
   private replaseProfilePage() {
     const PROFILE_PAGE = findDomElement(document.body, '#profile-page');
     PROFILE_PAGE.replaceWith(new ProfilePage().PROFILE_CONTAINER);
-  } */
+  }
 }
