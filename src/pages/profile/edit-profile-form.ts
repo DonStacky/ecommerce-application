@@ -1,6 +1,10 @@
+import { ErrorObject } from '@commercetools/platform-sdk';
 import 'bootstrap';
-import { createElementBase } from '../../shared/helpers/dom-utilites';
+import updateCustomer from '../../shared/api/update-customer';
+import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
+// eslint-disable-next-line import/no-cycle
+import ProfilePage from './create-profile-page';
 
 export default class EditProfileForm extends GetUserData {
   CLOSE_BUTTON: HTMLButtonElement;
@@ -89,6 +93,7 @@ export default class EditProfileForm extends GetUserData {
     this.addAttributes();
     this.appendElements();
     this.fillFields();
+    this.addEvents();
   }
 
   private addAttributes() {
@@ -129,5 +134,27 @@ export default class EditProfileForm extends GetUserData {
     this.LAST_NAME_INPUT.value = this.getLastName();
     this.EMAIL_INPUT.value = this.getEmail();
     this.BIRTH_DATE_INPUT.value = this.getBirthday();
+  }
+
+  private addEvents() {
+    this.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      event.preventDefault();
+      const target = event.target as HTMLAnchorElement;
+      if (target.tagName !== 'BUTTON') return;
+
+      updateCustomer()
+        .then(({ body }) => {
+          localStorage.setItem('userInformation', JSON.stringify(body));
+          this.replaseProfilePage();
+        })
+        .catch((err: ErrorObject) => {
+          console.error(err.message);
+        });
+    });
+  }
+
+  private replaseProfilePage() {
+    const PROFILE_PAGE = findDomElement(document.body, '#profile-page');
+    PROFILE_PAGE.replaceWith(new ProfilePage().PROFILE_CONTAINER);
   }
 }

@@ -1,5 +1,4 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
-import EditProfileForm from './edit-profile-form';
 
 export default class ModalProfileChange {
   MODAL_CONTAINER: HTMLDivElement;
@@ -14,7 +13,7 @@ export default class ModalProfileChange {
 
   SAVE_BUTTON: HTMLButtonElement;
 
-  constructor() {
+  constructor(element: HTMLElement) {
     this.MODAL_CONTAINER = createElementBase('div', ['modal', 'fade'], 'profileModal');
     this.MODAL_DIALOG = createElementBase('div', ['modal-dialog', 'modal-dialog_width']);
     this.MODAL_CONTENT = createElementBase('div', ['modal-content', 'modal-content_border']);
@@ -27,11 +26,11 @@ export default class ModalProfileChange {
     this.MODAL_CONTAINER.setAttribute('aria-hidden', 'true');
     this.CLOSE_BUTTON.setAttribute('data-bs-dismiss', 'modal');
 
-    this.appendElements();
+    this.appendElements(element);
   }
 
-  private appendElements() {
-    this.MODAL_CONTENT.append(new EditProfileForm().FORM /* createEditProfileForm() */);
+  private appendElements(element: HTMLElement) {
+    this.MODAL_CONTENT.append(element);
     this.MODAL_DIALOG.append(this.MODAL_CONTENT);
     this.MODAL_CONTAINER.append(this.MODAL_DIALOG);
   }
