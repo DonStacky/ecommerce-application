@@ -1,5 +1,5 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
-import createEditProfileForm from './edit-profile-form';
+import EditProfileForm from './edit-profile-form';
 
 export default class ModalProfileChange {
   MODAL_CONTAINER: HTMLDivElement;
@@ -31,7 +31,7 @@ export default class ModalProfileChange {
   }
 
   private appendElements() {
-    this.MODAL_CONTENT.append(createEditProfileForm());
+    this.MODAL_CONTENT.append(new EditProfileForm().FORM /* createEditProfileForm() */);
     this.MODAL_DIALOG.append(this.MODAL_CONTENT);
     this.MODAL_CONTAINER.append(this.MODAL_DIALOG);
   }

@@ -1,12 +1,12 @@
-import { CustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient, CustomerDraft } from '@commercetools/platform-sdk';
 import ROUTER from '../../app/router/router';
 import buildCommonClient from '../../shared/api/create-common-client';
 import loginCustomer from '../../shared/api/login-customer';
 import checkEnvVariables from '../../shared/helpers/utilites';
 import { CustomerData } from '../../shared/types/types';
+import { addLogoutBtn } from '../../widgets/header/header';
 import { findCountry } from './form-validation';
 import showModal from './modal-window';
-import { addLogoutBtn } from '../../widgets/header/header';
 
 function createCustomerFromTemlate(customerData: CustomerData): CustomerDraft {
   const billingAddress = {
@@ -55,10 +55,13 @@ async function registerCustomer(customerData: CustomerData) {
 
   try {
     await apiRoot.customers().post({ body: newCustomer }).execute();
-    await loginCustomer(customerData.email.value, customerData.password.value);
+    const {
+      body: { customer },
+    } = await loginCustomer(customerData.email.value, customerData.password.value);
     ROUTER.navigate('/');
     addLogoutBtn();
     showModal(true);
+    localStorage.setItem('userInformation', JSON.stringify(customer));
   } catch (err) {
     if (err instanceof Error) {
       showModal(false, err.message);
