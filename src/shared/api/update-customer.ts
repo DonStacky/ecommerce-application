@@ -53,6 +53,15 @@ export default function updateCustomer(firstName: string, lastName: string, emai
             action: 'setDateOfBirth',
             dateOfBirth,
           },
+          /* {
+            action: 'addAddress',
+            address: {
+              country: 'RU',
+              city: 'Borisovo',
+              streetName: 'Gaidara',
+              postalCode: '456789',
+            },
+          }, */
         ],
       },
     })

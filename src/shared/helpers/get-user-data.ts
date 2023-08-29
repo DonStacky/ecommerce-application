@@ -30,6 +30,26 @@ export default class GetUserData {
     return this.userData?.email || '';
   }
 
+  getAddresses(type: string) {
+    const address = this.userData?.addresses;
+    if (!address) return [];
+
+    const addressesArr = address.map((item) => {
+      if (type === 'Shipping address') {
+        if (this.userData?.shippingAddressIds?.pop() === item.id) {
+          return null;
+        }
+      }
+      if (type === 'Billing address') {
+        if (this.userData?.billingAddressIds?.pop() === item.id) {
+          return null;
+        }
+      }
+      return `${item.country}, ${item.city}, ${item.streetName}, ${item.postalCode}`;
+    });
+    return addressesArr;
+  }
+
   getShippingAddress() {
     const shippingAddressId = this.userData?.shippingAddressIds;
     let ids: string;

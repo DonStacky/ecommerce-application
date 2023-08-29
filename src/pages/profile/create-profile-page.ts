@@ -46,13 +46,11 @@ export default class ProfilePage extends GetUserData {
 
   MODAL_PROFILE_CHANGE: ModalProfileChange;
 
-  // myModal: bootstrap.Modal;
-
   constructor() {
     super();
 
     // Card elements
-    this.PROFILE_CONTAINER = createElementBase('div', ['container'], 'profile-page');
+    this.PROFILE_CONTAINER = createElementBase('div', ['container', 'container_margin'], 'profile-page');
     this.PROFILE_BODY = createElementBase('div', ['main-body']);
     this.PROFILE_PAGE = createElementBase('div', ['row', 'gutters-sm', 'justify-content-end']);
     this.PROFILE_CARD = createElementBase('div', ['col-md-4', 'mb-3', 'card']);
@@ -123,20 +121,51 @@ export default class ProfilePage extends GetUserData {
   private createAddressFormBody() {
     const nameData = ['Shipping address', 'Billing address'];
     const titleData = [this.getShippingAddress(), this.getBillingAddress()];
+    const id = ['shippingCollapse', 'billingCollapse'];
     const ELEMENT = createElementBase('div', ['card-body']);
 
     for (let i = 0; i < 2; i += 1) {
       const FORM_ROW = createElementBase('div', ['row']);
       const NAME_FIELD = createElementBase('div', ['col-sm-3']);
       const NAME_TEXT = createElementBase('h3', ['mb-0'], undefined, nameData[i]);
-      const TITLE = createElementBase('div', ['col-sm-9', 'text-secondary'], undefined, titleData[i]);
-      const HR = createElementBase('hr', []);
+      const TITLE_CONTAINER = createElementBase('div', ['col-sm-9']);
+      const TITLE_LIST_CONTAINER = createElementBase('div', ['collapse'], id[i]);
+      const FORM_ROW_TITLE = createElementBase('div', ['row']);
+      const TITLE = createElementBase('div', ['text-secondary'], undefined, titleData[i]);
+      const BUTTON_ADDRESS = createElementBase('div', ['row']);
+      const BUTTON_CONTAINER = createElementBase('div', ['col-sm-12']);
 
-      FORM_ROW.classList.add('profile__form_active');
+      const BUTTON_SHOW = createElementBase('button', ['btn', 'btn-info', 'btn-lg'], 'shippingShow', 'Show/Hide');
+
+      const createElementHr = () => createElementBase('hr', []);
+
+      const address = this.getAddresses(nameData[i]);
+
+      address.forEach((item, index) => {
+        if (item) {
+          const ROW = createElementBase('div', ['row']);
+          const ADDR_TITLE = createElementBase('div', ['text-secondary'], undefined, item);
+          ROW.append(ADDR_TITLE);
+          TITLE_LIST_CONTAINER.append(ROW);
+
+          if (index < address.length - 1) {
+            TITLE_LIST_CONTAINER.append(createElementHr());
+          }
+        }
+      });
+
+      BUTTON_SHOW.setAttribute('data-bs-toggle', 'collapse');
+      BUTTON_SHOW.setAttribute('data-bs-target', `#${id[i]}`);
 
       NAME_FIELD.append(NAME_TEXT);
-      FORM_ROW.append(NAME_FIELD, TITLE);
-      ELEMENT.append(FORM_ROW, HR);
+      FORM_ROW_TITLE.append(TITLE);
+      TITLE_CONTAINER.append(FORM_ROW_TITLE, createElementHr(), TITLE_LIST_CONTAINER);
+      FORM_ROW.append(NAME_FIELD, TITLE_CONTAINER);
+      BUTTON_ADDRESS.append(BUTTON_CONTAINER);
+      BUTTON_CONTAINER.append(BUTTON_SHOW);
+      ELEMENT.append(FORM_ROW, BUTTON_ADDRESS);
+
+      if (i < 1) ELEMENT.append(createElementHr());
     }
     return ELEMENT;
   }
