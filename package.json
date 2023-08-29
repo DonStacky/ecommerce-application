@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --write .",
-    "test": "jest --coverage",
+    "test": "jest",
     "prepare": "husky install"
   },
   "repository": {
