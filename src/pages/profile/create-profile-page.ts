@@ -131,7 +131,7 @@ export default class ProfilePage extends GetUserData {
       const TITLE_CONTAINER = createElementBase('div', ['col-sm-9']);
       const TITLE_LIST_CONTAINER = createElementBase('div', ['collapse'], id[i]);
       const FORM_ROW_TITLE = createElementBase('div', ['row']);
-      const TITLE = createElementBase('div', ['text-secondary'], undefined, titleData[i]);
+      const TITLE = createElementBase('div', ['text-secondary', 'text-secondary_edit'], undefined, titleData[i]);
       const BUTTON_ADDRESS = createElementBase('div', ['row']);
       const BUTTON_CONTAINER = createElementBase('div', ['col-sm-12']);
 
@@ -144,7 +144,7 @@ export default class ProfilePage extends GetUserData {
       address.forEach((item, index) => {
         if (item) {
           const ROW = createElementBase('div', ['row']);
-          const ADDR_TITLE = createElementBase('div', ['text-secondary'], undefined, item);
+          const ADDR_TITLE = createElementBase('div', ['text-secondary', 'text-secondary_edit'], undefined, item);
           ROW.append(ADDR_TITLE);
           TITLE_LIST_CONTAINER.append(ROW);
 
