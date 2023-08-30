@@ -5,7 +5,11 @@ import countries from '../registration/postal-codes';
 export default class EditAddressForm extends GetUserData {
   CLOSE_BUTTON: HTMLButtonElement;
 
+  BUTTONS: HTMLDivElement;
+
   SAVE_BUTTON: HTMLButtonElement;
+
+  DELETE_BUTTON: HTMLButtonElement;
 
   FORM: HTMLFormElement;
 
@@ -86,7 +90,10 @@ export default class EditAddressForm extends GetUserData {
     this.DEFAULT_LABEL = createElementBase('label', ['form-check-label'], undefined, 'Set as default');
     this.DEFAULT_OPTIONS = createElementBase('div', ['form-field', 'form-check', 'form-switch']);
 
+    this.BUTTONS = createElementBase('div', ['d-flex']);
     this.SAVE_BUTTON = createElementBase('button', ['submit-button', 'm-3'], undefined, 'Save');
+    this.DELETE_BUTTON = createElementBase('button', ['delete-button', 'm-3'], undefined, 'Delete');
+
     this.FORM = createElementBase('form', [
       'registration-form',
       'form-style',
@@ -124,6 +131,7 @@ export default class EditAddressForm extends GetUserData {
     this.DEFAULT_LABEL.setAttribute('for', `default`);
     this.FORM.setAttribute('noValidate', 'true');
     this.SAVE_BUTTON.setAttribute('type', 'button');
+    this.DELETE_BUTTON.setAttribute('type', 'button');
   }
 
   private appendElements() {
@@ -133,6 +141,7 @@ export default class EditAddressForm extends GetUserData {
     this.CITY_FIELD.append(this.CITY_LABEL, this.CITY_INPUT, this.CITY_INVALID);
     this.STREET_FIELD.append(this.STREET_LABEL, this.STREET_INPUT, this.STREET_INVALID);
     this.DEFAULT_OPTIONS.append(this.SET_DEFAULT, this.DEFAULT_LABEL);
+    this.BUTTONS.append(this.SAVE_BUTTON, this.DELETE_BUTTON);
     this.FORM.append(
       this.CLOSE_BUTTON,
       this.COUNTRY_FIELD,
@@ -140,7 +149,7 @@ export default class EditAddressForm extends GetUserData {
       this.CITY_FIELD,
       this.STREET_FIELD,
       this.DEFAULT_OPTIONS,
-      this.SAVE_BUTTON
+      this.BUTTONS
     );
   }
 
