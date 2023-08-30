@@ -21,7 +21,7 @@ function getVersion(): number {
   return JSON.parse(userInformation).version;
 }
 
-export default function updateCustomer(firstName: string, lastName: string, email: string, dateOfBirth: string) {
+export default function updateUserInformation(firstName: string, lastName: string, email: string, dateOfBirth: string) {
   const token = getToken();
   const customerID = getCustomerId();
   if (!token || !customerID) throw new Error('not found Token or UserID');
@@ -53,15 +53,37 @@ export default function updateCustomer(firstName: string, lastName: string, emai
             action: 'setDateOfBirth',
             dateOfBirth,
           },
-          /* {
+        ],
+      },
+    })
+    .execute();
+}
+
+export function addAddress(country: string, city: string, streetName: string, postalCode: string) {
+  const token = getToken();
+  const customerID = getCustomerId();
+  if (!token || !customerID) throw new Error('not found Token or UserID');
+  const ctpClient = buildClientUpdate(token);
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+  });
+
+  return apiRoot
+    .customers()
+    .withId({ ID: customerID })
+    .post({
+      body: {
+        version: getVersion(),
+        actions: [
+          {
             action: 'addAddress',
             address: {
-              country: 'RU',
-              city: 'Borisovo',
-              streetName: 'Gaidara',
-              postalCode: '456789',
+              country,
+              city,
+              streetName,
+              postalCode,
             },
-          }, */
+          },
         ],
       },
     })

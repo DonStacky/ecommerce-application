@@ -1,5 +1,5 @@
-import { ErrorObject } from '@commercetools/platform-sdk';
-import updateCustomer from '../../shared/api/update-customer';
+import { Customer, ErrorObject } from '@commercetools/platform-sdk';
+import updateUserInformation, { addAddress } from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
 import countries from '../registration/postal-codes';
@@ -218,6 +218,7 @@ export default class ProfilePage extends GetUserData {
   }
 
   private addEvents() {
+    // кнопка Save формы редактирования данных пользователя
     this.edit_user_form.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
@@ -227,23 +228,44 @@ export default class ProfilePage extends GetUserData {
       const email = this.edit_user_form.EMAIL_INPUT.value;
       const birthday = this.edit_user_form.BIRTH_DATE_INPUT.value;
 
-      updateCustomer(firstName, lastName, email, birthday)
+      updateUserInformation(firstName, lastName, email, birthday)
         .then(({ body }) => {
-          localStorage.setItem('userInformation', JSON.stringify(body));
           this.modal_user_change.modal?.hide();
-          this.replaseProfilePage();
+          this.writeChanges(body);
         })
         .catch((err: ErrorObject) => {
           console.error(err.message);
         });
     });
 
+    // Кнопка Save формы редактирования адреса
+    this.edit_address_form.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.tagName !== 'BUTTON') return;
+
+      const countryFromForm = this.edit_address_form.COUNTRY_SELECT.value;
+      const [country] = countries.filter((item) => item.Country === countryFromForm);
+      const city = this.edit_address_form.CITY_INPUT.value;
+      const streetName = this.edit_address_form.STREET_INPUT.value;
+      const postalCode = this.edit_address_form.POSTAL_CODE_INPUT.value;
+
+      addAddress(country.ISO, city, streetName, postalCode)
+        .then(({ body }) => {
+          this.modal_address_change.modal?.hide();
+          this.writeChanges(body);
+        })
+        .catch((err: ErrorObject) => {
+          console.error(err.message);
+        });
+    });
+
+    // Выбор адреса для редактирования
     this.PROFILE_FORM_ADDRESS.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.classList[0] !== 'text-secondary' && target.classList[0] !== 'new-address') return;
 
       const addressArr = target.innerText.split(', ');
-      const COUNTRY_OPTION_SELECTED = findDomElement<'select'>(this.edit_address_form.FORM, 'option[selected="true"]');
+      const COUNTRY_OPTION_SELECTED = findDomElement<'option'>(this.edit_address_form.FORM, 'option[selected="true"]');
       const FIELDS = this.edit_address_form.FORM.querySelectorAll(
         '.form-field > input'
       ) as NodeListOf<HTMLInputElement>;
@@ -263,21 +285,24 @@ export default class ProfilePage extends GetUserData {
         });
 
         COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
+        this.edit_address_form.DELETE_BUTTON.removeAttribute('disabled');
       } else {
         // установить дефолтные значения для полей
-        const COUNTRY_OPTION_1 = findDomElement<'select'>(this.edit_address_form.FORM, '#country').firstElementChild;
-
-        COUNTRY_OPTION_1?.setAttribute('selected', 'true');
         FIELDS.forEach((item) => {
           const element = item;
           element.value = '';
         });
+
+        this.edit_address_form.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');
+        this.edit_address_form.DELETE_BUTTON.setAttribute('disabled', '');
       }
     });
   }
 
-  private replaseProfilePage() {
+  private writeChanges(body: Customer) {
     const PROFILE_PAGE = findDomElement(document.body, '#profile-page');
+
+    localStorage.setItem('userInformation', JSON.stringify(body));
     PROFILE_PAGE.replaceWith(new ProfilePage().PROFILE_CONTAINER);
   }
 }
