@@ -376,10 +376,16 @@ export const PROFILE_ITEM = createElement({
   childElements: [PROFILE_LINK],
 });
 
+const showLinks = (item: HTMLLIElement) => {
+  item.classList.remove('hide');
+};
+
 function logout() {
   localStorage.removeItem('tokenCache');
   LOG_OUT_ITEM.remove();
   PROFILE_ITEM.remove();
+  HEADER_ITEMS.forEach((item) => showLinks(item));
+  MAIN_HEADER_ITEMS.forEach((item) => showLinks(item));
 }
 
 LOG_OUT_LINK.addEventListener('click', logout);
