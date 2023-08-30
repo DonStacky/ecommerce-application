@@ -3,7 +3,7 @@ import loginBack from '@image/hand-holding-string.jpg';
 import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-// import BASKET_PAGE from '../../pages/basket/basket';
+import BASKET_PAGE from '../../pages/basket/basket';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
@@ -20,9 +20,9 @@ import {
   HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
-  // eslint-disable-next-line prettier/prettier
   MAIN_HEADER_ITEMS,
   PROFILE_ITEM,
+  // eslint-disable-next-line prettier/prettier
   PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
@@ -82,7 +82,7 @@ const getRoutes = (router: Navigo) => {
       render(CATALOG_PAGE, '#catalog');
     })
     .on('/basket', () => {
-      render(new ProfilePage().PROFILE_CONTAINER, '#basket');
+      render(BASKET_PAGE, '#basket');
     })
     .on('/login', () => {
       if (localStorage.getItem('tokenCache')) {
@@ -105,7 +105,7 @@ const getRoutes = (router: Navigo) => {
       render(PROMO_PAGE);
     })
     .on('/profile', () => {
-      render(PROFILE_PAGE);
+      render(new ProfilePage().PROFILE_CONTAINER);
     })
     .notFound(() => {
       render(NOT_FOUND);
