@@ -21,7 +21,9 @@ import {
   HEADER_LIST,
   LOG_OUT_ITEM,
   // eslint-disable-next-line prettier/prettier
-  MAIN_HEADER_ITEMS
+  MAIN_HEADER_ITEMS,
+  PROFILE_ITEM,
+  PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
 
@@ -31,7 +33,11 @@ const render = (content: HTMLElement, linkID?: string) => {
       addLogoutBtn();
     } else {
       LOG_OUT_ITEM.classList.remove('logout--main');
-      HEADER_LIST.append(LOG_OUT_ITEM);
+      PROFILE_ITEM.classList.remove('header__item');
+      PROFILE_LINK.classList.remove('header__link');
+      PROFILE_LINK.classList.add('header-bottom__link');
+      PROFILE_ITEM.classList.add('header-bottom__item');
+      HEADER_LIST.append(PROFILE_ITEM, LOG_OUT_ITEM);
     }
   }
 
@@ -97,6 +103,9 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/promo', () => {
       render(PROMO_PAGE);
+    })
+    .on('/profile', () => {
+      render(PROFILE_PAGE);
     })
     .notFound(() => {
       render(NOT_FOUND);

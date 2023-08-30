@@ -114,7 +114,7 @@
 
   & .header__link, .footer__item {
     transition: 0.3s;
-    color: aliceblue;
+    color: #f0f8ff;
     padding: 0 2rem;
     margin: 0.3rem;
   }
@@ -164,4 +164,13 @@
   background-color: rgb(200, 237, 207);
   border-radius: 0.5rem;
   transition: 0.3s;
+  padding: 0 20px;
+}
+
+// .profile--main {
+//   padding: 0 20px;
+// }
+
+.hide {
+  display: none;
 }
