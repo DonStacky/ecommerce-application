@@ -152,7 +152,7 @@ export default class ProfilePage extends GetUserData {
       const BUTTON_ADDRESS = createElementBase('div', ['row']);
       const BUTTON_CONTAINER = createElementBase('div', ['col-sm-12']);
       const ROW_ADD_LINK = createElementBase('div', ['row']);
-      const TITLE_ADD_LINK = createElementBase('a', ['link-dark'], undefined, 'Add new address');
+      const TITLE_ADD_LINK = createElementBase('a', ['new-address', 'link-dark'], undefined, 'Add new address');
 
       const BUTTON_SHOW = createElementBase('button', ['btn', 'btn-info', 'btn-lg'], 'shippingShow', 'Show/Hide');
 
@@ -240,16 +240,39 @@ export default class ProfilePage extends GetUserData {
 
     this.PROFILE_FORM_ADDRESS.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (target.classList[0] !== 'text-secondary') return;
+      if (target.classList[0] !== 'text-secondary' && target.classList[0] !== 'new-address') return;
 
       const addressArr = target.innerText.split(', ');
-      const COUNTRY_SELECT = findDomElement<'select'>(this.edit_address_form.FORM, '#country');
-      const COUNTRY_OPTION_1 = COUNTRY_SELECT.firstElementChild;
-      const country = countries.filter((item) => item.ISO === addressArr[0]);
-      const COUNTRY_OPTION_FIND = findDomElement<'option'>(COUNTRY_SELECT, `option[value="${country[0].Country}"]`);
+      const COUNTRY_OPTION_SELECTED = findDomElement<'select'>(this.edit_address_form.FORM, 'option[selected="true"]');
+      const FIELDS = this.edit_address_form.FORM.querySelectorAll(
+        '.form-field > input'
+      ) as NodeListOf<HTMLInputElement>;
 
-      COUNTRY_OPTION_1?.removeAttribute('selected');
-      COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
+      COUNTRY_OPTION_SELECTED.removeAttribute('selected');
+
+      if (target.classList[0] === 'text-secondary') {
+        const country = countries.filter((item) => item.ISO === addressArr[0]);
+        const COUNTRY_OPTION_FIND = findDomElement<'option'>(
+          this.edit_address_form.FORM,
+          `option[value="${country[0].Country}"]`
+        );
+
+        FIELDS.forEach((item, index) => {
+          const element = item;
+          element.value = addressArr[index + 1];
+        });
+
+        COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
+      } else {
+        // установить дефолтные значения для полей
+        const COUNTRY_OPTION_1 = findDomElement<'select'>(this.edit_address_form.FORM, '#country').firstElementChild;
+
+        COUNTRY_OPTION_1?.setAttribute('selected', 'true');
+        FIELDS.forEach((item) => {
+          const element = item;
+          element.value = '';
+        });
+      }
     });
   }
 

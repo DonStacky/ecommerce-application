@@ -47,7 +47,7 @@ export default class GetUserData {
       }
       return {
         id: item.id,
-        address: `${item.country}, ${item.city}, ${item.streetName}, ${item.postalCode}`,
+        address: `${item.country}, ${item.postalCode}, ${item.city}, ${item.streetName}`,
       };
     });
     return addressesArr;
@@ -63,7 +63,7 @@ export default class GetUserData {
       return shippingAddress
         ? {
             id: ids,
-            address: `${shippingAddress[0].country}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}, ${shippingAddress[0].postalCode}`,
+            address: `${shippingAddress[0].country}, ${shippingAddress[0].postalCode}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}`,
           }
         : null;
     }
@@ -80,7 +80,7 @@ export default class GetUserData {
       return shippingAddress
         ? {
             id: ids,
-            address: `${shippingAddress[0].country}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}, ${shippingAddress[0].postalCode}`,
+            address: `${shippingAddress[0].country}, ${shippingAddress[0].postalCode}, ${shippingAddress[0].city}, ${shippingAddress[0].streetName}`,
           }
         : null;
     }
