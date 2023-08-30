@@ -2,6 +2,7 @@ import { ErrorObject } from '@commercetools/platform-sdk';
 import updateCustomer from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
+import countries from '../registration/postal-codes';
 import EditAddressForm from './edit-address-form';
 import EditUserForm from './edit-user-form';
 import ModalProfileChange from './modal-profile';
@@ -43,13 +44,13 @@ export default class ProfilePage extends GetUserData {
 
   PROFILE_FORM_ADDRESS: HTMLDivElement;
 
-  EDIT_USER_FORM: EditUserForm;
+  edit_user_form: EditUserForm;
 
-  EDIT_ADDRESS_FORM: EditAddressForm;
+  edit_address_form: EditAddressForm;
 
-  MODAL_USER_CHANGE: ModalProfileChange;
+  modal_user_change: ModalProfileChange;
 
-  MODAL_ADDRESS_CHANGE: ModalProfileChange;
+  modal_address_change: ModalProfileChange;
 
   constructor() {
     super();
@@ -69,7 +70,12 @@ export default class ProfilePage extends GetUserData {
     this.CARD_IMG = createElementBase('img', ['rounded-circle', 'card__image_width']);
     this.CARD_TITLE = createElementBase('div', ['mt-3']);
     this.FULLNAME = createElementBase('h2', [], undefined, this.getFullName());
-    this.ADDRESS = createElementBase('p', ['text-muted', 'font-size-sm'], undefined, this.getShippingAddress());
+    this.ADDRESS = createElementBase(
+      'p',
+      ['text-muted', 'font-size-sm'],
+      undefined,
+      this.getShippingAddress()?.address
+    );
 
     this.CARD_BODY_ADDRESS = createElementBase('div', [
       'card-body',
@@ -96,10 +102,10 @@ export default class ProfilePage extends GetUserData {
     this.BUTTON_LINK.setAttribute('data-bs-toggle', 'modal');
     this.BUTTON_LINK.setAttribute('data-bs-target', '#userModal');
 
-    this.EDIT_USER_FORM = new EditUserForm();
-    this.EDIT_ADDRESS_FORM = new EditAddressForm();
-    this.MODAL_USER_CHANGE = new ModalProfileChange(this.EDIT_USER_FORM.FORM, 'userModal');
-    this.MODAL_ADDRESS_CHANGE = new ModalProfileChange(this.EDIT_ADDRESS_FORM.FORM, 'addressModal');
+    this.edit_user_form = new EditUserForm();
+    this.edit_address_form = new EditAddressForm();
+    this.modal_user_change = new ModalProfileChange(this.edit_user_form.FORM, 'userModal');
+    this.modal_address_change = new ModalProfileChange(this.edit_address_form.FORM, 'addressModal');
     this.appendElements();
     this.addEvents();
   }
@@ -137,9 +143,16 @@ export default class ProfilePage extends GetUserData {
       const TITLE_CONTAINER = createElementBase('div', ['col-sm-9']);
       const TITLE_LIST_CONTAINER = createElementBase('div', ['collapse'], id[i]);
       const FORM_ROW_TITLE = createElementBase('div', ['row']);
-      const TITLE = createElementBase('div', ['text-secondary', 'text-secondary_edit'], undefined, titleData[i]);
+      const TITLE = createElementBase(
+        'div',
+        ['text-secondary', 'text-secondary_edit'],
+        titleData[i]?.id,
+        titleData[i]?.address
+      );
       const BUTTON_ADDRESS = createElementBase('div', ['row']);
       const BUTTON_CONTAINER = createElementBase('div', ['col-sm-12']);
+      const ROW_ADD_LINK = createElementBase('div', ['row']);
+      const TITLE_ADD_LINK = createElementBase('a', ['link-dark'], undefined, 'Add new address');
 
       const BUTTON_SHOW = createElementBase('button', ['btn', 'btn-info', 'btn-lg'], 'shippingShow', 'Show/Hide');
 
@@ -147,20 +160,17 @@ export default class ProfilePage extends GetUserData {
 
       const address = this.getAddresses(nameData[i]);
 
-      address.forEach((item, index) => {
+      address.forEach((item) => {
         if (item) {
           const ROW = createElementBase('div', ['row']);
-          const ADDR_TITLE = createElementBase('div', ['text-secondary', 'text-secondary_edit'], undefined, item);
+          const ADDR_TITLE = createElementBase('div', ['text-secondary', 'text-secondary_edit'], item.id, item.address);
 
           ADDR_TITLE.setAttribute('data-bs-toggle', 'modal');
           ADDR_TITLE.setAttribute('data-bs-target', '#addressModal');
 
           ROW.append(ADDR_TITLE);
           TITLE_LIST_CONTAINER.append(ROW);
-
-          if (index < address.length - 1) {
-            TITLE_LIST_CONTAINER.append(createElementHr());
-          }
+          TITLE_LIST_CONTAINER.append(createElementHr());
         }
       });
 
@@ -168,7 +178,12 @@ export default class ProfilePage extends GetUserData {
       BUTTON_SHOW.setAttribute('data-bs-target', `#${id[i]}`);
       TITLE.setAttribute('data-bs-toggle', 'modal');
       TITLE.setAttribute('data-bs-target', '#addressModal');
+      TITLE_ADD_LINK.setAttribute('href', '#');
+      TITLE_ADD_LINK.setAttribute('data-bs-toggle', 'modal');
+      TITLE_ADD_LINK.setAttribute('data-bs-target', '#addressModal');
 
+      ROW_ADD_LINK.append(TITLE_ADD_LINK);
+      TITLE_LIST_CONTAINER.append(ROW_ADD_LINK);
       NAME_FIELD.append(NAME_TEXT);
       FORM_ROW_TITLE.append(TITLE);
       TITLE_CONTAINER.append(FORM_ROW_TITLE, createElementHr(), TITLE_LIST_CONTAINER);
@@ -190,8 +205,8 @@ export default class ProfilePage extends GetUserData {
     this.BUTTON_CONTAINER.append(this.BUTTON_LINK);
     this.BUTTON_USER.append(this.BUTTON_CONTAINER);
     this.FORM_BODY_USER.append(
-      this.MODAL_USER_CHANGE.MODAL_CONTAINER,
-      this.MODAL_ADDRESS_CHANGE.MODAL_CONTAINER,
+      this.modal_user_change.MODAL_CONTAINER,
+      this.modal_address_change.MODAL_CONTAINER,
       this.BUTTON_USER
     );
 
@@ -203,24 +218,38 @@ export default class ProfilePage extends GetUserData {
   }
 
   private addEvents() {
-    this.EDIT_USER_FORM.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+    this.edit_user_form.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      const firstName = this.EDIT_USER_FORM.NAME_INPUT.value;
-      const lastName = this.EDIT_USER_FORM.LAST_NAME_INPUT.value;
-      const email = this.EDIT_USER_FORM.EMAIL_INPUT.value;
-      const birthday = this.EDIT_USER_FORM.BIRTH_DATE_INPUT.value;
+      const firstName = this.edit_user_form.NAME_INPUT.value;
+      const lastName = this.edit_user_form.LAST_NAME_INPUT.value;
+      const email = this.edit_user_form.EMAIL_INPUT.value;
+      const birthday = this.edit_user_form.BIRTH_DATE_INPUT.value;
 
       updateCustomer(firstName, lastName, email, birthday)
         .then(({ body }) => {
           localStorage.setItem('userInformation', JSON.stringify(body));
-          this.MODAL_USER_CHANGE.modal?.hide();
+          this.modal_user_change.modal?.hide();
           this.replaseProfilePage();
         })
         .catch((err: ErrorObject) => {
           console.error(err.message);
         });
+    });
+
+    this.PROFILE_FORM_ADDRESS.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.classList[0] !== 'text-secondary') return;
+
+      const addressArr = target.innerText.split(', ');
+      const COUNTRY_SELECT = findDomElement<'select'>(this.edit_address_form.FORM, '#country');
+      const COUNTRY_OPTION_1 = COUNTRY_SELECT.firstElementChild;
+      const country = countries.filter((item) => item.ISO === addressArr[0]);
+      const COUNTRY_OPTION_FIND = findDomElement<'option'>(COUNTRY_SELECT, `option[value="${country[0].Country}"]`);
+
+      COUNTRY_OPTION_1?.removeAttribute('selected');
+      COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
     });
   }
 

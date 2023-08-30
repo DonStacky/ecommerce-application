@@ -66,7 +66,11 @@ export default class EditAddressForm extends GetUserData {
 
     this.COUNTRY_LABEL = createElementBase('label', ['form-label'], undefined, 'Country');
     this.COUNTRY_PRESELECTED_OPTION = createElementBase('option', [], undefined, 'Country...');
-    this.COUNTRY_OPTIONS = countries.map(({ Country }) => createElementBase('option', [], undefined, Country));
+    this.COUNTRY_OPTIONS = countries.map(({ Country }) => {
+      const element = createElementBase('option', [], undefined, Country);
+      element.setAttribute('value', Country);
+      return element;
+    });
     this.COUNTRY_INVALID = createElementBase('div', ['invalid-feedback'], 'country-validation');
     this.COUNTRY_SELECT = createElementBase('select', ['form-control'], 'country');
     this.COUNTRY_FIELD = createElementBase('div', ['form-field']);
