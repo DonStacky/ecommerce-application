@@ -2,7 +2,8 @@ import { ErrorObject } from '@commercetools/platform-sdk';
 import updateCustomer from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
-import EditProfileForm from './edit-profile-form';
+import EditAddressForm from './edit-address-form';
+import EditUserForm from './edit-user-form';
 import ModalProfileChange from './modal-profile';
 
 export default class ProfilePage extends GetUserData {
@@ -42,9 +43,13 @@ export default class ProfilePage extends GetUserData {
 
   PROFILE_FORM_ADDRESS: HTMLDivElement;
 
-  EDIT_PROFILE_FORM: EditProfileForm;
+  EDIT_USER_FORM: EditUserForm;
 
-  MODAL_PROFILE_CHANGE: ModalProfileChange;
+  EDIT_ADDRESS_FORM: EditAddressForm;
+
+  MODAL_USER_CHANGE: ModalProfileChange;
+
+  MODAL_ADDRESS_CHANGE: ModalProfileChange;
 
   constructor() {
     super();
@@ -89,11 +94,12 @@ export default class ProfilePage extends GetUserData {
     this.CARD_IMG.setAttribute('alt', 'User image');
     this.CARD_IMG.setAttribute('src', 'https://bootdey.com/img/Content/avatar/avatar7.png');
     this.BUTTON_LINK.setAttribute('data-bs-toggle', 'modal');
-    this.BUTTON_LINK.setAttribute('data-bs-target', '#profileModal');
+    this.BUTTON_LINK.setAttribute('data-bs-target', '#userModal');
 
-    this.EDIT_PROFILE_FORM = new EditProfileForm();
-    this.MODAL_PROFILE_CHANGE = new ModalProfileChange(this.EDIT_PROFILE_FORM.FORM);
-
+    this.EDIT_USER_FORM = new EditUserForm();
+    this.EDIT_ADDRESS_FORM = new EditAddressForm();
+    this.MODAL_USER_CHANGE = new ModalProfileChange(this.EDIT_USER_FORM.FORM, 'userModal');
+    this.MODAL_ADDRESS_CHANGE = new ModalProfileChange(this.EDIT_ADDRESS_FORM.FORM, 'addressModal');
     this.appendElements();
     this.addEvents();
   }
@@ -145,6 +151,10 @@ export default class ProfilePage extends GetUserData {
         if (item) {
           const ROW = createElementBase('div', ['row']);
           const ADDR_TITLE = createElementBase('div', ['text-secondary', 'text-secondary_edit'], undefined, item);
+
+          ADDR_TITLE.setAttribute('data-bs-toggle', 'modal');
+          ADDR_TITLE.setAttribute('data-bs-target', '#addressModal');
+
           ROW.append(ADDR_TITLE);
           TITLE_LIST_CONTAINER.append(ROW);
 
@@ -156,6 +166,8 @@ export default class ProfilePage extends GetUserData {
 
       BUTTON_SHOW.setAttribute('data-bs-toggle', 'collapse');
       BUTTON_SHOW.setAttribute('data-bs-target', `#${id[i]}`);
+      TITLE.setAttribute('data-bs-toggle', 'modal');
+      TITLE.setAttribute('data-bs-target', '#addressModal');
 
       NAME_FIELD.append(NAME_TEXT);
       FORM_ROW_TITLE.append(TITLE);
@@ -177,7 +189,11 @@ export default class ProfilePage extends GetUserData {
 
     this.BUTTON_CONTAINER.append(this.BUTTON_LINK);
     this.BUTTON_USER.append(this.BUTTON_CONTAINER);
-    this.FORM_BODY_USER.append(this.MODAL_PROFILE_CHANGE.MODAL_CONTAINER, this.BUTTON_USER);
+    this.FORM_BODY_USER.append(
+      this.MODAL_USER_CHANGE.MODAL_CONTAINER,
+      this.MODAL_ADDRESS_CHANGE.MODAL_CONTAINER,
+      this.BUTTON_USER
+    );
 
     this.PROFILE_FORM_USER.append(this.FORM_BODY_USER);
     this.PROFILE_FORM_ADDRESS.append(this.FORM_BODY_ADDRESS);
@@ -187,19 +203,19 @@ export default class ProfilePage extends GetUserData {
   }
 
   private addEvents() {
-    this.EDIT_PROFILE_FORM.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+    this.EDIT_USER_FORM.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      const firstName = this.EDIT_PROFILE_FORM.NAME_INPUT.value;
-      const lastName = this.EDIT_PROFILE_FORM.LAST_NAME_INPUT.value;
-      const email = this.EDIT_PROFILE_FORM.EMAIL_INPUT.value;
-      const birthday = this.EDIT_PROFILE_FORM.BIRTH_DATE_INPUT.value;
+      const firstName = this.EDIT_USER_FORM.NAME_INPUT.value;
+      const lastName = this.EDIT_USER_FORM.LAST_NAME_INPUT.value;
+      const email = this.EDIT_USER_FORM.EMAIL_INPUT.value;
+      const birthday = this.EDIT_USER_FORM.BIRTH_DATE_INPUT.value;
 
       updateCustomer(firstName, lastName, email, birthday)
         .then(({ body }) => {
           localStorage.setItem('userInformation', JSON.stringify(body));
-          this.MODAL_PROFILE_CHANGE.modal?.hide();
+          this.MODAL_USER_CHANGE.modal?.hide();
           this.replaseProfilePage();
         })
         .catch((err: ErrorObject) => {

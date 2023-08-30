@@ -1,7 +1,7 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
 
-export default class EditProfileForm extends GetUserData {
+export default class EditUserForm extends GetUserData {
   CLOSE_BUTTON: HTMLButtonElement;
 
   NAME_LABEL: HTMLLabelElement;

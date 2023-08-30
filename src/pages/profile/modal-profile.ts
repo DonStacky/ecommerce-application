@@ -16,8 +16,8 @@ export default class ModalProfileChange {
 
   modal: Modal | undefined;
 
-  constructor(element: HTMLElement) {
-    this.MODAL_CONTAINER = createElementBase('div', ['modal', 'fade'], 'profileModal');
+  constructor(element: HTMLElement, id: string) {
+    this.MODAL_CONTAINER = createElementBase('div', ['modal', 'fade'], id);
     this.MODAL_DIALOG = createElementBase('div', ['modal-dialog', 'modal-dialog_width']);
     this.MODAL_CONTENT = createElementBase('div', ['modal-content', 'modal-content_border']);
     this.MODAL_FOOTER = createElementBase('div', ['modal-footer']);
