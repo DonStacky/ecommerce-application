@@ -122,3 +122,25 @@ export function changeAddress(
     })
     .execute();
 }
+
+export function setDefaultShippingAddress(addressId: string) {
+  const apiRoot = createClientUpdate();
+  const customerID = getCustomerId();
+  if (!customerID) throw new Error('not found UserID');
+
+  return apiRoot
+    .customers()
+    .withId({ ID: customerID })
+    .post({
+      body: {
+        version: getVersion(),
+        actions: [
+          {
+            action: 'setDefaultShippingAddress',
+            addressId,
+          },
+        ],
+      },
+    })
+    .execute();
+}

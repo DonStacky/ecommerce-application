@@ -94,7 +94,7 @@ export default class EditAddressForm extends GetUserData {
     this.STREET_INPUT = createElementBase('input', ['form-control'], 'street');
     this.STREET_FIELD = createElementBase('div', ['form-field']);
 
-    this.SET_DEFAULT = createElementBase('input', ['form-check-input'], 'default', 'Birth date');
+    this.SET_DEFAULT = createElementBase('input', ['form-check-input'], 'default');
     this.DEFAULT_LABEL = createElementBase('label', ['form-check-label'], undefined, 'Set as default');
     this.DEFAULT_OPTIONS = createElementBase('div', ['form-field', 'form-check', 'form-switch']);
 

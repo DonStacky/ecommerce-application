@@ -1,5 +1,12 @@
 import { Customer, ErrorObject } from '@commercetools/platform-sdk';
-import { addAddress, changeAddress, removeAddress, updateUserInformation } from '../../shared/api/update-customer';
+import {
+  addAddress,
+  changeAddress,
+  removeAddress,
+  setDefaultShippingAddress,
+  // eslint-disable-next-line prettier/prettier
+  updateUserInformation
+} from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
 import countries from '../registration/postal-codes';
@@ -262,6 +269,18 @@ export default class ProfilePage extends GetUserData {
         changeAddress(this.edit_address_form.addressId, country.ISO, city, streetName, postalCode)
           .then(({ body }) => {
             this.modal_address_change.modal?.hide();
+            this.writeChanges(body);
+          })
+          .catch((err: ErrorObject) => {
+            console.error(err.message);
+          });
+      }
+      // TODO нужно различеть shipping и billing и не работает при создании нового адреса
+      // Положить в then?
+      if (this.edit_address_form.SET_DEFAULT.checked) {
+        setDefaultShippingAddress(this.edit_address_form.addressId)
+          .then(({ body }) => {
+            // this.modal_address_change.modal?.hide();
             this.writeChanges(body);
           })
           .catch((err: ErrorObject) => {
