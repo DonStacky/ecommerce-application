@@ -1,8 +1,9 @@
-import { ErrorObject, ErrorResponse } from '@commercetools/platform-sdk';
+import { Customer, ErrorObject, ErrorResponse } from '@commercetools/platform-sdk';
 import {
   addAddress,
   changeAddress,
   removeAddress,
+  setDefaultBillingAddress,
   setDefaultShippingAddress,
   // eslint-disable-next-line prettier/prettier
   updateUserInformation
@@ -144,7 +145,8 @@ export default class ProfilePage extends GetUserData {
     const ELEMENT = createElementBase('div', ['card-body']);
 
     for (let i = 0; i < 2; i += 1) {
-      const FORM_ROW = createElementBase('div', ['row']);
+      const fieldId = ['shippingField', 'billingField'];
+      const FORM_ROW = createElementBase('div', ['row'], fieldId[i]);
       const NAME_FIELD = createElementBase('div', ['col-sm-3']);
       const NAME_TEXT = createElementBase('h3', ['mb-0'], undefined, nameData[i]);
       const TITLE_CONTAINER = createElementBase('div', ['col-sm-9']);
@@ -292,11 +294,16 @@ export default class ProfilePage extends GetUserData {
           console.error(error.message);
         }
       }
-      // TODO нужно различеть shipping и billing и не работает при создании нового адреса
-      // Положить в then?
+
       if (this.edit_address_form.SET_DEFAULT.checked) {
         try {
-          const { body } = await setDefaultShippingAddress(this.edit_address_form.addressId);
+          let body: Customer | undefined;
+          if (this.edit_address_form.addressType === 'shipping') {
+            ({ body } = await setDefaultShippingAddress(this.edit_address_form.addressId));
+          }
+          if (this.edit_address_form.addressType === 'billing') {
+            ({ body } = await setDefaultBillingAddress(this.edit_address_form.addressId));
+          }
 
           this.modal_address_change.modal?.hide();
           localStorage.setItem('userInformation', JSON.stringify(body));
@@ -318,6 +325,11 @@ export default class ProfilePage extends GetUserData {
       const FIELDS = this.edit_address_form.FORM.querySelectorAll(
         '.form-field > input'
       ) as NodeListOf<HTMLInputElement>;
+      if (target.closest('#shippingField')) {
+        this.edit_address_form.addressType = 'shipping';
+      } else if (target.closest('#billingField')) {
+        this.edit_address_form.addressType = 'billing';
+      }
 
       COUNTRY_OPTION_SELECTED.removeAttribute('selected');
 
@@ -350,19 +362,26 @@ export default class ProfilePage extends GetUserData {
     });
 
     // Кнопка удаления адреса
+    // TODO нельзя удалять последний адрес (исправить)
+    // Проверить billingIds и shippingIds или еще смотреть на массив address
     this.edit_address_form.DELETE_BUTTON.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.classList[0] !== 'delete-button') return;
 
-      removeAddress(this.edit_address_form.addressId)
-        .then(({ body }) => {
-          this.modal_address_change.modal?.hide();
-          localStorage.setItem('userInformation', JSON.stringify(body));
-          this.replasePage();
-        })
-        .catch((err: ErrorObject) => {
-          console.error(err.message);
-        });
+      const addreses = this.userData?.addresses;
+      if (addreses && addreses.length > 0) {
+        removeAddress(this.edit_address_form.addressId)
+          .then(({ body }) => {
+            this.modal_address_change.modal?.hide();
+            localStorage.setItem('userInformation', JSON.stringify(body));
+            this.replasePage();
+          })
+          .catch((err: ErrorObject) => {
+            console.error(err.message);
+          });
+      } else {
+        console.log('You can`t delete this address. Please change them');
+      }
     });
   }
 

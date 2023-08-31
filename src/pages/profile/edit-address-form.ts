@@ -59,10 +59,13 @@ export default class EditAddressForm extends GetUserData {
 
   addressId: string;
 
+  addressType: string;
+
   constructor() {
     super();
 
     this.addressId = '';
+    this.addressType = '';
 
     this.CLOSE_BUTTON = createElementBase('button', ['btn-close', 'close_align']);
 
