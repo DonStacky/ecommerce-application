@@ -33,3 +33,9 @@ export const productsText = getProducts()
     return body.results[0].masterData.current.description?.en;
   })
   .catch(console.error);
+
+export const productID = getProducts()
+  .then(({ body }) => {
+    return body.results[0].id;
+  })
+  .catch(console.error);

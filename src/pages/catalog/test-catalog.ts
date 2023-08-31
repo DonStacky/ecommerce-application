@@ -1,9 +1,7 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-// import sailboat from '@image/sailboat.jpg';
-import './catalog.scss';
-import { productsImgURL, productsTitle, productsText } from './catalog-data';
-
-console.log(productsImgURL);
+import './test-catalog.scss';
+import { productsImgURL, productsTitle, productsText, productID } from './test-catalog-data';
+import { openDetailedPage } from '../detailed/detailed-data';
 
 const cardTitle = createElement({
   tagname: 'h5',
@@ -29,8 +27,10 @@ const cardBtn = createElement({
   options: [
     ['textContent', `Go somewhere`],
     ['className', 'btn btn-primary'],
-    ['href', '#'],
   ],
+});
+cardBtn.addEventListener('click', () => {
+  openDetailedPage(productID);
 });
 
 const cardMore = createElement({

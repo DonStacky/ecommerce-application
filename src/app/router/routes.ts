@@ -4,7 +4,8 @@ import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
 import BASKET_PAGE from '../../pages/basket/basket';
-import CATALOG_PAGE from '../../pages/catalog/catalog';
+import CATALOG_PAGE from '../../pages/catalog/test-catalog';
+import { DETAILED_PAGE } from '../../pages/detailed/detailed-data';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
@@ -105,6 +106,13 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/profile', () => {
       render(PROFILE_PAGE);
+    })
+    .on('/detailed', () => {
+      // const productID = localStorage.getItem('currentProduct');
+      // if (productID) {
+      //   getDetailedInfo(productID);
+      // }
+      render(DETAILED_PAGE);
     })
     .notFound(() => {
       render(NOT_FOUND);
