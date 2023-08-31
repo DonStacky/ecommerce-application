@@ -57,8 +57,12 @@ export default class EditAddressForm extends GetUserData {
 
   DEFAULT_OPTIONS: HTMLDivElement;
 
+  addressId: string;
+
   constructor() {
     super();
+
+    this.addressId = '';
 
     this.CLOSE_BUTTON = createElementBase('button', ['btn-close', 'close_align']);
 
@@ -113,8 +117,6 @@ export default class EditAddressForm extends GetUserData {
 
     this.addAttributes();
     this.appendElements();
-    // this.fillFields();
-    // this.addEvents();
   }
 
   private addAttributes() {
@@ -156,11 +158,4 @@ export default class EditAddressForm extends GetUserData {
       this.BUTTONS
     );
   }
-
-  /* private fillFields() {
-    this.NAME_INPUT.value = this.getFirstName();
-    this.POSTAL_CODE_INPUT.value = this.getLastName();
-    this.EMAIL_INPUT.value = this.getEmail();
-    this.BIRTH_DATE_INPUT.value = this.getBirthday();
-  } */
 }

@@ -1,5 +1,5 @@
 import { Customer, ErrorObject } from '@commercetools/platform-sdk';
-import updateUserInformation, { addAddress } from '../../shared/api/update-customer';
+import { addAddress, changeAddress, removeAddress, updateUserInformation } from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
 import countries from '../registration/postal-codes';
@@ -249,14 +249,25 @@ export default class ProfilePage extends GetUserData {
       const streetName = this.edit_address_form.STREET_INPUT.value;
       const postalCode = this.edit_address_form.POSTAL_CODE_INPUT.value;
 
-      addAddress(country.ISO, city, streetName, postalCode)
-        .then(({ body }) => {
-          this.modal_address_change.modal?.hide();
-          this.writeChanges(body);
-        })
-        .catch((err: ErrorObject) => {
-          console.error(err.message);
-        });
+      if (this.edit_address_form.DELETE_BUTTON.hasAttribute('disabled')) {
+        addAddress(country.ISO, city, streetName, postalCode)
+          .then(({ body }) => {
+            this.modal_address_change.modal?.hide();
+            this.writeChanges(body);
+          })
+          .catch((err: ErrorObject) => {
+            console.error(err.message);
+          });
+      } else {
+        changeAddress(this.edit_address_form.addressId, country.ISO, city, streetName, postalCode)
+          .then(({ body }) => {
+            this.modal_address_change.modal?.hide();
+            this.writeChanges(body);
+          })
+          .catch((err: ErrorObject) => {
+            console.error(err.message);
+          });
+      }
     });
 
     // Выбор адреса для редактирования
@@ -286,6 +297,7 @@ export default class ProfilePage extends GetUserData {
 
         COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
         this.edit_address_form.DELETE_BUTTON.removeAttribute('disabled');
+        this.edit_address_form.addressId = target.id;
       } else {
         // установить дефолтные значения для полей
         FIELDS.forEach((item) => {
@@ -295,7 +307,23 @@ export default class ProfilePage extends GetUserData {
 
         this.edit_address_form.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');
         this.edit_address_form.DELETE_BUTTON.setAttribute('disabled', '');
+        this.edit_address_form.addressId = '';
       }
+    });
+
+    // Кнопка удаления адреса
+    this.edit_address_form.DELETE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.classList[0] !== 'delete-button') return;
+
+      removeAddress(this.edit_address_form.addressId)
+        .then(({ body }) => {
+          this.modal_address_change.modal?.hide();
+          this.writeChanges(body);
+        })
+        .catch((err: ErrorObject) => {
+          console.error(err.message);
+        });
     });
   }
 

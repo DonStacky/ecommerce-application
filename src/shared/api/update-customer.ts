@@ -1,19 +1,4 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import checkEnvVariables from '../helpers/utilites';
-import { buildClientUpdate } from './build-client';
-
-function getCustomerId(): string | undefined {
-  const userInformation = localStorage.getItem('userInformation');
-  if (!userInformation) return undefined;
-
-  return JSON.parse(userInformation).id;
-}
-
-function getToken() {
-  const token = localStorage.getItem('tokenCache');
-  if (!token) return undefined;
-  return `Bearer ${JSON.parse(token).token}`;
-}
+import { createClientUpdate, getCustomerId } from './create-client-update';
 
 function getVersion(): number {
   const userInformation = localStorage.getItem('userInformation');
@@ -21,14 +6,10 @@ function getVersion(): number {
   return JSON.parse(userInformation).version;
 }
 
-export default function updateUserInformation(firstName: string, lastName: string, email: string, dateOfBirth: string) {
-  const token = getToken();
+export function updateUserInformation(firstName: string, lastName: string, email: string, dateOfBirth: string) {
+  const apiRoot = createClientUpdate();
   const customerID = getCustomerId();
-  if (!token || !customerID) throw new Error('not found Token or UserID');
-  const ctpClient = buildClientUpdate(token);
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-  });
+  if (!customerID) throw new Error('not found UserID');
 
   return apiRoot
     .customers()
@@ -60,13 +41,9 @@ export default function updateUserInformation(firstName: string, lastName: strin
 }
 
 export function addAddress(country: string, city: string, streetName: string, postalCode: string) {
-  const token = getToken();
+  const apiRoot = createClientUpdate();
   const customerID = getCustomerId();
-  if (!token || !customerID) throw new Error('not found Token or UserID');
-  const ctpClient = buildClientUpdate(token);
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-  });
+  if (!customerID) throw new Error('not found UserID');
 
   return apiRoot
     .customers()
@@ -77,6 +54,62 @@ export function addAddress(country: string, city: string, streetName: string, po
         actions: [
           {
             action: 'addAddress',
+            address: {
+              country,
+              city,
+              streetName,
+              postalCode,
+            },
+          },
+        ],
+      },
+    })
+    .execute();
+}
+
+export function removeAddress(addressId: string) {
+  const apiRoot = createClientUpdate();
+  const customerID = getCustomerId();
+  if (!customerID) throw new Error('not found UserID');
+
+  return apiRoot
+    .customers()
+    .withId({ ID: customerID })
+    .post({
+      body: {
+        version: getVersion(),
+        actions: [
+          {
+            action: 'removeAddress',
+            addressId,
+          },
+        ],
+      },
+    })
+    .execute();
+}
+
+export function changeAddress(
+  addressId: string,
+  country: string,
+  city: string,
+  streetName: string,
+  postalCode: string
+) {
+  const apiRoot = createClientUpdate();
+  const customerID = getCustomerId();
+  if (!customerID) throw new Error('not found UserID');
+
+  return apiRoot
+    .customers()
+    .withId({ ID: customerID })
+    .post({
+      body: {
+        version: getVersion(),
+        actions: [
+          {
+            action: 'changeAddress',
+            addressId,
             address: {
               country,
               city,

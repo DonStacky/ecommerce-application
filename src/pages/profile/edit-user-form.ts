@@ -88,7 +88,6 @@ export default class EditUserForm extends GetUserData {
     this.addAttributes();
     this.appendElements();
     this.fillFields();
-    // this.addEvents();
   }
 
   private addAttributes() {
