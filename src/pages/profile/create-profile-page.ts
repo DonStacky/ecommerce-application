@@ -1,4 +1,4 @@
-import { Customer, ErrorObject } from '@commercetools/platform-sdk';
+import { ErrorObject, ErrorResponse } from '@commercetools/platform-sdk';
 import {
   addAddress,
   changeAddress,
@@ -238,7 +238,8 @@ export default class ProfilePage extends GetUserData {
       updateUserInformation(firstName, lastName, email, birthday)
         .then(({ body }) => {
           this.modal_user_change.modal?.hide();
-          this.writeChanges(body);
+          localStorage.setItem('userInformation', JSON.stringify(body));
+          this.replasePage();
         })
         .catch((err: ErrorObject) => {
           console.error(err.message);
@@ -246,7 +247,7 @@ export default class ProfilePage extends GetUserData {
     });
 
     // Кнопка Save формы редактирования адреса
-    this.edit_address_form.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+    this.edit_address_form.SAVE_BUTTON.addEventListener('click', async (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
@@ -257,35 +258,53 @@ export default class ProfilePage extends GetUserData {
       const postalCode = this.edit_address_form.POSTAL_CODE_INPUT.value;
 
       if (this.edit_address_form.DELETE_BUTTON.hasAttribute('disabled')) {
-        addAddress(country.ISO, city, streetName, postalCode)
-          .then(({ body }) => {
-            this.modal_address_change.modal?.hide();
-            this.writeChanges(body);
-          })
-          .catch((err: ErrorObject) => {
-            console.error(err.message);
-          });
+        try {
+          const { body } = await addAddress(country.ISO, city, streetName, postalCode);
+
+          this.edit_address_form.addressId = body.addresses.at(-1)?.id || '';
+          localStorage.setItem('userInformation', JSON.stringify(body));
+        } catch (err) {
+          const error = err as ErrorResponse;
+          console.error(error.message);
+        }
+
+        if (!this.edit_address_form.SET_DEFAULT.checked) {
+          this.modal_address_change.modal?.hide();
+          this.replasePage();
+        }
       } else {
-        changeAddress(this.edit_address_form.addressId, country.ISO, city, streetName, postalCode)
-          .then(({ body }) => {
+        const { body } = await changeAddress(
+          this.edit_address_form.addressId,
+          country.ISO,
+          city,
+          streetName,
+          postalCode
+        );
+        try {
+          localStorage.setItem('userInformation', JSON.stringify(body));
+
+          if (!this.edit_address_form.SET_DEFAULT.checked) {
             this.modal_address_change.modal?.hide();
-            this.writeChanges(body);
-          })
-          .catch((err: ErrorObject) => {
-            console.error(err.message);
-          });
+            this.replasePage();
+          }
+        } catch (err) {
+          const error = err as ErrorResponse;
+          console.error(error.message);
+        }
       }
       // TODO нужно различеть shipping и billing и не работает при создании нового адреса
       // Положить в then?
       if (this.edit_address_form.SET_DEFAULT.checked) {
-        setDefaultShippingAddress(this.edit_address_form.addressId)
-          .then(({ body }) => {
-            // this.modal_address_change.modal?.hide();
-            this.writeChanges(body);
-          })
-          .catch((err: ErrorObject) => {
-            console.error(err.message);
-          });
+        try {
+          const { body } = await setDefaultShippingAddress(this.edit_address_form.addressId);
+
+          this.modal_address_change.modal?.hide();
+          localStorage.setItem('userInformation', JSON.stringify(body));
+          this.replasePage();
+        } catch (err) {
+          const error = err as ErrorResponse;
+          console.error(error.message);
+        }
       }
     });
 
@@ -338,7 +357,8 @@ export default class ProfilePage extends GetUserData {
       removeAddress(this.edit_address_form.addressId)
         .then(({ body }) => {
           this.modal_address_change.modal?.hide();
-          this.writeChanges(body);
+          localStorage.setItem('userInformation', JSON.stringify(body));
+          this.replasePage();
         })
         .catch((err: ErrorObject) => {
           console.error(err.message);
@@ -346,10 +366,9 @@ export default class ProfilePage extends GetUserData {
     });
   }
 
-  private writeChanges(body: Customer) {
+  private replasePage() {
     const PROFILE_PAGE = findDomElement(document.body, '#profile-page');
 
-    localStorage.setItem('userInformation', JSON.stringify(body));
     PROFILE_PAGE.replaceWith(new ProfilePage().PROFILE_CONTAINER);
   }
 }
