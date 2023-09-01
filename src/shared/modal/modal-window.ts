@@ -1,7 +1,7 @@
 import { Alert } from 'bootstrap';
-import { createElement } from '../../shared/helpers/dom-utilites';
+import { createElement } from '../helpers/dom-utilites';
 
-export default function showModal(success: boolean, description?: string) {
+export default function showModal(success: boolean, title: string, description?: string) {
   const SVG_SUCCESS_CONTAINER = createElement({
     tagname: 'div',
     options: [
@@ -41,7 +41,6 @@ export default function showModal(success: boolean, description?: string) {
     tagname: 'div',
     options: [
       ['className', `modal-window alert alert-${success ? `success` : 'danger'} d-flex  alert-dismissible show fade`],
-      ['role', 'alert'],
     ],
     childElements: [
       success ? SVG_SUCCESS_CONTAINER.firstElementChild : SVG_FAILED_CONTAINER.firstElementChild,
@@ -51,7 +50,7 @@ export default function showModal(success: boolean, description?: string) {
         childElements: [
           createElement({
             tagname: 'div',
-            options: [['textContent', success ? 'Successfully created' : 'Registration failed']],
+            options: [['textContent', success ? `Successfully ${title}` : `${title} failed`]],
           }),
           createElement({
             tagname: 'div',
@@ -63,6 +62,7 @@ export default function showModal(success: boolean, description?: string) {
       button,
     ],
   });
+  modal.setAttribute('role', 'alert');
 
   const alert = new Alert(modal);
   document.body.append(modal);

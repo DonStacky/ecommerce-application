@@ -3,10 +3,10 @@ import ROUTER from '../../app/router/router';
 import buildCommonClient from '../../shared/api/create-common-client';
 import loginCustomer from '../../shared/api/login-customer';
 import checkEnvVariables from '../../shared/helpers/utilites';
+import showModal from '../../shared/modal/modal-window';
 import { CustomerData } from '../../shared/types/types';
 import { addLogoutBtn } from '../../widgets/header/header';
 import { findCountry } from './form-validation';
-import showModal from './modal-window';
 
 export function createCustomerFromTemlate(customerData: CustomerData): CustomerDraft {
   const billingAddress = {
@@ -60,11 +60,11 @@ async function registerCustomer(customerData: CustomerData) {
     } = await loginCustomer(customerData.email.value, customerData.password.value);
     ROUTER.navigate('/');
     addLogoutBtn();
-    showModal(true);
+    showModal(true, 'created');
     localStorage.setItem('userInformation', JSON.stringify(customer));
   } catch (err) {
     if (err instanceof Error) {
-      showModal(false, err.message);
+      showModal(false, 'Registration', err.message);
       return false;
     }
   }

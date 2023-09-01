@@ -12,7 +12,7 @@ import {
 } from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
-import showModal from '../registration/modal-window';
+import showModal from '../../shared/modal/modal-window';
 import countries from '../registration/postal-codes';
 import EditAddressForm from './edit-address-form';
 import EditPasswordForm from './edit-password-form';
@@ -263,11 +263,10 @@ export default class ProfilePage extends GetUserData {
           this.modalUserChange.modal?.hide();
           localStorage.setItem('userInformation', JSON.stringify(body));
           this.replasePage();
-          showModal(true);
+          showModal(true, 'update user information');
         })
         .catch((err: ErrorObject) => {
-          console.error(err.message);
-          showModal(false, err.message);
+          showModal(false, 'Update user information', err.message);
         });
     });
 
@@ -282,23 +281,18 @@ export default class ProfilePage extends GetUserData {
       const streetName = this.editAddressForm.STREET_INPUT.value;
       const postalCode = this.editAddressForm.POSTAL_CODE_INPUT.value;
 
-      if (this.editAddressForm.DELETE_BUTTON.hasAttribute('disabled')) {
-        try {
+      try {
+        if (this.editAddressForm.DELETE_BUTTON.hasAttribute('disabled')) {
           const { body } = await addAddress(country.ISO, city, streetName, postalCode);
 
           this.editAddressForm.addressId = body.addresses.at(-1)?.id || '';
           localStorage.setItem('userInformation', JSON.stringify(body));
-        } catch (err) {
-          const error = err as ErrorResponse;
-          console.error(error.message);
-        }
 
-        if (!this.editAddressForm.SET_DEFAULT.checked) {
-          this.modalAddressChange.modal?.hide();
-          this.replasePage();
-        }
-      } else {
-        try {
+          if (!this.editAddressForm.SET_DEFAULT.checked) {
+            this.modalAddressChange.modal?.hide();
+            this.replasePage();
+          }
+        } else {
           const { body } = await changeAddress(
             this.editAddressForm.addressId,
             country.ISO,
@@ -312,14 +306,9 @@ export default class ProfilePage extends GetUserData {
             this.modalAddressChange.modal?.hide();
             this.replasePage();
           }
-        } catch (err) {
-          const error = err as ErrorResponse;
-          console.error(error.message);
         }
-      }
 
-      if (this.editAddressForm.SET_DEFAULT.checked) {
-        try {
+        if (this.editAddressForm.SET_DEFAULT.checked) {
           let body: Customer | undefined;
           if (this.editAddressForm.addressType === 'shipping') {
             ({ body } = await setDefaultShippingAddress(this.editAddressForm.addressId));
@@ -331,10 +320,11 @@ export default class ProfilePage extends GetUserData {
           this.modalAddressChange.modal?.hide();
           localStorage.setItem('userInformation', JSON.stringify(body));
           this.replasePage();
-        } catch (err) {
-          const error = err as ErrorResponse;
-          console.error(error.message);
         }
+        showModal(true, 'change address');
+      } catch (err) {
+        const error = err as ErrorResponse;
+        showModal(false, 'Change address', error.message);
       }
     });
 
@@ -389,18 +379,19 @@ export default class ProfilePage extends GetUserData {
       if (target.classList[0] !== 'delete-button') return;
 
       const addreses = this.userData?.addresses;
-      if (addreses && addreses.length > 0) {
+      if (addreses && addreses.length > 1) {
         removeAddress(this.editAddressForm.addressId)
           .then(({ body }) => {
             this.modalAddressChange.modal?.hide();
             localStorage.setItem('userInformation', JSON.stringify(body));
             this.replasePage();
+            showModal(true, 'delete address');
           })
           .catch((err: ErrorObject) => {
-            console.error(err.message);
+            showModal(false, 'Delete address', err.message);
           });
       } else {
-        console.log('You can`t delete this address. Please change them');
+        showModal(false, 'Change address', 'You can`t delete this address. Please change them');
       }
     });
 
@@ -421,11 +412,10 @@ export default class ProfilePage extends GetUserData {
           this.modalPasswordChange.modal?.hide();
           localStorage.setItem('userInformation', JSON.stringify(customer));
           this.replasePage();
-          showModal(true);
+          showModal(true, 'password changed');
         } catch (err) {
           const error = err as ErrorResponse;
-          console.error(error.message);
-          showModal(false, error.message);
+          showModal(false, 'Change password', error.message);
         }
       }
     });
