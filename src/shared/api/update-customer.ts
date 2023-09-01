@@ -166,3 +166,23 @@ export function setDefaultBillingAddress(addressId: string) {
     })
     .execute();
 }
+
+export function changePassword(currentPassword: string, newPassword: string) {
+  const apiRoot = createClientUpdate();
+  const customerID = getCustomerId();
+  if (!customerID) throw new Error('not found UserID');
+
+  return apiRoot
+    .me()
+    .password()
+    .post({
+      body: {
+        version: getVersion(),
+        currentPassword,
+        newPassword,
+      },
+    })
+    .execute();
+}
+
+// const a: CustomerDraft =

@@ -1,7 +1,9 @@
 import { Customer, ErrorObject, ErrorResponse } from '@commercetools/platform-sdk';
+import loginCustomer from '../../shared/api/login-customer';
 import {
   addAddress,
   changeAddress,
+  changePassword,
   removeAddress,
   setDefaultBillingAddress,
   setDefaultShippingAddress,
@@ -10,8 +12,10 @@ import {
 } from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
+import showModal from '../registration/modal-window';
 import countries from '../registration/postal-codes';
 import EditAddressForm from './edit-address-form';
+import EditPasswordForm from './edit-password-form';
 import EditUserForm from './edit-user-form';
 import ModalProfileChange from './modal-profile';
 
@@ -42,7 +46,9 @@ export default class ProfilePage extends GetUserData {
 
   BUTTON_CONTAINER: HTMLDivElement;
 
-  BUTTON_LINK: HTMLAnchorElement;
+  BUTTON_EDIT: HTMLAnchorElement;
+
+  BUTTON_CHANGE_PASSWORD: HTMLAnchorElement;
 
   CARD_BODY_ADDRESS: HTMLDivElement;
 
@@ -52,13 +58,17 @@ export default class ProfilePage extends GetUserData {
 
   PROFILE_FORM_ADDRESS: HTMLDivElement;
 
-  edit_user_form: EditUserForm;
+  editUserForm: EditUserForm;
 
-  edit_address_form: EditAddressForm;
+  editAddressForm: EditAddressForm;
 
-  modal_user_change: ModalProfileChange;
+  editPasswordForm: EditPasswordForm;
 
-  modal_address_change: ModalProfileChange;
+  modalUserChange: ModalProfileChange;
+
+  modalAddressChange: ModalProfileChange;
+
+  modalPasswordChange: ModalProfileChange;
 
   constructor() {
     super();
@@ -103,17 +113,27 @@ export default class ProfilePage extends GetUserData {
     this.BUTTON_USER = createElementBase('div', ['row']);
     this.FORM_BODY_ADDRESS = this.createAddressFormBody();
     this.BUTTON_CONTAINER = createElementBase('div', ['col-sm-12']);
-    this.BUTTON_LINK = createElementBase('a', ['btn', 'btn-info', 'btn-lg'], undefined, 'Edit');
+    this.BUTTON_EDIT = createElementBase('a', ['btn', 'btn-info', 'btn-lg'], undefined, 'Edit');
+    this.BUTTON_CHANGE_PASSWORD = createElementBase(
+      'a',
+      ['btn', 'btn-info', 'btn-lg', 'ms-5'],
+      undefined,
+      'Change password'
+    );
 
     this.CARD_IMG.setAttribute('alt', 'User image');
     this.CARD_IMG.setAttribute('src', 'https://bootdey.com/img/Content/avatar/avatar7.png');
-    this.BUTTON_LINK.setAttribute('data-bs-toggle', 'modal');
-    this.BUTTON_LINK.setAttribute('data-bs-target', '#userModal');
+    this.BUTTON_EDIT.setAttribute('data-bs-toggle', 'modal');
+    this.BUTTON_EDIT.setAttribute('data-bs-target', '#userModal');
+    this.BUTTON_CHANGE_PASSWORD.setAttribute('data-bs-toggle', 'modal');
+    this.BUTTON_CHANGE_PASSWORD.setAttribute('data-bs-target', '#passwordModal');
 
-    this.edit_user_form = new EditUserForm();
-    this.edit_address_form = new EditAddressForm();
-    this.modal_user_change = new ModalProfileChange(this.edit_user_form.FORM, 'userModal');
-    this.modal_address_change = new ModalProfileChange(this.edit_address_form.FORM, 'addressModal');
+    this.editUserForm = new EditUserForm();
+    this.editAddressForm = new EditAddressForm();
+    this.editPasswordForm = new EditPasswordForm();
+    this.modalUserChange = new ModalProfileChange(this.editUserForm.FORM, 'userModal');
+    this.modalAddressChange = new ModalProfileChange(this.editAddressForm.FORM, 'addressModal');
+    this.modalPasswordChange = new ModalProfileChange(this.editPasswordForm.FORM, 'passwordModal');
     this.appendElements();
     this.addEvents();
   }
@@ -211,11 +231,12 @@ export default class ProfilePage extends GetUserData {
     this.CARD_BODY_USER.append(this.CARD_IMG, this.CARD_TITLE);
     this.PROFILE_CARD.append(this.CARD_BODY_USER);
 
-    this.BUTTON_CONTAINER.append(this.BUTTON_LINK);
+    this.BUTTON_CONTAINER.append(this.BUTTON_EDIT, this.BUTTON_CHANGE_PASSWORD);
     this.BUTTON_USER.append(this.BUTTON_CONTAINER);
     this.FORM_BODY_USER.append(
-      this.modal_user_change.MODAL_CONTAINER,
-      this.modal_address_change.MODAL_CONTAINER,
+      this.modalUserChange.MODAL_CONTAINER,
+      this.modalAddressChange.MODAL_CONTAINER,
+      this.modalPasswordChange.MODAL_CONTAINER,
       this.BUTTON_USER
     );
 
@@ -228,65 +249,67 @@ export default class ProfilePage extends GetUserData {
 
   private addEvents() {
     // кнопка Save формы редактирования данных пользователя
-    this.edit_user_form.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+    this.editUserForm.SAVE_BUTTON.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      const firstName = this.edit_user_form.NAME_INPUT.value;
-      const lastName = this.edit_user_form.LAST_NAME_INPUT.value;
-      const email = this.edit_user_form.EMAIL_INPUT.value;
-      const birthday = this.edit_user_form.BIRTH_DATE_INPUT.value;
+      const firstName = this.editUserForm.NAME_INPUT.value;
+      const lastName = this.editUserForm.LAST_NAME_INPUT.value;
+      const email = this.editUserForm.EMAIL_INPUT.value;
+      const birthday = this.editUserForm.BIRTH_DATE_INPUT.value;
 
       updateUserInformation(firstName, lastName, email, birthday)
         .then(({ body }) => {
-          this.modal_user_change.modal?.hide();
+          this.modalUserChange.modal?.hide();
           localStorage.setItem('userInformation', JSON.stringify(body));
           this.replasePage();
+          showModal(true);
         })
         .catch((err: ErrorObject) => {
           console.error(err.message);
+          showModal(false, err.message);
         });
     });
 
     // Кнопка Save формы редактирования адреса
-    this.edit_address_form.SAVE_BUTTON.addEventListener('click', async (event: MouseEvent) => {
+    this.editAddressForm.SAVE_BUTTON.addEventListener('click', async (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      const countryFromForm = this.edit_address_form.COUNTRY_SELECT.value;
+      const countryFromForm = this.editAddressForm.COUNTRY_SELECT.value;
       const [country] = countries.filter((item) => item.Country === countryFromForm);
-      const city = this.edit_address_form.CITY_INPUT.value;
-      const streetName = this.edit_address_form.STREET_INPUT.value;
-      const postalCode = this.edit_address_form.POSTAL_CODE_INPUT.value;
+      const city = this.editAddressForm.CITY_INPUT.value;
+      const streetName = this.editAddressForm.STREET_INPUT.value;
+      const postalCode = this.editAddressForm.POSTAL_CODE_INPUT.value;
 
-      if (this.edit_address_form.DELETE_BUTTON.hasAttribute('disabled')) {
+      if (this.editAddressForm.DELETE_BUTTON.hasAttribute('disabled')) {
         try {
           const { body } = await addAddress(country.ISO, city, streetName, postalCode);
 
-          this.edit_address_form.addressId = body.addresses.at(-1)?.id || '';
+          this.editAddressForm.addressId = body.addresses.at(-1)?.id || '';
           localStorage.setItem('userInformation', JSON.stringify(body));
         } catch (err) {
           const error = err as ErrorResponse;
           console.error(error.message);
         }
 
-        if (!this.edit_address_form.SET_DEFAULT.checked) {
-          this.modal_address_change.modal?.hide();
+        if (!this.editAddressForm.SET_DEFAULT.checked) {
+          this.modalAddressChange.modal?.hide();
           this.replasePage();
         }
       } else {
-        const { body } = await changeAddress(
-          this.edit_address_form.addressId,
-          country.ISO,
-          city,
-          streetName,
-          postalCode
-        );
         try {
+          const { body } = await changeAddress(
+            this.editAddressForm.addressId,
+            country.ISO,
+            city,
+            streetName,
+            postalCode
+          );
           localStorage.setItem('userInformation', JSON.stringify(body));
 
-          if (!this.edit_address_form.SET_DEFAULT.checked) {
-            this.modal_address_change.modal?.hide();
+          if (!this.editAddressForm.SET_DEFAULT.checked) {
+            this.modalAddressChange.modal?.hide();
             this.replasePage();
           }
         } catch (err) {
@@ -295,17 +318,17 @@ export default class ProfilePage extends GetUserData {
         }
       }
 
-      if (this.edit_address_form.SET_DEFAULT.checked) {
+      if (this.editAddressForm.SET_DEFAULT.checked) {
         try {
           let body: Customer | undefined;
-          if (this.edit_address_form.addressType === 'shipping') {
-            ({ body } = await setDefaultShippingAddress(this.edit_address_form.addressId));
+          if (this.editAddressForm.addressType === 'shipping') {
+            ({ body } = await setDefaultShippingAddress(this.editAddressForm.addressId));
           }
-          if (this.edit_address_form.addressType === 'billing') {
-            ({ body } = await setDefaultBillingAddress(this.edit_address_form.addressId));
+          if (this.editAddressForm.addressType === 'billing') {
+            ({ body } = await setDefaultBillingAddress(this.editAddressForm.addressId));
           }
 
-          this.modal_address_change.modal?.hide();
+          this.modalAddressChange.modal?.hide();
           localStorage.setItem('userInformation', JSON.stringify(body));
           this.replasePage();
         } catch (err) {
@@ -322,14 +345,12 @@ export default class ProfilePage extends GetUserData {
       if (target.innerText === 'Set some address as default') return;
 
       const addressArr = target.innerText.split(', ');
-      const COUNTRY_OPTION_SELECTED = findDomElement<'option'>(this.edit_address_form.FORM, 'option[selected="true"]');
-      const FIELDS = this.edit_address_form.FORM.querySelectorAll(
-        '.form-field > input'
-      ) as NodeListOf<HTMLInputElement>;
+      const COUNTRY_OPTION_SELECTED = findDomElement<'option'>(this.editAddressForm.FORM, 'option[selected="true"]');
+      const FIELDS = this.editAddressForm.FORM.querySelectorAll('.form-field > input') as NodeListOf<HTMLInputElement>;
       if (target.closest('#shippingField')) {
-        this.edit_address_form.addressType = 'shipping';
+        this.editAddressForm.addressType = 'shipping';
       } else if (target.closest('#billingField')) {
-        this.edit_address_form.addressType = 'billing';
+        this.editAddressForm.addressType = 'billing';
       }
 
       COUNTRY_OPTION_SELECTED.removeAttribute('selected');
@@ -337,7 +358,7 @@ export default class ProfilePage extends GetUserData {
       if (target.classList[0] === 'text-secondary') {
         const country = countries.filter((item) => item.ISO === addressArr[0]);
         const COUNTRY_OPTION_FIND = findDomElement<'option'>(
-          this.edit_address_form.FORM,
+          this.editAddressForm.FORM,
           `option[value="${country[0].Country}"]`
         );
 
@@ -347,8 +368,8 @@ export default class ProfilePage extends GetUserData {
         });
 
         COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
-        this.edit_address_form.DELETE_BUTTON.removeAttribute('disabled');
-        this.edit_address_form.addressId = target.id;
+        this.editAddressForm.DELETE_BUTTON.removeAttribute('disabled');
+        this.editAddressForm.addressId = target.id;
       } else {
         // установить дефолтные значения для полей
         FIELDS.forEach((item) => {
@@ -356,24 +377,22 @@ export default class ProfilePage extends GetUserData {
           element.value = '';
         });
 
-        this.edit_address_form.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');
-        this.edit_address_form.DELETE_BUTTON.setAttribute('disabled', '');
-        this.edit_address_form.addressId = '';
+        this.editAddressForm.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');
+        this.editAddressForm.DELETE_BUTTON.setAttribute('disabled', '');
+        this.editAddressForm.addressId = '';
       }
     });
 
     // Кнопка удаления адреса
-    // TODO нельзя удалять последний адрес (исправить)
-    // Проверить billingIds и shippingIds или еще смотреть на массив address
-    this.edit_address_form.DELETE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+    this.editAddressForm.DELETE_BUTTON.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLButtonElement;
       if (target.classList[0] !== 'delete-button') return;
 
       const addreses = this.userData?.addresses;
       if (addreses && addreses.length > 0) {
-        removeAddress(this.edit_address_form.addressId)
+        removeAddress(this.editAddressForm.addressId)
           .then(({ body }) => {
-            this.modal_address_change.modal?.hide();
+            this.modalAddressChange.modal?.hide();
             localStorage.setItem('userInformation', JSON.stringify(body));
             this.replasePage();
           })
@@ -382,6 +401,32 @@ export default class ProfilePage extends GetUserData {
           });
       } else {
         console.log('You can`t delete this address. Please change them');
+      }
+    });
+
+    // Кнопка Save формы редактирования пароля
+    this.editPasswordForm.SAVE_BUTTON.addEventListener('click', async (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.tagName !== 'BUTTON') return;
+
+      const currentPassword = this.editPasswordForm.OLD_PASSWORD_INPUT.value;
+      const newPassword = this.editPasswordForm.NEW_PASSWORD_INPUT.value;
+      const email = this.userData?.email;
+      if (email) {
+        try {
+          await changePassword(currentPassword, newPassword);
+          const {
+            body: { customer },
+          } = await loginCustomer(email, newPassword);
+          this.modalPasswordChange.modal?.hide();
+          localStorage.setItem('userInformation', JSON.stringify(customer));
+          this.replasePage();
+          showModal(true);
+        } catch (err) {
+          const error = err as ErrorResponse;
+          console.error(error.message);
+          showModal(false, error.message);
+        }
       }
     });
   }
