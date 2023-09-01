@@ -1,7 +1,17 @@
 import * as yup from 'yup';
 
+const firstNameSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required('Please enter your first name. First name field is required')
+    .matches(
+      /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
+      'First name should not contain any special symbols or numbers. First name must not contain leading or trailing whitespace'
+    ),
+});
+
 const loginSchema = yup.object().shape({
-  login: yup
+  title: yup
     .string()
     .required('Email addres is required')
     .matches(/^\S+$/, 'Email address must not contain leading or trailing whitespace')
@@ -18,7 +28,7 @@ const loginSchema = yup.object().shape({
 });
 
 const passwordSchema = yup.object().shape({
-  password: yup
+  title: yup
     .string()
     .required('Password is required')
     .min(8, 'Password too short')
@@ -32,6 +42,15 @@ const passwordSchema = yup.object().shape({
 export function loginValidation(login: yup.InferType<typeof loginSchema>) {
   try {
     const validate = loginSchema.validateSync(login);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+
+export function firstNameValidation(firstName: yup.InferType<typeof firstNameSchema>) {
+  try {
+    const validate = firstNameSchema.validateSync(firstName);
     return validate;
   } catch (error) {
     return (error as Error).message;

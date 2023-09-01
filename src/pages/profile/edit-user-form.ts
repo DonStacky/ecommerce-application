@@ -1,5 +1,8 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
+import { firstNameValidation, loginValidation } from '../../shared/helpers/validation';
+import validationResults from './data';
+import { UserValidation } from './types';
 
 export default class EditUserForm extends GetUserData {
   CLOSE_BUTTON: HTMLButtonElement;
@@ -49,25 +52,25 @@ export default class EditUserForm extends GetUserData {
 
     this.CLOSE_BUTTON = createElementBase('button', ['btn-close', 'close_align']);
     this.NAME_LABEL = createElementBase('label', ['form-label'], undefined, 'First name');
-    this.NAME_INVALID = createElementBase('div', ['invalid-feedback'], 'name-validation');
-    this.NAME_INPUT = createElementBase('input', ['form-control'], 'firstName');
+    this.NAME_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.NAME_INPUT = createElementBase('input', ['form-control'], 'profileFirstName');
     this.NAME_FIELD = createElementBase('div', ['form-field']);
 
     this.LAST_NAME_LABEL = createElementBase('label', ['form-label'], undefined, 'Last name');
-    this.LAST_NAME_INVALID = createElementBase('div', ['invalid-feedback'], 'last-name-validation');
-    this.LAST_NAME_INPUT = createElementBase('input', ['form-control'], 'lastName');
+    this.LAST_NAME_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.LAST_NAME_INPUT = createElementBase('input', ['form-control'], 'profileLastName');
     this.LAST_NAME_FIELD = createElementBase('div', ['form-field']);
 
     this.EMAIL_LABEL = createElementBase('label', ['form-label'], undefined, 'Email');
     this.EMAIL_SYMBOL = createElementBase('span', ['input-group-text'], 'inputGroupPrepend', '@');
-    this.EMAIL_INVALID = createElementBase('div', ['invalid-feedback'], 'email-validation');
-    this.EMAIL_INPUT = createElementBase('input', ['form-control'], 'email');
-    this.EMAIL_INPUT_GROUP = createElementBase('div', ['input-group', 'has-validation'], 'email');
+    this.EMAIL_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.EMAIL_INPUT = createElementBase('input', ['form-control'], 'profileEmail');
+    this.EMAIL_INPUT_GROUP = createElementBase('div', ['input-group', 'has-validation']);
     this.EMAIL_FIELD = createElementBase('div', ['form-field']);
 
     this.BIRTH_DATE_LABEL = createElementBase('label', ['form-label'], undefined, 'Birth date');
-    this.BIRTH_DATE_INVALID = createElementBase('div', ['invalid-feedback'], 'birth-date-validation');
-    this.BIRTH_DATE_INPUT = createElementBase('input', ['form-control'], 'birthDate');
+    this.BIRTH_DATE_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.BIRTH_DATE_INPUT = createElementBase('input', ['form-control'], 'profileBirthDate');
     this.BIRTH_DATE_FIELD = createElementBase('div', ['form-field']);
 
     this.SAVE_BUTTON = createElementBase('button', ['submit-button', 'm-3'], undefined, 'Save');
@@ -88,23 +91,25 @@ export default class EditUserForm extends GetUserData {
     this.addAttributes();
     this.appendElements();
     this.fillFields();
+    this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
   }
 
   private addAttributes() {
     this.CLOSE_BUTTON.setAttribute('type', `button`);
     this.CLOSE_BUTTON.setAttribute('data-bs-dismiss', 'modal');
     this.CLOSE_BUTTON.setAttribute('area-label', 'Close');
-    this.NAME_LABEL.setAttribute('for', `firstName`);
+    this.NAME_LABEL.setAttribute('for', `profileFirstName`);
     this.NAME_INPUT.setAttribute('type', `text`);
     this.LAST_NAME_LABEL.setAttribute('for', `lastName`);
     this.LAST_NAME_INPUT.setAttribute('type', `text`);
-    this.EMAIL_LABEL.setAttribute('for', `email`);
+    this.EMAIL_LABEL.setAttribute('for', `profileEmail`);
     this.EMAIL_INPUT.setAttribute('type', `text`);
     this.EMAIL_INPUT.setAttribute('aria-describedby', 'inputGroupPrepend');
-    this.BIRTH_DATE_LABEL.setAttribute('for', `birthDate`);
+    this.BIRTH_DATE_LABEL.setAttribute('for', `profileBirthDate`);
     this.BIRTH_DATE_INPUT.setAttribute('type', `date`);
     this.FORM.setAttribute('noValidate', 'true');
     this.SAVE_BUTTON.setAttribute('type', 'button');
+    this.SAVE_BUTTON.setAttribute('disabled', '');
   }
 
   private appendElements() {
@@ -128,5 +133,63 @@ export default class EditUserForm extends GetUserData {
     this.LAST_NAME_INPUT.value = this.getLastName();
     this.EMAIL_INPUT.value = this.getEmail();
     this.BIRTH_DATE_INPUT.value = this.getBirthday();
+  }
+
+  private liveValidation(event: KeyboardEvent) {
+    const target = event.target as HTMLInputElement;
+    if (target.tagName !== 'INPUT') return;
+
+    const text = target.value;
+
+    if (target.id === 'profileFirstName') {
+      const validation = firstNameValidation({ title: text });
+
+      if (typeof validation === 'string') {
+        this.NAME_INVALID.innerText = validation;
+        target.classList.add('form-control_validation');
+        validationResults.firstName = false;
+      } else {
+        target.classList.remove('form-control_validation');
+        this.NAME_INVALID.innerText = '';
+        validationResults.firstName = true;
+      }
+    }
+
+    if (target.id === 'profileEmail') {
+      const validation = loginValidation({ title: text });
+
+      if (typeof validation === 'string') {
+        this.EMAIL_INVALID.innerText = validation;
+        target.classList.add('form-control_validation');
+        validationResults.email = false;
+      } else {
+        target.classList.remove('form-control_validation');
+        this.EMAIL_INVALID.innerText = '';
+        validationResults.email = true;
+      }
+    }
+
+    this.createBtnStatus(validationResults);
+  }
+
+  /* private applyValidation(validation: string, element: HTMLDivElement, target: HTMLInputElement) {
+    const ELEMENT = element;
+    if (typeof validation === 'string') {
+      ELEMENT.innerText = validation;
+      target.classList.add('form-control_validation');
+      validationResults.login = false;
+    } else {
+      target.classList.remove('form-control_validation');
+      ELEMENT.innerText = '';
+      validationResults.login = true;
+    }
+  } */
+
+  private createBtnStatus(validationData: UserValidation) {
+    if (validationData.email && validationData.firstName) {
+      this.SAVE_BUTTON.removeAttribute('disabled');
+    } else {
+      this.SAVE_BUTTON.setAttribute('disabled', '');
+    }
   }
 }

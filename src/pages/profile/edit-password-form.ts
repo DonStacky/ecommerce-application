@@ -38,17 +38,17 @@ export default class EditPasswordForm extends GetUserData {
     this.CLOSE_BUTTON = createElementBase('button', ['btn-close', 'close_align']);
 
     this.OLD_PASSWORD_LABEL = createElementBase('label', ['form-label'], undefined, 'Curent password');
-    this.OLD_PASSWORD_INVALID = createElementBase('div', ['invalid-feedback'], 'password-validation');
+    this.OLD_PASSWORD_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
     this.OLD_PASSWORD_INPUT = createElementBase('input', ['form-control'], 'oldPassword');
     this.OLD_PASSWORD_FIELD = createElementBase('div', ['form-field']);
 
     this.NEW_PASSWORD_LABEL = createElementBase('label', ['form-label'], undefined, 'New password');
-    this.NEW_PASSWORD_INVALID = createElementBase('div', ['invalid-feedback'], 'password-validation');
+    this.NEW_PASSWORD_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
     this.NEW_PASSWORD_INPUT = createElementBase('input', ['form-control'], 'newPassword');
     this.NEW_PASSWORD_FIELD = createElementBase('div', ['form-field']);
 
     this.REPEAT_NEW_PASSWORD_LABEL = createElementBase('label', ['form-label'], undefined, 'Repeat new password');
-    this.REPEAT_NEW_PASSWORD_INVALID = createElementBase('div', ['invalid-feedback'], 'password-validation');
+    this.REPEAT_NEW_PASSWORD_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
     this.REPEAT_NEW_PASSWORD_INPUT = createElementBase('input', ['form-control'], 'repeatNewPassword');
     this.REPEAT_NEW_PASSWORD_FIELD = createElementBase('div', ['form-field']);
 
@@ -81,8 +81,8 @@ export default class EditPasswordForm extends GetUserData {
     this.NEW_PASSWORD_INPUT.setAttribute('type', `password`);
     this.REPEAT_NEW_PASSWORD_INPUT.setAttribute('type', `password`);
     this.REPEAT_NEW_PASSWORD_LABEL.setAttribute('for', `repeatNewPassword`);
-    this.FORM.setAttribute('noValidate', 'true');
     this.SAVE_BUTTON.setAttribute('type', 'button');
+    this.FORM.setAttribute('noValidate', 'true');
   }
 
   private appendElements() {

@@ -78,26 +78,26 @@ export default class EditAddressForm extends GetUserData {
       element.setAttribute('value', Country);
       return element;
     });
-    this.COUNTRY_INVALID = createElementBase('div', ['invalid-feedback'], 'country-validation');
-    this.COUNTRY_SELECT = createElementBase('select', ['form-control'], 'country');
+    this.COUNTRY_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.COUNTRY_SELECT = createElementBase('select', ['form-control'], 'profileCountry');
     this.COUNTRY_FIELD = createElementBase('div', ['form-field']);
 
     this.POSTAL_CODE_LABEL = createElementBase('label', ['form-label'], undefined, 'Postal code');
-    this.POSTAL_CODE_INVALID = createElementBase('div', ['invalid-feedback'], 'postal-code-validation');
-    this.POSTAL_CODE_INPUT = createElementBase('input', ['form-control'], 'postalCode');
+    this.POSTAL_CODE_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.POSTAL_CODE_INPUT = createElementBase('input', ['form-control'], 'profilePostalCode');
     this.POSTAL_CODE_FIELD = createElementBase('div', ['form-field']);
 
     this.CITY_LABEL = createElementBase('label', ['form-label'], undefined, 'City');
-    this.CITY_INVALID = createElementBase('div', ['invalid-feedback'], 'city-validation');
-    this.CITY_INPUT = createElementBase('input', ['form-control'], 'city');
+    this.CITY_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.CITY_INPUT = createElementBase('input', ['form-control'], 'profileCity');
     this.CITY_FIELD = createElementBase('div', ['form-field']);
 
     this.STREET_LABEL = createElementBase('label', ['form-label'], undefined, 'Street');
-    this.STREET_INVALID = createElementBase('div', ['invalid-feedback'], 'street-validation');
-    this.STREET_INPUT = createElementBase('input', ['form-control'], 'street');
+    this.STREET_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
+    this.STREET_INPUT = createElementBase('input', ['form-control'], 'profileStreet');
     this.STREET_FIELD = createElementBase('div', ['form-field']);
 
-    this.SET_DEFAULT = createElementBase('input', ['form-check-input'], 'default');
+    this.SET_DEFAULT = createElementBase('input', ['form-check-input'], 'profileDefault');
     this.DEFAULT_LABEL = createElementBase('label', ['form-check-label'], undefined, 'Set as default');
     this.DEFAULT_OPTIONS = createElementBase('div', ['form-field', 'form-check', 'form-switch']);
 
@@ -126,18 +126,18 @@ export default class EditAddressForm extends GetUserData {
     this.CLOSE_BUTTON.setAttribute('type', `button`);
     this.CLOSE_BUTTON.setAttribute('data-bs-dismiss', 'modal');
     this.CLOSE_BUTTON.setAttribute('area-label', 'Close');
-    this.COUNTRY_LABEL.setAttribute('for', `country`);
+    this.COUNTRY_LABEL.setAttribute('for', `profileCountry`);
     this.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');
     this.COUNTRY_PRESELECTED_OPTION.setAttribute('disabled', 'true');
     this.COUNTRY_PRESELECTED_OPTION.setAttribute('value', '');
-    this.POSTAL_CODE_LABEL.setAttribute('for', `postalCode`);
+    this.POSTAL_CODE_LABEL.setAttribute('for', `profilePostalCode`);
     this.POSTAL_CODE_INPUT.setAttribute('type', `text`);
-    this.CITY_LABEL.setAttribute('for', `city`);
+    this.CITY_LABEL.setAttribute('for', `profileCity`);
     this.CITY_INPUT.setAttribute('type', `text`);
-    this.STREET_LABEL.setAttribute('for', `street`);
+    this.STREET_LABEL.setAttribute('for', `profileStreet`);
     this.STREET_INPUT.setAttribute('type', `text`);
     this.SET_DEFAULT.setAttribute('type', `checkbox`);
-    this.DEFAULT_LABEL.setAttribute('for', `default`);
+    this.DEFAULT_LABEL.setAttribute('for', `profileDefault`);
     this.FORM.setAttribute('noValidate', 'true');
     this.SAVE_BUTTON.setAttribute('type', 'button');
     this.DELETE_BUTTON.setAttribute('type', 'button');
