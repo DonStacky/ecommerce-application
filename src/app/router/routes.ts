@@ -108,10 +108,6 @@ const getRoutes = (router: Navigo) => {
       render(PROFILE_PAGE);
     })
     .on('/detailed', () => {
-      // const productID = localStorage.getItem('currentProduct');
-      // if (productID) {
-      //   getDetailedInfo(productID);
-      // }
       render(DETAILED_PAGE);
     })
     .notFound(() => {

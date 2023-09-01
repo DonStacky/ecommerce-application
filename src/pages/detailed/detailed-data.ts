@@ -1,5 +1,5 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import getProduct from './detailed-page';
+import { getProduct, getCategories } from './detailed-page';
 import router from '../../app/router/router';
 import './detailed-page.scss';
 
@@ -8,7 +8,7 @@ const DETAILED_TEXT_COLUMN = createElement({
   options: [
     [
       'className',
-      'col text-center col-sm-6 col-12 d-flex flex-column justify-content-center align-items-start detailed__text',
+      'col text-center col-sm-6 col-8 d-flex flex-column justify-content-center align-items-start detailed__text-column',
     ],
   ],
 });
@@ -20,7 +20,7 @@ const DETAILED_TITLE = createElement({
 
 const DETAILED_DESC_TEXT = createElement({
   tagname: 'p',
-  options: [['className', 'text-dark mt-5 me-5 text-start']],
+  options: [['className', 'text-dark mt-3 text-start detailed__text']],
 });
 
 const DETAILED_CAROUSEL_INNER = createElement({
@@ -109,32 +109,134 @@ export const DETAILED_PAGE = createElement({
   childElements: [DETAILED_GRID_ROW],
 });
 
-function getTitle(id: string) {
-  getProduct(id)
-    .then(({ body }) => {
-      DETAILED_TITLE.textContent = body.masterData.current.name.en;
-    })
-    .catch(console.error);
+const charachteristics = ['Category', 'Material', 'Season', 'Size'];
 
-  DETAILED_TEXT_COLUMN.append(DETAILED_TITLE);
+const CHARACTER_DTS = charachteristics.map((text) => {
+  const CHARACTER_DT = createElement({
+    tagname: 'dt',
+    options: [
+      ['className', 'detailed__term'],
+      ['textContent', `${text}`],
+    ],
+  });
+
+  return CHARACTER_DT;
+});
+
+const CHARACTER_DDS = charachteristics.map(() => {
+  const CHARACTER_DD = createElement({
+    tagname: 'dd',
+    options: [['className', 'detailed__description']],
+  });
+
+  return CHARACTER_DD;
+});
+
+async function getCharachteristics(id: string) {
+  const categoriesID = (await getProduct(id)).body.masterData.current.categories;
+  const categories = categoriesID.map(async (item) => {
+    const category = (await getCategories(item.id)).body.name;
+
+    return category;
+  });
+  CHARACTER_DDS.forEach(async (dd, index) => {
+    if (index < 3) {
+      // eslint-disable-next-line no-param-reassign
+      dd.textContent = (await categories[index]).en;
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      dd.textContent = (await getProduct(id)).body.masterData.current.masterVariant.attributes?.[0].value;
+    }
+  });
+}
+
+const CHARACTER_DLS = charachteristics.map((stub, index) => {
+  const CHARACTER_DL = createElement({
+    tagname: 'dl',
+    options: [['className', 'detailed__list']],
+    childElements: [CHARACTER_DTS[index], CHARACTER_DDS[index]],
+  });
+
+  return CHARACTER_DL;
+});
+
+const DETAILED_CHARACTER = createElement({
+  tagname: 'div',
+  options: [
+    ['className', 'characteristic-wrapper'],
+    ['id', 'detailedCharacteristic'],
+  ],
+  childElements: [...CHARACTER_DLS],
+});
+
+const DETAILED_CHARACTER_LINK = createElement({
+  tagname: 'span',
+  options: [
+    ['className', 'characteristic-link mb-3'],
+    ['textContent', 'Characteristics'],
+    ['ariaExpanded', 'false'],
+  ],
+});
+DETAILED_CHARACTER_LINK.addEventListener('click', () => {
+  DETAILED_CHARACTER.classList.toggle('characteristic-wrapper--show');
+});
+
+DETAILED_TEXT_COLUMN.append(DETAILED_CHARACTER_LINK, DETAILED_CHARACTER);
+
+const DETAILED_PRICE = createElement({
+  tagname: 'span',
+  options: [['className', 'detailed__price']],
+});
+
+const DETAILED_DISCOUNT = createElement({
+  tagname: 'span',
+  options: [['className', 'detailed__discount']],
+});
+
+function getTitle(id: string) {
+  getProduct(id).then(({ body }) => {
+    DETAILED_TITLE.textContent = body.masterData.current.name.en;
+  });
+
+  DETAILED_TEXT_COLUMN.prepend(DETAILED_TITLE);
 }
 
 function getText(id: string) {
-  getProduct(id)
-    .then(({ body }) => {
-      const text = body.masterData.current.description?.en;
-      if (text) {
-        DETAILED_DESC_TEXT.textContent = text;
-      }
-    })
-    .catch(console.error);
+  getProduct(id).then(({ body }) => {
+    const text = body.masterData.current.description?.en;
+    if (text) {
+      DETAILED_DESC_TEXT.textContent = text;
+    }
+  });
 
-  DETAILED_TEXT_COLUMN.append(DETAILED_DESC_TEXT);
+  DETAILED_TEXT_COLUMN.prepend(DETAILED_DESC_TEXT);
+}
+
+function getPrice(id: string) {
+  getProduct(id).then(({ body }) => {
+    const priceCent = body.masterData.current.masterVariant.prices?.[0].value.centAmount;
+    if (priceCent) {
+      DETAILED_PRICE.textContent = `${(priceCent / 100).toFixed(2)} $`;
+    }
+  });
+}
+
+DETAILED_TEXT_COLUMN.append(DETAILED_PRICE);
+
+function getDiscount(id: string) {
+  getProduct(id).then(({ body }) => {
+    const discountCent = body.masterData.current.masterVariant.prices?.[0].discounted?.value.centAmount;
+
+    if (discountCent) {
+      DETAILED_DISCOUNT.textContent = DETAILED_PRICE.textContent;
+      DETAILED_PRICE.textContent = `${(discountCent / 100).toFixed(2)} $`;
+      DETAILED_PRICE.append(DETAILED_DISCOUNT);
+    }
+  });
 }
 
 async function getCarousel(id: string) {
   const detailedCarouselImages = (await getProduct(id)).body.masterData.current.masterVariant.images;
-  console.log(detailedCarouselImages);
 
   if (detailedCarouselImages) {
     const DETAILED_CAROUSEL_IMAGES = detailedCarouselImages.map((image) => {
@@ -164,9 +266,12 @@ async function getCarousel(id: string) {
 }
 
 export function getDetailedInfo(id: string) {
-  getTitle(id);
   getText(id);
+  getTitle(id);
   getCarousel(id);
+  getCharachteristics(id);
+  getPrice(id);
+  getDiscount(id);
 
   return [id];
 }
@@ -175,7 +280,6 @@ export function openDetailedPage(promiseID: Promise<string | void>) {
   router.navigate('/detailed');
   promiseID.then((id) => {
     if (id) {
-      // localStorage.setItem('currentProduct', id);
       getDetailedInfo(id);
     }
   });
