@@ -152,12 +152,7 @@ export default class ProfilePage extends GetUserData {
       const TITLE_CONTAINER = createElementBase('div', ['col-sm-9']);
       const TITLE_LIST_CONTAINER = createElementBase('div', ['collapse'], id[i]);
       const FORM_ROW_TITLE = createElementBase('div', ['row']);
-      const TITLE = createElementBase(
-        'div',
-        ['text-secondary', 'text-secondary_edit'],
-        titleData[i]?.id,
-        titleData[i]?.address
-      );
+      const TITLE = createElementBase('div', ['text-secondary'], titleData[i]?.id, titleData[i]?.address);
       const BUTTON_ADDRESS = createElementBase('div', ['row']);
       const BUTTON_CONTAINER = createElementBase('div', ['col-sm-12']);
       const ROW_ADD_LINK = createElementBase('div', ['row']);
@@ -185,8 +180,13 @@ export default class ProfilePage extends GetUserData {
 
       BUTTON_SHOW.setAttribute('data-bs-toggle', 'collapse');
       BUTTON_SHOW.setAttribute('data-bs-target', `#${id[i]}`);
-      TITLE.setAttribute('data-bs-toggle', 'modal');
-      TITLE.setAttribute('data-bs-target', '#addressModal');
+
+      if (titleData[i]?.address !== 'Set some address as default') {
+        TITLE.classList.add('text-secondary_edit');
+        TITLE.setAttribute('data-bs-toggle', 'modal');
+        TITLE.setAttribute('data-bs-target', '#addressModal');
+      }
+
       TITLE_ADD_LINK.setAttribute('href', '#');
       TITLE_ADD_LINK.setAttribute('data-bs-toggle', 'modal');
       TITLE_ADD_LINK.setAttribute('data-bs-target', '#addressModal');
@@ -319,6 +319,7 @@ export default class ProfilePage extends GetUserData {
     this.PROFILE_FORM_ADDRESS.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.classList[0] !== 'text-secondary' && target.classList[0] !== 'new-address') return;
+      if (target.innerText === 'Set some address as default') return;
 
       const addressArr = target.innerText.split(', ');
       const COUNTRY_OPTION_SELECTED = findDomElement<'option'>(this.edit_address_form.FORM, 'option[selected="true"]');
