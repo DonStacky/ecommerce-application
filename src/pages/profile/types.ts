@@ -26,3 +26,19 @@ export type PasswordValidateResault =
   | {
       title: string;
     };
+
+export interface AddressValidation {
+  country: boolean;
+  postalCode: boolean;
+  city: boolean;
+  street: boolean;
+  default: boolean;
+}
+
+export type AddressValidateResaultIndex = 'country' | 'postalCode' | 'city' | 'street' | 'default';
+
+export type AddressValidateResault =
+  | string
+  | {
+      title: string;
+    };
