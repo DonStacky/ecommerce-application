@@ -1,6 +1,6 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { InputTemplate /* , Order, SearchInput */ } from '../../shared/types/types';
-// import search from './product-search';
+import { InputTemplate, Order, SearchInput } from '../../shared/types/types';
+import search from './product-search';
 
 export const RAW_INPUT: InputTemplate = {
   seasons: [],
@@ -11,39 +11,39 @@ export const RAW_INPUT: InputTemplate = {
   price: [],
 };
 
-// export const buildSearchInput = (): SearchInput => {
-//   const resultInput = {};
-//   const sorts = ['price', 'name.en'];
+export const buildSearchInput = (): SearchInput => {
+  const resultInput = {};
+  const sorts = ['price', 'name.en'];
 
-//   Object.defineProperty(resultInput, 'seasons', {
-//     value: RAW_INPUT.seasons.filter(([input]) => input.checked).map(([, string]) => string),
-//   });
-//   Object.defineProperty(resultInput, 'materials', {
-//     value: RAW_INPUT.materials.filter(([input]) => input.checked).map(([, string]) => string),
-//   });
-//   Object.defineProperty(resultInput, 'productType', {
-//     value: RAW_INPUT.productType.filter(([input]) => input.checked).map(([, string]) => string),
-//   });
-//   Object.defineProperty(resultInput, 'searchTextInput', { value: RAW_INPUT.searchTextInput[0].value });
+  Object.defineProperty(resultInput, 'seasons', {
+    value: RAW_INPUT.seasons.filter(([input]) => input.checked).map(([, string]) => string),
+  });
+  Object.defineProperty(resultInput, 'materials', {
+    value: RAW_INPUT.materials.filter(([input]) => input.checked).map(([, string]) => string),
+  });
+  Object.defineProperty(resultInput, 'productType', {
+    value: RAW_INPUT.productType.filter(([input]) => input.checked).map(([, string]) => string),
+  });
+  Object.defineProperty(resultInput, 'searchTextInput', { value: RAW_INPUT.searchTextInput[0].value });
 
-//   const entries = RAW_INPUT.sort.reduce((acc, cur, idx) => {
-//     if (cur[0].checked) {
-//       acc.push(`${sorts[idx]} ${cur[1].checked ? Order.asc : Order.desc}`);
-//     }
-//     return acc;
-//   }, new Array<string>(0));
-//   Object.defineProperty(resultInput, 'sort', { value: entries });
+  const entries = RAW_INPUT.sort.reduce((acc, cur, idx) => {
+    if (cur[0].checked) {
+      acc.push(`${sorts[idx]} ${cur[1].checked ? Order.asc : Order.desc}`);
+    }
+    return acc;
+  }, new Array<string>(0));
+  Object.defineProperty(resultInput, 'sort', { value: entries });
 
-//   if (+RAW_INPUT.price[0].value > 0 || +RAW_INPUT.price[1].value > 0) {
-//     Object.defineProperty(resultInput, 'price', {
-//       value: `variants.price.centAmount:range (${
-//         +RAW_INPUT.price[0].value > 0 ? +RAW_INPUT.price[0].value * 100 : '*'
-//       } to ${+RAW_INPUT.price[1].value > 0 ? +RAW_INPUT.price[1].value * 100 : '*'})`,
-//     });
-//   }
-//   console.log(resultInput);
-//   return resultInput;
-// };
+  if (+RAW_INPUT.price[0].value > 0 || +RAW_INPUT.price[1].value > 0) {
+    Object.defineProperty(resultInput, 'price', {
+      value: `variants.price.centAmount:range (${
+        +RAW_INPUT.price[0].value > 0 ? +RAW_INPUT.price[0].value * 100 : '*'
+      } to ${+RAW_INPUT.price[1].value > 0 ? +RAW_INPUT.price[1].value * 100 : '*'})`,
+    });
+  }
+  console.log(resultInput);
+  return resultInput;
+};
 
 const SEARCH_FORM = createElement({
   tagname: 'form',
@@ -53,7 +53,7 @@ const SEARCH_FORM = createElement({
       'submit',
       (event) => {
         event.preventDefault();
-        // search(buildSearchInput());
+        search(buildSearchInput());
       },
     ],
   ],
