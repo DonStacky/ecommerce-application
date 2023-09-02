@@ -6,5 +6,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ecommerce Application</title>
   </head>
-  <body></body>
+  <body>
+    <nav class="navbar navbar-light bg-dark">
+      <form class="search-form">
+        <div class="d-flex controls">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0 mx-2" type="submit">Search</button>
+          <button class="btn btn-outline-success my-2 my-sm-0 mx-2 filter"></button>
+        </div>
+        <div class="filters filters-show">
+          <div class="category-container">
+          <h2 class="category-header">Seasons</h2>
+            <label class="btn season-category">
+              <input type="checkbox" class="category"> Winter
+            </label>
+            <label class="btn season-category">
+              <input type="checkbox" class="category"> Spring
+            </label>
+            <label class="btn season-category">
+              <input type="checkbox" class="category"> Summer
+            </label>
+            <label class="btn season-category">
+              <input type="checkbox" class="category"> Autumn
+            </label>
+          </div> 
+          <div class="category-container">
+            <h2 class="category-header">Materials</h2>
+              <label class="btn materials-category">
+                <input type="checkbox" class="category"> Wood
+              </label>
+              <label class="btn materials-category">
+                <input type="checkbox" class="category"> Plywood
+              </label>
+              <label class="btn materials-category">
+                <input type="checkbox" class="category"> Wax
+              </label>
+            </div> 
+            <div class="category-container">
+              <h2 class="category-header">Product type</h2>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> calendar
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> candles
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> candlestick
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> den
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> figures
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> key holder
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> lantern
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> napkin rings
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> photo holder
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> stand
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> wall decorations
+                </label>
+                <label class="btn product-type-category">
+                  <input type="checkbox" class="category"> wreath
+                </label>
+              </div>
+              <div class="category-container">
+                  <h2 class="category-header">Sort by price</h2>
+                  <label class="btn sort-category">
+                    <input type="checkbox" class="category"> Enable sort by price
+                  </label>
+                  <label class="btn sort-button">
+                    <input type="checkbox" class="category"> Sort type
+                  </label>
+              </div> 
+              <div class="category-container">
+                <h2 class="category-header">Sort by name</h2>
+                <label class="btn sort-category">
+                  <input type="checkbox" class="category"> Enable sort by name
+                </label>
+                <label class="btn sort-button">
+                  <input type="checkbox" class="category"> Sort type
+                </label>
+              </div> 
+
+              <div class="category-container">
+                <h2 class="category-header">Select Price</h2>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Min price $</span>
+                  <input type="number" step="0.01" class="form-control" aria-label="Amount (to the nearest dollar)">
+                  <span class="input-group-text">.00</span>
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Max price $</span>
+                  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div> 
+
+
+              <div class="category-container">
+                <button class="btn btn-success" type="submit">Search</button>
+          <button class="btn btn-danger">Reset</button>
+                
+              </div> 
+
+        </div>
+      </form>
+    </nav>
+
+    
+  </body>
 </html>
