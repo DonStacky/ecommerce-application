@@ -1,7 +1,11 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
+import { oldPasswordValidation, passwordValidation } from '../../shared/helpers/validation';
+import { PasswordValidateResault, PasswordValidateResaultIndex, PasswordValidation } from './types';
 
 export default class EditPasswordForm extends GetUserData {
+  validationResults: PasswordValidation;
+
   CLOSE_BUTTON: HTMLButtonElement;
 
   OLD_PASSWORD_LABEL: HTMLLabelElement;
@@ -34,6 +38,12 @@ export default class EditPasswordForm extends GetUserData {
 
   constructor() {
     super();
+
+    this.validationResults = {
+      oldPassword: false,
+      newPassword: false,
+      repeatPassword: false,
+    };
 
     this.CLOSE_BUTTON = createElementBase('button', ['btn-close', 'close_align']);
 
@@ -69,6 +79,8 @@ export default class EditPasswordForm extends GetUserData {
 
     this.addAttributes();
     this.appendElements();
+
+    this.FORM.addEventListener('input', this.liveValidation.bind(this));
   }
 
   private addAttributes() {
@@ -82,6 +94,7 @@ export default class EditPasswordForm extends GetUserData {
     this.REPEAT_NEW_PASSWORD_INPUT.setAttribute('type', `password`);
     this.REPEAT_NEW_PASSWORD_LABEL.setAttribute('for', `repeatNewPassword`);
     this.SAVE_BUTTON.setAttribute('type', 'button');
+    this.SAVE_BUTTON.setAttribute('disabled', '');
     this.FORM.setAttribute('noValidate', 'true');
   }
 
@@ -100,5 +113,58 @@ export default class EditPasswordForm extends GetUserData {
       this.REPEAT_NEW_PASSWORD_FIELD,
       this.SAVE_BUTTON
     );
+  }
+
+  private liveValidation(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.tagName !== 'INPUT') return;
+
+    const text = target.value;
+
+    if (target.id === 'oldPassword') {
+      const validation = oldPasswordValidation({ title: text });
+
+      this.applyValidation(validation, this.OLD_PASSWORD_INVALID, target, 'oldPassword');
+    }
+
+    if (target.id === 'newPassword') {
+      const validation = passwordValidation({ title: text });
+
+      this.applyValidation(validation, this.NEW_PASSWORD_INVALID, target, 'newPassword');
+    }
+
+    if (target.id === 'repeatNewPassword') {
+      const validation = passwordValidation({ title: text });
+
+      this.applyValidation(validation, this.REPEAT_NEW_PASSWORD_INVALID, target, 'repeatPassword');
+    }
+
+    this.createBtnStatus(this.validationResults);
+  }
+
+  private applyValidation(
+    validation: PasswordValidateResault,
+    element: HTMLDivElement,
+    target: HTMLInputElement,
+    validationResultsIndex: PasswordValidateResaultIndex
+  ) {
+    const ELEMENT = element;
+    if (typeof validation === 'string') {
+      ELEMENT.innerText = validation;
+      target.classList.add('form-control_validation');
+      this.validationResults[validationResultsIndex] = false;
+    } else {
+      target.classList.remove('form-control_validation');
+      ELEMENT.innerText = '';
+      this.validationResults[validationResultsIndex] = true;
+    }
+  }
+
+  private createBtnStatus(validationData: PasswordValidation) {
+    if (validationData.oldPassword && validationData.newPassword && validationData.repeatPassword) {
+      this.SAVE_BUTTON.removeAttribute('disabled');
+    } else {
+      this.SAVE_BUTTON.setAttribute('disabled', '');
+    }
   }
 }

@@ -1,10 +1,16 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
-import { firstNameValidation, loginValidation } from '../../shared/helpers/validation';
-import validationResults from './data';
-import { UserValidation } from './types';
+import {
+  birthDateValidation,
+  firstNameValidation,
+  lastNameValidation,
+  loginValidation,
+} from '../../shared/helpers/validation';
+import { UserValidateResault, UserValidateResaultIndex, UserValidation } from './types';
 
 export default class EditUserForm extends GetUserData {
+  validationResults: UserValidation;
+
   CLOSE_BUTTON: HTMLButtonElement;
 
   NAME_LABEL: HTMLLabelElement;
@@ -50,6 +56,13 @@ export default class EditUserForm extends GetUserData {
   constructor() {
     super();
 
+    this.validationResults = {
+      firstName: true,
+      lastName: true,
+      email: true,
+      birthDate: true,
+    };
+
     this.CLOSE_BUTTON = createElementBase('button', ['btn-close', 'close_align']);
     this.NAME_LABEL = createElementBase('label', ['form-label'], undefined, 'First name');
     this.NAME_INVALID = createElementBase('div', ['form-text', 'form-text_width']);
@@ -91,7 +104,7 @@ export default class EditUserForm extends GetUserData {
     this.addAttributes();
     this.appendElements();
     this.fillFields();
-    this.FORM.addEventListener('keyup', this.liveValidation.bind(this));
+    this.FORM.addEventListener('input', this.liveValidation.bind(this));
   }
 
   private addAttributes() {
@@ -135,7 +148,7 @@ export default class EditUserForm extends GetUserData {
     this.BIRTH_DATE_INPUT.value = this.getBirthday();
   }
 
-  private liveValidation(event: KeyboardEvent) {
+  private liveValidation(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.tagName !== 'INPUT') return;
 
@@ -144,49 +157,50 @@ export default class EditUserForm extends GetUserData {
     if (target.id === 'profileFirstName') {
       const validation = firstNameValidation({ title: text });
 
-      if (typeof validation === 'string') {
-        this.NAME_INVALID.innerText = validation;
-        target.classList.add('form-control_validation');
-        validationResults.firstName = false;
-      } else {
-        target.classList.remove('form-control_validation');
-        this.NAME_INVALID.innerText = '';
-        validationResults.firstName = true;
-      }
+      this.applyValidation(validation, this.NAME_INVALID, target, 'firstName');
+    }
+
+    if (target.id === 'profileLastName') {
+      const validation = lastNameValidation({ title: text });
+
+      this.applyValidation(validation, this.LAST_NAME_INVALID, target, 'lastName');
     }
 
     if (target.id === 'profileEmail') {
       const validation = loginValidation({ title: text });
 
-      if (typeof validation === 'string') {
-        this.EMAIL_INVALID.innerText = validation;
-        target.classList.add('form-control_validation');
-        validationResults.email = false;
-      } else {
-        target.classList.remove('form-control_validation');
-        this.EMAIL_INVALID.innerText = '';
-        validationResults.email = true;
-      }
+      this.applyValidation(validation, this.EMAIL_INVALID, target, 'firstName');
     }
 
-    this.createBtnStatus(validationResults);
+    if (target.id === 'profileBirthDate') {
+      const validation = birthDateValidation({ title: new Date(text) });
+
+      this.applyValidation(validation, this.BIRTH_DATE_INVALID, target, 'birthDate');
+    }
+
+    this.createBtnStatus(this.validationResults);
   }
 
-  /* private applyValidation(validation: string, element: HTMLDivElement, target: HTMLInputElement) {
+  private applyValidation(
+    validation: UserValidateResault,
+    element: HTMLDivElement,
+    target: HTMLInputElement,
+    validationResultsIndex: UserValidateResaultIndex
+  ) {
     const ELEMENT = element;
     if (typeof validation === 'string') {
       ELEMENT.innerText = validation;
       target.classList.add('form-control_validation');
-      validationResults.login = false;
+      this.validationResults[validationResultsIndex] = false;
     } else {
       target.classList.remove('form-control_validation');
       ELEMENT.innerText = '';
-      validationResults.login = true;
+      this.validationResults[validationResultsIndex] = true;
     }
-  } */
+  }
 
   private createBtnStatus(validationData: UserValidation) {
-    if (validationData.email && validationData.firstName) {
+    if (validationData.firstName && validationData.lastName && validationData.email && validationData.birthDate) {
       this.SAVE_BUTTON.removeAttribute('disabled');
     } else {
       this.SAVE_BUTTON.setAttribute('disabled', '');

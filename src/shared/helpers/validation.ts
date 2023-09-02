@@ -1,5 +1,7 @@
 import * as yup from 'yup';
 
+const minAgeMilisec = 410240376000;
+
 const firstNameSchema = yup.object().shape({
   title: yup
     .string()
@@ -7,6 +9,16 @@ const firstNameSchema = yup.object().shape({
     .matches(
       /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
       'First name should not contain any special symbols or numbers. First name must not contain leading or trailing whitespace'
+    ),
+});
+
+const lastNameSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required('Please enter your last name. Last name field is required')
+    .matches(
+      /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
+      'Last name should not contain any special symbols or numbers. Last name must not contain leading or trailing whitespace'
     ),
 });
 
@@ -27,6 +39,10 @@ const loginSchema = yup.object().shape({
     .email('Email address must be properly formatted (e.g., user@example.com)'),
 });
 
+const birthDateSchema = yup.object().shape({
+  title: yup.date().max(new Date(Date.now() - minAgeMilisec), 'You must be older than 13 y.o.'),
+});
+
 const passwordSchema = yup.object().shape({
   title: yup
     .string()
@@ -39,14 +55,9 @@ const passwordSchema = yup.object().shape({
     .matches(/^\S+\S+$/, 'Password must not contain leading or trailing whitespace'),
 });
 
-export function loginValidation(login: yup.InferType<typeof loginSchema>) {
-  try {
-    const validate = loginSchema.validateSync(login);
-    return validate;
-  } catch (error) {
-    return (error as Error).message;
-  }
-}
+const oldPasswordSchema = yup.object().shape({
+  title: yup.string().required('Password is required'),
+});
 
 export function firstNameValidation(firstName: yup.InferType<typeof firstNameSchema>) {
   try {
@@ -57,9 +68,45 @@ export function firstNameValidation(firstName: yup.InferType<typeof firstNameSch
   }
 }
 
+export function lastNameValidation(lastName: yup.InferType<typeof lastNameSchema>) {
+  try {
+    const validate = lastNameSchema.validateSync(lastName);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+
+export function loginValidation(login: yup.InferType<typeof loginSchema>) {
+  try {
+    const validate = loginSchema.validateSync(login);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+
+export function birthDateValidation(birthDate: yup.InferType<typeof birthDateSchema>) {
+  try {
+    const validate = birthDateSchema.validateSync(birthDate);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+
 export function passwordValidation(password: yup.InferType<typeof passwordSchema>) {
   try {
     const validate = passwordSchema.validateSync(password);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+
+export function oldPasswordValidation(oldPassword: yup.InferType<typeof oldPasswordSchema>) {
+  try {
+    const validate = oldPasswordSchema.validateSync(oldPassword);
     return validate;
   } catch (error) {
     return (error as Error).message;

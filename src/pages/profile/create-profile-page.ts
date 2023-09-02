@@ -402,17 +402,22 @@ export default class ProfilePage extends GetUserData {
 
       const currentPassword = this.editPasswordForm.OLD_PASSWORD_INPUT.value;
       const newPassword = this.editPasswordForm.NEW_PASSWORD_INPUT.value;
+      const repeatPassword = this.editPasswordForm.REPEAT_NEW_PASSWORD_INPUT.value;
       const email = this.userData?.email;
       if (email) {
         try {
-          await changePassword(currentPassword, newPassword);
-          const {
-            body: { customer },
-          } = await loginCustomer(email, newPassword);
-          this.modalPasswordChange.modal?.hide();
-          localStorage.setItem('userInformation', JSON.stringify(customer));
-          this.replasePage();
-          showModal(true, 'password changed');
+          if (newPassword === repeatPassword) {
+            await changePassword(currentPassword, newPassword);
+            const {
+              body: { customer },
+            } = await loginCustomer(email, newPassword);
+            this.modalPasswordChange.modal?.hide();
+            localStorage.setItem('userInformation', JSON.stringify(customer));
+            this.replasePage();
+            showModal(true, 'password changed');
+          } else {
+            throw new Error('Wrong repeat password');
+          }
         } catch (err) {
           const error = err as ErrorResponse;
           showModal(false, 'Change password', error.message);
