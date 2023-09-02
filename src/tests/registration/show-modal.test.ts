@@ -44,7 +44,7 @@ describe('showModal', () => {
     const { body } = document;
     const clickEvent = new Event('click');
     const promise = new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), 100);
+      setTimeout(() => resolve(), 200);
     });
 
     showModal(false, 'Registration', 'Error message');

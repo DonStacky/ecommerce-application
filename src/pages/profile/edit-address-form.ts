@@ -1,8 +1,14 @@
+import * as yup from 'yup';
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
+import { cityValidation, countryValidation, streetValidation } from '../../shared/helpers/validation';
+import { findCountry } from '../registration/form-validation';
 import countries from '../registration/postal-codes';
+import { AddressValidateResault, AddressValidateResaultIndex, AddressValidation } from './types';
 
 export default class EditAddressForm extends GetUserData {
+  validationResults: AddressValidation;
+
   CLOSE_BUTTON: HTMLButtonElement;
 
   BUTTONS: HTMLDivElement;
@@ -64,6 +70,14 @@ export default class EditAddressForm extends GetUserData {
   constructor() {
     super();
 
+    this.validationResults = {
+      country: false,
+      postalCode: false,
+      city: false,
+      street: false,
+      default: true,
+    };
+
     this.addressId = '';
     this.addressType = '';
 
@@ -120,6 +134,7 @@ export default class EditAddressForm extends GetUserData {
 
     this.addAttributes();
     this.appendElements();
+    this.FORM.addEventListener('input', this.liveValidation.bind(this));
   }
 
   private addAttributes() {
@@ -140,6 +155,7 @@ export default class EditAddressForm extends GetUserData {
     this.DEFAULT_LABEL.setAttribute('for', `profileDefault`);
     this.FORM.setAttribute('noValidate', 'true');
     this.SAVE_BUTTON.setAttribute('type', 'button');
+    // this.SAVE_BUTTON.setAttribute('disabled', '');
     this.DELETE_BUTTON.setAttribute('type', 'button');
   }
 
@@ -160,5 +176,93 @@ export default class EditAddressForm extends GetUserData {
       this.DEFAULT_OPTIONS,
       this.BUTTONS
     );
+  }
+
+  private liveValidation(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.tagName !== 'INPUT' && target.id !== 'profileCountry') return;
+
+    const postalCodeSchema = yup.object().shape({
+      title: yup
+        .string()
+        .required()
+        .matches(
+          new RegExp(findCountry(this.COUNTRY_SELECT.value).Regex),
+          `Please enter correct postal code. Postal code should be a format of ${
+            findCountry(this.COUNTRY_SELECT.value).Format
+          }`
+        ),
+    });
+
+    const postalCodeValidation = (postalCode: yup.InferType<typeof postalCodeSchema>) => {
+      try {
+        const validate = postalCodeSchema.validateSync(postalCode);
+        return validate;
+      } catch (error) {
+        return (error as Error).message;
+      }
+    };
+
+    const text = target.value;
+
+    if ((target as HTMLInputElement).id === 'profileCity') {
+      const validation = cityValidation({ title: text });
+
+      this.applyValidation(validation, this.CITY_INVALID, target, 'city');
+    }
+
+    if ((target as HTMLInputElement).id === 'profileStreet') {
+      const validation = streetValidation({ title: text });
+
+      this.applyValidation(validation, this.STREET_INVALID, target, 'street');
+    }
+
+    if (target.id === 'profileCountry') {
+      const validation = postalCodeValidation({ title: this.POSTAL_CODE_INPUT.value });
+
+      this.applyValidation(validation, this.POSTAL_CODE_INVALID, this.POSTAL_CODE_INPUT, 'postalCode');
+    }
+
+    if ((target as HTMLInputElement).id === 'profilePostalCode') {
+      const validation = postalCodeValidation({ title: text });
+
+      this.applyValidation(validation, this.POSTAL_CODE_INVALID, target, 'postalCode');
+    }
+    const validation = countryValidation({ title: this.COUNTRY_SELECT.value });
+    this.applyValidation(validation, this.COUNTRY_INVALID, this.COUNTRY_SELECT, 'country');
+
+    this.createBtnStatus(this.validationResults);
+  }
+
+  private applyValidation(
+    validation: AddressValidateResault,
+    element: HTMLDivElement,
+    target: HTMLElement,
+    validationResultsIndex: AddressValidateResaultIndex
+  ) {
+    const ELEMENT = element;
+    if (typeof validation === 'string') {
+      ELEMENT.innerText = validation;
+      target.classList.add('form-control_validation');
+      this.validationResults[validationResultsIndex] = false;
+    } else {
+      target.classList.remove('form-control_validation');
+      ELEMENT.innerText = '';
+      this.validationResults[validationResultsIndex] = true;
+    }
+  }
+
+  private createBtnStatus(validationData: AddressValidation) {
+    if (
+      validationData.country &&
+      validationData.postalCode &&
+      validationData.city &&
+      validationData.street &&
+      validationData.default
+    ) {
+      this.SAVE_BUTTON.removeAttribute('disabled');
+    } else {
+      this.SAVE_BUTTON.setAttribute('disabled', '');
+    }
   }
 }

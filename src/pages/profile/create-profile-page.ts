@@ -8,7 +8,7 @@ import {
   setDefaultBillingAddress,
   setDefaultShippingAddress,
   // eslint-disable-next-line prettier/prettier
-  updateUserInformation
+  updateUserInformation,
 } from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
@@ -365,6 +365,9 @@ export default class ProfilePage extends GetUserData {
         FIELDS.forEach((item) => {
           const element = item;
           element.value = '';
+          element.classList.remove('form-control_validation');
+          const title = element.nextElementSibling as HTMLDivElement;
+          title.innerText = '';
         });
 
         this.editAddressForm.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');

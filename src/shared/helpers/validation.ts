@@ -59,6 +59,25 @@ const oldPasswordSchema = yup.object().shape({
   title: yup.string().required('Password is required'),
 });
 
+const citySchema = yup.object().shape({
+  title: yup
+    .string()
+    .required()
+    .min(1, 'Should contain at least 1 character')
+    .matches(
+      /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
+      'Should not contain any special symbols or numbers. Should not contain leading or trailing whitespace'
+    ),
+});
+
+const streetSchema = yup.object().shape({
+  title: yup.string().required().min(1, 'Should contain at least 1 character'),
+});
+
+const countrySchema = yup.object().shape({
+  title: yup.string().required('Please enter your country. Country field is required'),
+});
+
 export function firstNameValidation(firstName: yup.InferType<typeof firstNameSchema>) {
   try {
     const validate = firstNameSchema.validateSync(firstName);
@@ -107,6 +126,30 @@ export function passwordValidation(password: yup.InferType<typeof passwordSchema
 export function oldPasswordValidation(oldPassword: yup.InferType<typeof oldPasswordSchema>) {
   try {
     const validate = oldPasswordSchema.validateSync(oldPassword);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+export function cityValidation(city: yup.InferType<typeof citySchema>) {
+  try {
+    const validate = citySchema.validateSync(city);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+export function streetValidation(street: yup.InferType<typeof streetSchema>) {
+  try {
+    const validate = streetSchema.validateSync(street);
+    return validate;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
+export function countryValidation(country: yup.InferType<typeof countrySchema>) {
+  try {
+    const validate = countrySchema.validateSync(country);
     return validate;
   } catch (error) {
     return (error as Error).message;
