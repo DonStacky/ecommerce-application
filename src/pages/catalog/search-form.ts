@@ -402,3 +402,9 @@ export const SEARCH_BAR = createElement({
   options: [['className', 'navbar navbar-light']],
   childElements: [SEARCH_FORM],
 });
+
+document.body.addEventListener('click', (event) => {
+  if (event.target instanceof Node && !SEARCH_FORM.contains(event.target)) {
+    FILTERS.classList.remove('filters-show');
+  }
+});

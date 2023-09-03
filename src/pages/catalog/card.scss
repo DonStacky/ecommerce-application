@@ -60,7 +60,7 @@
 span.discount {
   text-decoration: line-through;
   position: absolute;
-  transform: rotateZ(45deg) translateY(-4rem);
+  transform: rotateZ(45deg) translateX(-2rem);
   transform-origin: center;
   color: violet;
   text-shadow: 1px 1px violet;
