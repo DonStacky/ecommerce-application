@@ -50,10 +50,9 @@ export default function createCard(product: ProductProjection) {
       }),
       (() => {
         const MAIN_PRICE = createElement({
-          tagname: 'a',
+          tagname: 'button',
           options: [
             ['className', 'btn btn-primary fs-2'],
-            ['href', '#'],
             ['textContent', productDiscountPrice || productMainPrice || 'N/A'],
           ],
         });

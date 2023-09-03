@@ -6,15 +6,15 @@
   border-radius: 10px;
   border: 1px solid green;
   transition: box-shadow .2s;
-  & a {
+  & button {
     position: absolute;
     top: 30rem;
     left: .5rem;
   }
-  & a::before {
+  & button::before {
     content: 'Price: ';
   }
-  & a::after {
+  & button::after {
     content: ' $';
   }
   &:hover {
