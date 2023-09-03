@@ -49,7 +49,7 @@ const MODAL_CONTENT = createElement({
 
 const MODAL_DIALOG = createElement({
   tagname: 'div',
-  options: [['className', 'modal-dialog modal-lg']],
+  options: [['className', 'modal-dialog modal-dialog-centered']],
   childElements: [MODAL_CONTENT],
 });
 

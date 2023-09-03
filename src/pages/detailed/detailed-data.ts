@@ -94,10 +94,16 @@ export const DETAILED_CAROUSEL = createElement({
   childElements: [DETAILED_CAROUSEL_INNER, BUTTON_PREV, BUTTON_NEXT],
 });
 
-DETAILED_CAROUSEL_INNER.addEventListener('click', () => {
-  DETAILED_CAROUSEL.classList.add('detailed__carousel--modal');
-  MODAL_BODY.append(DETAILED_CAROUSEL);
-});
+DETAILED_CAROUSEL_INNER.addEventListener(
+  'click',
+  () => {
+    DETAILED_CAROUSEL.classList.add('detailed__carousel--modal');
+    MODAL_BODY.append(DETAILED_CAROUSEL);
+    DETAILED_CAROUSEL_INNER.dataset.bsToggle = '';
+    console.log('modal');
+  },
+  { once: true }
+);
 
 const DETAILED_CAROUSEL_COLUMN = createElement({
   tagname: 'div',
@@ -193,6 +199,17 @@ DETAILED_CHARACTER_LINK.addEventListener('click', () => {
 MODAL.addEventListener('hide.bs.modal', () => {
   DETAILED_CAROUSEL_COLUMN.append(DETAILED_CAROUSEL);
   DETAILED_CAROUSEL.classList.remove('detailed__carousel--modal');
+  DETAILED_CAROUSEL_INNER.dataset.bsToggle = 'modal';
+
+  DETAILED_CAROUSEL_INNER.addEventListener(
+    'click',
+    () => {
+      DETAILED_CAROUSEL.classList.add('detailed__carousel--modal');
+      MODAL_BODY.append(DETAILED_CAROUSEL);
+      DETAILED_CAROUSEL_INNER.dataset.bsToggle = '';
+    },
+    { once: true }
+  );
 });
 
 DETAILED_TEXT_COLUMN.append(DETAILED_CHARACTER_LINK, DETAILED_CHARACTER);
