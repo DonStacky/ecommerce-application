@@ -190,7 +190,12 @@ const DETAILED_PRICE = createElement({
 
 const DETAILED_DISCOUNT = createElement({
   tagname: 'span',
-  options: [['className', 'detailed__discount']],
+  options: [['className', 'detailed__price']],
+});
+
+const DETAILED_PRICE_FIELD = createElement({
+  tagname: 'div',
+  childElements: [DETAILED_PRICE],
 });
 
 function getTitle(id: string) {
@@ -212,28 +217,31 @@ function getText(id: string) {
   DETAILED_TEXT_COLUMN.prepend(DETAILED_DESC_TEXT);
 }
 
+async function getDiscount(id: string) {
+  const discountCent = (await getProduct(id)).body.masterData.current.masterVariant.prices?.[0].discounted?.value
+    .centAmount;
+
+  if (discountCent) {
+    DETAILED_DISCOUNT.textContent = `${(discountCent / 100).toFixed(2)} $`;
+    DETAILED_PRICE_FIELD.prepend(DETAILED_DISCOUNT);
+    DETAILED_PRICE.classList.add('detailed__discount');
+    console.log(discountCent);
+  }
+}
+
 function getPrice(id: string) {
   getProduct(id).then(({ body }) => {
     const priceCent = body.masterData.current.masterVariant.prices?.[0].value.centAmount;
+    console.log(priceCent);
     if (priceCent) {
       DETAILED_PRICE.textContent = `${(priceCent / 100).toFixed(2)} $`;
     }
   });
+
+  getDiscount(id);
 }
 
-DETAILED_TEXT_COLUMN.append(DETAILED_PRICE);
-
-function getDiscount(id: string) {
-  getProduct(id).then(({ body }) => {
-    const discountCent = body.masterData.current.masterVariant.prices?.[0].discounted?.value.centAmount;
-
-    if (discountCent) {
-      DETAILED_DISCOUNT.textContent = DETAILED_PRICE.textContent;
-      DETAILED_PRICE.textContent = `${(discountCent / 100).toFixed(2)} $`;
-      DETAILED_PRICE.append(DETAILED_DISCOUNT);
-    }
-  });
-}
+DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD);
 
 async function getCarousel(id: string) {
   const detailedCarouselImages = (await getProduct(id)).body.masterData.current.masterVariant.images;
@@ -254,11 +262,12 @@ async function getCarousel(id: string) {
     const DETAILED_CAROUSEL_ITEMS = DETAILED_CAROUSEL_IMAGES.map((image) => {
       const DETAILED_CAROUSEL_ITEM = createElement({
         tagname: 'div',
-        options: [['className', 'carousel-item active']],
+        options: [['className', 'carousel-item']],
         childElements: [image],
       });
       return DETAILED_CAROUSEL_ITEM;
     });
+    DETAILED_CAROUSEL_ITEMS[0].classList.add('active');
 
     DETAILED_CAROUSEL_INNER.innerHTML = '';
     DETAILED_CAROUSEL_INNER.append(...DETAILED_CAROUSEL_ITEMS);
@@ -271,7 +280,6 @@ export function getDetailedInfo(id: string) {
   getCarousel(id);
   getCharachteristics(id);
   getPrice(id);
-  getDiscount(id);
 
   return [id];
 }

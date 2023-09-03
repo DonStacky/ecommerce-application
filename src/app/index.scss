@@ -1,7 +1,7 @@
-@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap';
 @import '../pages/login/login.scss';
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
-@import "./../pages/registration/registration-form.scss";
+@import './../pages/registration/registration-form.scss';
 @import './../pages/registration/modal.scss';
 
 html {
