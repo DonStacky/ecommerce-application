@@ -64,7 +64,7 @@ span.discount {
   transform-origin: center;
   color: violet;
   text-shadow: 1px 1px violet;
-
+  white-space: nowrap;
   &::after{
     content: ' $';
   }

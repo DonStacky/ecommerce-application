@@ -2,6 +2,8 @@ import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import buildCommonClient from '../../shared/api/create-common-client';
 import checkEnvVariables from '../../shared/helpers/utilites';
 import { SearchInput } from '../../shared/types/types';
+import createCard from './card';
+import CONTENT from './content';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
 
@@ -58,5 +60,14 @@ export default async function search(searchInput: SearchInput) {
       },
     })
     .execute()
-    .then(console.log);
+    .then((data) => {
+      const result = data.body.results.reduce((acc, cur) => {
+        acc.push(createCard(cur));
+        return acc;
+      }, new Array<HTMLDivElement>(0));
+      return result;
+    })
+    .then((cards) => {
+      CONTENT.replaceChildren(...cards);
+    });
 }
