@@ -1,5 +1,6 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { InputTemplate, Order, SearchInput } from '../../shared/types/types';
+import { showBreadCrumb } from './breadcrumb';
 import search from './product-search';
 
 export const RAW_INPUT: InputTemplate = {
@@ -54,6 +55,7 @@ const SEARCH_FORM = createElement({
       (event) => {
         event.preventDefault();
         search(buildSearchInput());
+        showBreadCrumb(['All', 'Custom Search']);
       },
     ],
   ],

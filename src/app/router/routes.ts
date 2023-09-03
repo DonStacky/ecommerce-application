@@ -25,6 +25,8 @@ import {
   PROFILE_LINK,
 } from '../../widgets/header/header';
 import ROUTER from './router';
+import search from '../../pages/catalog/product-search';
+import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 
 const render = (content: HTMLElement, linkID?: string) => {
   if (localStorage.getItem('tokenCache')) {
@@ -79,6 +81,11 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/catalog', () => {
       render(CATALOG_PAGE, '#catalog');
+    })
+    .on('/catalog/all', () => {
+      render(CATALOG_PAGE, '#catalog');
+      search({});
+      showBreadCrumb(['All']);
     })
     .on('/basket', () => {
       render(BASKET_PAGE, '#basket');

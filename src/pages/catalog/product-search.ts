@@ -4,6 +4,8 @@ import checkEnvVariables from '../../shared/helpers/utilites';
 import { SearchInput } from '../../shared/types/types';
 import createCard from './card';
 import CONTENT from './content';
+import NOT_FOUND from '@svg/404_not_found.svg';
+import { createElement } from '../../shared/helpers/dom-utilites';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
 
@@ -68,6 +70,19 @@ export default async function search(searchInput: SearchInput) {
       return result;
     })
     .then((cards) => {
-      CONTENT.replaceChildren(...cards);
+      if (cards.length) {
+        CONTENT.replaceChildren(...cards);
+      } else {
+        CONTENT.replaceChildren(
+          createElement({
+            tagname: 'img',
+            options: [
+              ['src', NOT_FOUND],
+              ['className', 'aside__image'],
+              ['alt', 'Page not found'],
+            ],
+          })
+        );
+      }
     });
 }
