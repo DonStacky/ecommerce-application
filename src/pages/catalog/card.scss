@@ -1,0 +1,71 @@
+.my-card {
+  position: relative;
+  width: 27rem;
+  overflow: hidden;
+  height: 37rem;
+  border-radius: 10px;
+  border: 1px solid green;
+  transition: box-shadow .2s;
+  & a {
+    position: absolute;
+    top: 30rem;
+    left: .5rem;
+  }
+  & a::before {
+    content: 'Price: ';
+  }
+  & a::after {
+    content: ' $';
+  }
+  &:hover {
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0.1rem 0.2rem 4rem 0.1rem black;
+    cursor: pointer;
+    & .my-card-image {
+    height: 37rem;
+    }
+    & .my-card-body {
+      background-color: rgba(0,0,0,.5);
+      top: 0;
+      color: white;
+    }
+  }
+}
+
+.my-card:has(.discount) {
+  border: 1px solid violet;
+  &:hover {
+    box-shadow: 0.1rem 0.2rem 4rem 0.1rem violet;
+  }
+}
+
+.my-card-image {
+  width: 27rem;
+  height: 27rem;
+  transition: height .5s;
+  object-fit: cover;
+}
+.my-card-body {
+  position: absolute;
+  top: 27rem;
+  height: 37rem;
+  width: 27rem;
+  transition: top .5s, color .5s;
+}
+
+.my-card-text {
+  padding: .5rem;
+}
+
+span.discount {
+  text-decoration: line-through;
+  position: absolute;
+  transform: rotateZ(45deg) translateY(-4rem);
+  transform-origin: center;
+  color: violet;
+  text-shadow: 1px 1px violet;
+
+  &::after{
+    content: ' $';
+  }
+}
