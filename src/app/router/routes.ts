@@ -9,6 +9,7 @@ import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
 import NOT_FOUND from '../../pages/not_found/not_found';
+import PROFILE_PAGE from '../../pages/profile/profile-stub';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
@@ -20,6 +21,8 @@ import {
   HEADER_LIST,
   LOG_OUT_ITEM,
   addLogoutBtn,
+  PROFILE_ITEM,
+  PROFILE_LINK,
 } from '../../widgets/header/header';
 import ROUTER from './router';
 
@@ -29,7 +32,11 @@ const render = (content: HTMLElement, linkID?: string) => {
       addLogoutBtn();
     } else {
       LOG_OUT_ITEM.classList.remove('logout--main');
-      HEADER_LIST.append(LOG_OUT_ITEM);
+      PROFILE_ITEM.classList.remove('header__item');
+      PROFILE_LINK.classList.remove('header__link');
+      PROFILE_LINK.classList.add('header-bottom__link');
+      PROFILE_ITEM.classList.add('header-bottom__item');
+      HEADER_LIST.append(PROFILE_ITEM, LOG_OUT_ITEM);
     }
   }
 
@@ -95,6 +102,9 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/promo', () => {
       render(PROMO_PAGE);
+    })
+    .on('/profile', () => {
+      render(PROFILE_PAGE);
     })
     .notFound(() => {
       render(NOT_FOUND);

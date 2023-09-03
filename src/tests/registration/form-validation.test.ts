@@ -3,7 +3,7 @@
  */
 
 import { date, string } from 'yup';
-import { validateString, validateDate, validatePostalCode } from '../pages/registration/form-validation';
+import { validateString, validateDate, validatePostalCode } from '../../pages/registration/form-validation';
 
 describe('validateString', () => {
   it('Should validate input with provided schema', async () => {

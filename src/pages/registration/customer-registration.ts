@@ -8,7 +8,7 @@ import { findCountry } from './form-validation';
 import showModal from './modal-window';
 import { addLogoutBtn } from '../../widgets/header/header';
 
-function createCustomerFromTemlate(customerData: CustomerData): CustomerDraft {
+export function createCustomerFromTemlate(customerData: CustomerData): CustomerDraft {
   const billingAddress = {
     country: findCountry(customerData.billingAddress.country.value).ISO,
     streetName: customerData.billingAddress.streetName.value,
@@ -68,7 +68,7 @@ async function registerCustomer(customerData: CustomerData) {
   return true;
 }
 
-export default function submit(
+export function submit(
   toDoList: (() => Promise<boolean>)[],
   extendedList: (() => Promise<boolean>)[],
   markerToExtend: HTMLInputElement,

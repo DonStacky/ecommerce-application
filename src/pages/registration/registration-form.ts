@@ -1,7 +1,7 @@
 import 'bootstrap';
 import { date, string } from 'yup';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import submit from './customer-registration';
+import { submit } from './customer-registration';
 import { MIN_AGE_MILISEC, validateDate, validatePostalCode, validateString } from './form-validation';
 import countries from './postal-codes';
 
@@ -621,7 +621,7 @@ const VALIDATIONS = [
     string()
       .required('Please enter your first name. First name field is required')
       .matches(
-        /^([a-zA-Z]+ )*[a-zA-Z]+$/,
+        /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
         'First name should not contain any special symbols or numbers. First name must not contain leading or trailing whitespace'
       )
   ).bind(NAME_INPUT),
@@ -631,7 +631,7 @@ const VALIDATIONS = [
     string()
       .required('Please enter your last name. Last name field is required')
       .matches(
-        /^([a-zA-Z]+ )*[a-zA-Z]+$/,
+        /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
         'Last name should not contain any special symbols or numbers. Last name must not contain leading or trailing whitespace'
       )
   ).bind(LAST_NAME_INPUT),
@@ -682,7 +682,7 @@ const VALIDATIONS = [
     string()
       .min(1, 'City field should contain at least 1 character')
       .matches(
-        /^([a-zA-Z]+ )*[a-zA-Z]+$/,
+        /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
         'City field should not contain any special symbols or numbers. City should not contain leading or trailing whitespace'
       )
   ).bind(BILLING_CITY_INPUT),
@@ -705,7 +705,7 @@ const VALIDATIONS_EXTENDED = [
     string()
       .min(1, 'City field should contain at least 1 character')
       .matches(
-        /^([a-zA-Z]+ )*[a-zA-Z]+$/,
+        /^([a-zA-Zа-яА-Я]+ )*[a-zA-Zа-яА-Я]+$/,
         'City field should not contain any special symbols or numbers. City should not contain leading or trailing whitespace'
       )
   ).bind(SHIPPING_CITY_INPUT),
