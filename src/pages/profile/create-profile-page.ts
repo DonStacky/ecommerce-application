@@ -355,6 +355,12 @@ export default class ProfilePage extends GetUserData {
         FIELDS.forEach((item, index) => {
           const element = item;
           element.value = addressArr[index + 1];
+
+          element.classList.remove('form-control_validation');
+          const title = element.nextElementSibling as HTMLDivElement;
+          if (title.classList[0] !== 'form-check-label') {
+            title.innerText = '';
+          }
         });
 
         COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
