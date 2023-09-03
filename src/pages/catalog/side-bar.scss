@@ -3,7 +3,7 @@
     background-color: $catalog-button-color;
     border-color: $catalog-button-color;
   }
-  .btn-primary:hover{
+  .btn-primary:hover {
     background-color: darken($color: $catalog-button-color, $amount: 20%);
     border-color: darken($color: $catalog-button-color, $amount: 20%);
   }
@@ -12,11 +12,11 @@
     border-color: darken($color: $catalog-button-color, $amount: 30%);
   }
   @extend .ms-2;
-  row-gap: .5rem;
+  row-gap: 0.5rem;
   #winter,
   #spring,
   #summer,
-  #autumn{
+  #autumn {
     border-left: 1px solid black;
     & div {
       display: block;
@@ -29,7 +29,7 @@
   & .btn.btn-primary::before {
     @extend .me-2;
     content: url('@svg/arrow.svg');
-    transition: transform .5s;
+    transition: transform 0.5s;
   }
   & .btn.btn-primary[aria-expanded='true']::before {
     content: url('@svg/arrow.svg');

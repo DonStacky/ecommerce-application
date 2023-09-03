@@ -5,14 +5,14 @@
   height: 37rem;
   border-radius: 10px;
   border: 1px solid green;
-  transition: box-shadow .2s;
+  transition: box-shadow 0.2s;
 
   .btn-primary {
     background-color: $catalog-button-color;
     border-color: $catalog-button-color;
   }
 
-  .btn-primary:hover{
+  .btn-primary:hover {
     background-color: darken($color: $catalog-button-color, $amount: 20%);
     border-color: darken($color: $catalog-button-color, $amount: 20%);
   }
@@ -21,7 +21,7 @@
     background-color: darken($color: $catalog-button-color, $amount: 30%);
     border-color: darken($color: $catalog-button-color, $amount: 30%);
   }
-  
+
   button {
     position: absolute;
     top: 23rem;
@@ -41,11 +41,11 @@
     cursor: pointer;
 
     .my-card-image {
-    height: 37rem;
+      height: 37rem;
     }
 
     .my-card-body {
-      background-color: rgba(0,0,0,.5);
+      background-color: rgba(0, 0, 0, 0.5);
       top: 0;
       color: white;
     }
@@ -63,7 +63,7 @@
 .my-card-image {
   width: 27rem;
   height: 27rem;
-  transition: height .5s;
+  transition: height 0.5s;
   object-fit: cover;
 }
 .my-card-body {
@@ -71,11 +71,11 @@
   top: 27rem;
   height: 37rem;
   width: 27rem;
-  transition: top .5s, color .5s;
+  transition: top 0.5s, color 0.5s;
 }
 
 .my-card-text {
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 span.discount {
@@ -86,8 +86,8 @@ span.discount {
   color: violet;
   text-shadow: 1px 1px violet;
   white-space: nowrap;
-  
-  &::after{
+
+  &::after {
     content: ' $';
   }
 }
