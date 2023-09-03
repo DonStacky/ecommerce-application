@@ -1,4 +1,16 @@
 .accordion {
+  .btn-primary {
+    background-color: $catalog-button-color;
+    border-color: $catalog-button-color;
+  }
+  .btn-primary:hover{
+    background-color: darken($color: $catalog-button-color, $amount: 20%);
+    border-color: darken($color: $catalog-button-color, $amount: 20%);
+  }
+  .btn-primary:active {
+    background-color: darken($color: $catalog-button-color, $amount: 30%);
+    border-color: darken($color: $catalog-button-color, $amount: 30%);
+  }
   @extend .ms-2;
   row-gap: .5rem;
   #winter,

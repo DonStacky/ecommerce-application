@@ -392,6 +392,10 @@ const FILTERS = createElement({
   childElements: [...categories, PRICE_SORT_CATEGORY, NAME_SORT_CATEGORY, PRICE_CONTAINER, SECONDARY_CONTROLS],
 });
 
+SEARCH_FORM.addEventListener('submit', () => {
+  FILTERS.classList.remove('filters-show');
+});
+
 FILTER_BUTTON.addEventListener('click', () => {
   FILTERS.classList.toggle('filters-show');
 });

@@ -1,4 +1,18 @@
+@import '../../app/styles/abstract/variables';
+
 .my-card {
+  .btn-primary {
+    background-color: $catalog-button-color;
+    border-color: $catalog-button-color;
+  }
+  .btn-primary:hover{
+    background-color: darken($color: $catalog-button-color, $amount: 20%);
+    border-color: darken($color: $catalog-button-color, $amount: 20%);
+  }
+  .btn-primary:active {
+    background-color: darken($color: $catalog-button-color, $amount: 30%);
+    border-color: darken($color: $catalog-button-color, $amount: 30%);
+  }
   position: relative;
   width: 27rem;
   overflow: hidden;
@@ -8,8 +22,8 @@
   transition: box-shadow .2s;
   & button {
     position: absolute;
-    top: 30rem;
-    left: .5rem;
+    top: 23rem;
+    right: 0.5rem;
   }
   & button::before {
     content: 'Price: ';
