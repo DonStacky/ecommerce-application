@@ -373,7 +373,9 @@ export default class ProfilePage extends GetUserData {
           element.value = '';
           element.classList.remove('form-control_validation');
           const title = element.nextElementSibling as HTMLDivElement;
-          title.innerText = '';
+          if (title.classList[0] !== 'form-check-label') {
+            title.innerText = '';
+          }
 
           this.editAddressForm.validationResults = {
             country: false,
