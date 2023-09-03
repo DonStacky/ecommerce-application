@@ -399,7 +399,7 @@ FILTER_BUTTON.addEventListener('click', () => {
 SEARCH_FORM.append(CONTROLS, FILTERS);
 export const SEARCH_BAR = createElement({
   tagname: 'nav',
-  options: [['className', 'navbar navbar-light']],
+  options: [['className', 'navbar navbar-light my-search-form']],
   childElements: [SEARCH_FORM],
 });
 

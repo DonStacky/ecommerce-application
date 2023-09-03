@@ -1,0 +1,29 @@
+.accordion {
+  @extend .ms-2;
+  row-gap: .5rem;
+  #winter,
+  #spring,
+  #summer,
+  #autumn{
+    border-left: 1px solid black;
+    & div {
+      display: block;
+      width: fit-content;
+    }
+  }
+  & div:hover {
+    cursor: pointer;
+  }
+  & .btn.btn-primary::before {
+    @extend .me-2;
+    content: url('@svg/arrow.svg');
+    transition: transform .5s;
+  }
+  & .btn.btn-primary[aria-expanded='true']::before {
+    content: url('@svg/arrow.svg');
+    transform: rotateZ(90deg);
+  }
+}
+.accordion::before {
+  content: 'Categories';
+}
