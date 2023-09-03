@@ -6,4 +6,7 @@
     column-gap: 2rem;
     row-gap: 2rem;
     flex-grow: 1;
+    & .aside__image {
+        max-width: 30%;
+    }
 }
