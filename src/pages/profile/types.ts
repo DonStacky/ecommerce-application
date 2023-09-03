@@ -32,10 +32,9 @@ export interface AddressValidation {
   postalCode: boolean;
   city: boolean;
   street: boolean;
-  default: boolean;
 }
 
-export type AddressValidateResaultIndex = 'country' | 'postalCode' | 'city' | 'street' | 'default';
+export type AddressValidateResaultIndex = 'country' | 'postalCode' | 'city' | 'street';
 
 export type AddressValidateResault =
   | string

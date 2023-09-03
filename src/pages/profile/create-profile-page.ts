@@ -360,6 +360,12 @@ export default class ProfilePage extends GetUserData {
         COUNTRY_OPTION_FIND.setAttribute('selected', 'true');
         this.editAddressForm.DELETE_BUTTON.removeAttribute('disabled');
         this.editAddressForm.addressId = target.id;
+        this.editAddressForm.validationResults = {
+          country: true,
+          postalCode: true,
+          city: true,
+          street: true,
+        };
       } else {
         // установить дефолтные значения для полей
         FIELDS.forEach((item) => {
@@ -368,6 +374,13 @@ export default class ProfilePage extends GetUserData {
           element.classList.remove('form-control_validation');
           const title = element.nextElementSibling as HTMLDivElement;
           title.innerText = '';
+
+          this.editAddressForm.validationResults = {
+            country: false,
+            postalCode: false,
+            city: false,
+            street: false,
+          };
         });
 
         this.editAddressForm.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');

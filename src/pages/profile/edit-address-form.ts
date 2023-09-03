@@ -75,7 +75,6 @@ export default class EditAddressForm extends GetUserData {
       postalCode: false,
       city: false,
       street: false,
-      default: true,
     };
 
     this.addressId = '';
@@ -155,7 +154,7 @@ export default class EditAddressForm extends GetUserData {
     this.DEFAULT_LABEL.setAttribute('for', `profileDefault`);
     this.FORM.setAttribute('noValidate', 'true');
     this.SAVE_BUTTON.setAttribute('type', 'button');
-    // this.SAVE_BUTTON.setAttribute('disabled', '');
+    this.SAVE_BUTTON.setAttribute('disabled', '');
     this.DELETE_BUTTON.setAttribute('type', 'button');
   }
 
@@ -228,6 +227,7 @@ export default class EditAddressForm extends GetUserData {
 
       this.applyValidation(validation, this.POSTAL_CODE_INVALID, target, 'postalCode');
     }
+
     const validation = countryValidation({ title: this.COUNTRY_SELECT.value });
     this.applyValidation(validation, this.COUNTRY_INVALID, this.COUNTRY_SELECT, 'country');
 
@@ -253,13 +253,7 @@ export default class EditAddressForm extends GetUserData {
   }
 
   private createBtnStatus(validationData: AddressValidation) {
-    if (
-      validationData.country &&
-      validationData.postalCode &&
-      validationData.city &&
-      validationData.street &&
-      validationData.default
-    ) {
+    if (validationData.country && validationData.postalCode && validationData.city && validationData.street) {
       this.SAVE_BUTTON.removeAttribute('disabled');
     } else {
       this.SAVE_BUTTON.setAttribute('disabled', '');
