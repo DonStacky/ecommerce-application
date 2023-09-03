@@ -2,6 +2,7 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import { getProduct, getCategories } from './detailed-page';
 import router from '../../app/router/router';
 import './detailed-page.scss';
+import { MODAL, MODAL_BODY } from './detailed-modal';
 
 const DETAILED_TEXT_COLUMN = createElement({
   tagname: 'div',
@@ -27,6 +28,8 @@ const DETAILED_CAROUSEL_INNER = createElement({
   tagname: 'div',
   options: [['className', 'carousel-inner w-75']],
 });
+DETAILED_CAROUSEL_INNER.dataset.bsToggle = 'modal';
+DETAILED_CAROUSEL_INNER.dataset.bsTarget = '#detailed-modal';
 
 const SPAN_PREV_ICON = createElement({
   tagname: 'span',
@@ -82,7 +85,7 @@ const BUTTON_NEXT = createElement({
 BUTTON_NEXT.dataset.bsTarget = '#carouselDetailed';
 BUTTON_NEXT.dataset.bsSlide = 'next';
 
-const DETAILED_CAROUSEL = createElement({
+export const DETAILED_CAROUSEL = createElement({
   tagname: 'div',
   options: [
     ['className', 'detailed__carousel carousel carousel-dark slide d-flex justify-content-center'],
@@ -91,9 +94,14 @@ const DETAILED_CAROUSEL = createElement({
   childElements: [DETAILED_CAROUSEL_INNER, BUTTON_PREV, BUTTON_NEXT],
 });
 
+DETAILED_CAROUSEL_INNER.addEventListener('click', () => {
+  DETAILED_CAROUSEL.classList.add('detailed__carousel--modal');
+  MODAL_BODY.append(DETAILED_CAROUSEL);
+});
+
 const DETAILED_CAROUSEL_COLUMN = createElement({
   tagname: 'div',
-  options: [['className', 'col col-sm-6 col-12']],
+  options: [['className', 'col col-sm-6 col-12 d-flex justify-content-center']],
   childElements: [DETAILED_CAROUSEL],
 });
 
@@ -105,8 +113,8 @@ const DETAILED_GRID_ROW = createElement({
 
 export const DETAILED_PAGE = createElement({
   tagname: 'div',
-  options: [['className', 'detailed']],
-  childElements: [DETAILED_GRID_ROW],
+  options: [['className', 'detailed container-xl']],
+  childElements: [DETAILED_GRID_ROW, MODAL],
 });
 
 const charachteristics = ['Category', 'Material', 'Season', 'Size'];
@@ -177,8 +185,14 @@ const DETAILED_CHARACTER_LINK = createElement({
     ['ariaExpanded', 'false'],
   ],
 });
+
 DETAILED_CHARACTER_LINK.addEventListener('click', () => {
   DETAILED_CHARACTER.classList.toggle('characteristic-wrapper--show');
+});
+
+MODAL.addEventListener('hide.bs.modal', () => {
+  DETAILED_CAROUSEL_COLUMN.append(DETAILED_CAROUSEL);
+  DETAILED_CAROUSEL.classList.remove('detailed__carousel--modal');
 });
 
 DETAILED_TEXT_COLUMN.append(DETAILED_CHARACTER_LINK, DETAILED_CHARACTER);
@@ -245,7 +259,7 @@ DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD);
 
 async function getCarousel(id: string) {
   const detailedCarouselImages = (await getProduct(id)).body.masterData.current.masterVariant.images;
-
+  console.log((await getProduct(id)).body.masterData.current);
   if (detailedCarouselImages) {
     const DETAILED_CAROUSEL_IMAGES = detailedCarouselImages.map((image) => {
       const DETAILED_CAROUSEL_IMAGE = createElement({
