@@ -2,6 +2,7 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { createElement } from '../../shared/helpers/dom-utilites';
 
 export default function createCard(product: ProductProjection) {
+  const cardID = product.id;
   const imgSrc = product.masterVariant.images
     ? product.masterVariant.images.filter((image) => image.url.includes('card'))[0].url ||
       product.masterVariant.images[0].url ||
@@ -55,6 +56,15 @@ export default function createCard(product: ProductProjection) {
             ['className', 'btn btn-primary fs-2'],
             ['textContent', productDiscountPrice || productMainPrice || 'N/A'],
           ],
+          events: [
+            [
+              'click',
+              (event) => {
+                event.stopPropagation();
+                console.log('click on card button.ID', cardID);
+              },
+            ],
+          ],
         });
         if (productDiscountPrice) {
           MAIN_PRICE.append(
@@ -69,6 +79,14 @@ export default function createCard(product: ProductProjection) {
         }
         return MAIN_PRICE;
       })(),
+    ],
+    events: [
+      [
+        'click',
+        () => {
+          console.log('click on card. ID', cardID);
+        },
+      ],
     ],
   });
 }

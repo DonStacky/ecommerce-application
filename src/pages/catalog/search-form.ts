@@ -42,7 +42,6 @@ export const buildSearchInput = (): SearchInput => {
       } to ${+RAW_INPUT.price[1].value > 0 ? +RAW_INPUT.price[1].value * 100 : '*'})`,
     });
   }
-  console.log(resultInput);
   return resultInput;
 };
 

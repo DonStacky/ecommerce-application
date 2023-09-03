@@ -24,8 +24,7 @@ apiRoot
   .execute()
   .then((data) => {
     data.body.results.forEach((res) => Object.defineProperty(CATEGORY_NAME_ID_MAP, res.name.en, { value: res.id }));
-  })
-  .then(() => console.log(CATEGORY_NAME_ID_MAP));
+  });
 
 export default async function search(searchInput: SearchInput) {
   const { seasons, materials, productType, sort, searchTextInput, price } = searchInput;
@@ -47,9 +46,7 @@ export default async function search(searchInput: SearchInput) {
   const root = createApiBuilderFromCtpClient(client).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
-  console.log(mappedArr);
 
-  console.log('res sort', sort);
   root
     .productProjections()
     .search()
