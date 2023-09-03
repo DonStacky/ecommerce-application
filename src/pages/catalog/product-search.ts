@@ -4,7 +4,7 @@ import checkEnvVariables from '../../shared/helpers/utilites';
 import { SearchInput } from '../../shared/types/types';
 import createCard from './card';
 import CONTENT from './content';
-import NOT_FOUND from '@svg/404_not_found.svg';
+import NOT_FOUND from '@svg/no-result.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
@@ -69,6 +69,7 @@ export default async function search(searchInput: SearchInput) {
     .then((cards) => {
       if (cards.length) {
         CONTENT.replaceChildren(...cards);
+        CONTENT.classList.remove('content-not-found');
       } else {
         CONTENT.replaceChildren(
           createElement({
@@ -78,8 +79,16 @@ export default async function search(searchInput: SearchInput) {
               ['className', 'aside__image'],
               ['alt', 'Page not found'],
             ],
+          }),
+          createElement({
+            tagname: 'div',
+            options: [
+              ['textContent', 'Found 0 results'],
+              ['className', 'fs-3'],
+            ],
           })
         );
+        CONTENT.classList.add('content-not-found');
       }
     });
 }

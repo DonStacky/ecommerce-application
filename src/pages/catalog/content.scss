@@ -6,7 +6,14 @@
     column-gap: 2rem;
     row-gap: 2rem;
     flex-grow: 1;
-    & .aside__image {
+    .aside__image {
         max-width: 30%;
+        object-fit: contain;
     }
+}
+
+.content-not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
