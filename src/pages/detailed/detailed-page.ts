@@ -145,7 +145,7 @@ const DETAILS_DDS = details.map(() => {
   return DETAILS_DD;
 });
 
-async function getCharachteristics(categoriesRef: CategoryReference[], size: string) {
+async function setCharachteristics(categoriesRef: CategoryReference[], size: string) {
   const categoriesID = categoriesRef;
 
   const categories = categoriesID.map(async (item) => {
@@ -228,19 +228,19 @@ const DETAILED_PRICE_FIELD = createElement({
   childElements: [DETAILED_PRICE],
 });
 
-function getTitle(title: string) {
+function setTitle(title: string) {
   DETAILED_TITLE.textContent = title;
 
   DETAILED_TEXT_COLUMN.prepend(DETAILED_TITLE);
 }
 
-function getText(text: string) {
+function setText(text: string) {
   DETAILED_DESC_TEXT.textContent = text;
 
   DETAILED_TEXT_COLUMN.prepend(DETAILED_DESC_TEXT);
 }
 
-async function getDiscount(discount: number) {
+async function setDiscount(discount: number) {
   DETAILED_DISCOUNT.textContent = '';
 
   if (discount) {
@@ -250,7 +250,7 @@ async function getDiscount(discount: number) {
   }
 }
 
-function getPrice(price: number, discount?: number) {
+function setPrice(price: number, discount?: number) {
   DETAILED_PRICE_FIELD.innerHTML = '';
   DETAILED_PRICE.textContent = '';
   DETAILED_PRICE.classList.remove('detailed__discount');
@@ -259,13 +259,13 @@ function getPrice(price: number, discount?: number) {
   DETAILED_PRICE.textContent = `${(price / 100).toFixed(2)} $`;
 
   if (discount) {
-    getDiscount(discount);
+    setDiscount(discount);
   }
 }
 
 DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD);
 
-async function getCarousel(images: Image[]) {
+async function setCarousel(images: Image[]) {
   const detailedCarouselImages = images;
 
   if (detailedCarouselImages) {
@@ -307,16 +307,16 @@ export async function getDetailedInfo(id: string) {
   const discount = product.masterVariant.prices?.[0].discounted?.value.centAmount;
 
   if (text && images && price) {
-    getText(text);
-    getCarousel(images);
+    setText(text);
+    setCarousel(images);
 
     if (discount) {
-      getPrice(price, discount);
+      setPrice(price, discount);
     } else {
-      getPrice(price);
+      setPrice(price);
     }
   }
 
-  getTitle(title);
-  getCharachteristics(categories, size);
+  setTitle(title);
+  setCharachteristics(categories, size);
 }

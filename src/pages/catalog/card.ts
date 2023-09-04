@@ -13,10 +13,10 @@ export default function createCard(product: ProductProjection) {
   const productDescription = product.description?.en || '';
   const productPrices = product.masterVariant.prices;
   const productMainPrice = productPrices?.[0].value.centAmount
-    ? `${productPrices[0].value.centAmount / 100}`
+    ? `${productPrices[0].value.centAmount / 100} $`
     : undefined;
   const productDiscountPrice = productPrices?.[0].discounted?.value.centAmount
-    ? `${productPrices[0].discounted.value.centAmount / 100}`
+    ? `${productPrices[0].discounted.value.centAmount / 100} $`
     : undefined;
 
   return createElement({
