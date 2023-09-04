@@ -43,4 +43,4 @@ export type AddressValidateResult =
     };
 
 export type AddressType = 'Shipping address' | 'Billing address';
-export type AddressData = ['Shipping address', 'Billing address'];
+export type AddressData = AddressType[];
