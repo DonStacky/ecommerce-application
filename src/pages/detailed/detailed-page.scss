@@ -21,7 +21,7 @@
   color: $main-color-text;
 
   &::after {
-    content: " ";
+    content: ' ';
     display: none;
     position: absolute;
     width: 15rem;
@@ -46,9 +46,9 @@
 }
 
 .characteristic-wrapper--show {
-  max-height: 200px;
+  max-height: 205px;
 
-  & .detailed__term::after{
+  & .detailed__term::after {
     display: block;
   }
 }
@@ -62,7 +62,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   text-decoration: line-through;
-  color:  $bottom-header-item-color;
+  color: $bottom-header-item-color;
   vertical-align: middle;
   margin: 1rem;
 }

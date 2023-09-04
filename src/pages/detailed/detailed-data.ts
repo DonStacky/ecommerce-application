@@ -1,8 +1,7 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { getProduct, getCategories } from './detailed-page';
-import router from '../../app/router/router';
-import './detailed-page.scss';
 import { MODAL, MODAL_BODY } from './detailed-modal';
+import { getCategories, getProduct } from './detailed-page';
+import './detailed-page.scss';
 
 const DETAILED_TEXT_COLUMN = createElement({
   tagname: 'div',
@@ -100,7 +99,6 @@ DETAILED_CAROUSEL_INNER.addEventListener(
     DETAILED_CAROUSEL.classList.add('detailed__carousel--modal');
     MODAL_BODY.append(DETAILED_CAROUSEL);
     DETAILED_CAROUSEL_INNER.dataset.bsToggle = '';
-    console.log('modal');
   },
   { once: true }
 );
@@ -123,7 +121,7 @@ export const DETAILED_PAGE = createElement({
   childElements: [DETAILED_GRID_ROW, MODAL],
 });
 
-const charachteristics = ['Category', 'Material', 'Season', 'Size'];
+const charachteristics = ['Material', 'Season', 'Category', 'Size'];
 
 const CHARACTER_DTS = charachteristics.map((text) => {
   const CHARACTER_DT = createElement({
@@ -148,18 +146,22 @@ const CHARACTER_DDS = charachteristics.map(() => {
 
 async function getCharachteristics(id: string) {
   const categoriesID = (await getProduct(id)).body.masterData.current.categories;
+
   const categories = categoriesID.map(async (item) => {
     const category = (await getCategories(item.id)).body.name;
 
     return category;
   });
+
   CHARACTER_DDS.forEach(async (dd, index) => {
+    const definitionDescription = dd;
+
     if (index < 3) {
-      // eslint-disable-next-line no-param-reassign
-      dd.textContent = (await categories[index]).en;
+      definitionDescription.textContent = (await categories[index]).en;
     } else {
-      // eslint-disable-next-line no-param-reassign
-      dd.textContent = (await getProduct(id)).body.masterData.current.masterVariant.attributes?.[0].value;
+      definitionDescription.textContent = (
+        await getProduct(id)
+      ).body.masterData.current.masterVariant.attributes?.[0].value;
     }
   });
 }
@@ -249,6 +251,7 @@ function getText(id: string) {
 }
 
 async function getDiscount(id: string) {
+  DETAILED_DISCOUNT.textContent = '';
   const discountCent = (await getProduct(id)).body.masterData.current.masterVariant.prices?.[0].discounted?.value
     .centAmount;
 
@@ -256,14 +259,18 @@ async function getDiscount(id: string) {
     DETAILED_DISCOUNT.textContent = `${(discountCent / 100).toFixed(2)} $`;
     DETAILED_PRICE_FIELD.prepend(DETAILED_DISCOUNT);
     DETAILED_PRICE.classList.add('detailed__discount');
-    console.log(discountCent);
   }
 }
 
 function getPrice(id: string) {
+  DETAILED_PRICE_FIELD.innerHTML = '';
+  DETAILED_PRICE.textContent = '';
+  DETAILED_PRICE.classList.remove('detailed__discount');
+  DETAILED_PRICE_FIELD.append(DETAILED_PRICE);
+
   getProduct(id).then(({ body }) => {
     const priceCent = body.masterData.current.masterVariant.prices?.[0].value.centAmount;
-    console.log(priceCent);
+
     if (priceCent) {
       DETAILED_PRICE.textContent = `${(priceCent / 100).toFixed(2)} $`;
     }
@@ -276,7 +283,7 @@ DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD);
 
 async function getCarousel(id: string) {
   const detailedCarouselImages = (await getProduct(id)).body.masterData.current.masterVariant.images;
-  console.log((await getProduct(id)).body.masterData.current);
+
   if (detailedCarouselImages) {
     const DETAILED_CAROUSEL_IMAGES = detailedCarouselImages.map((image) => {
       const DETAILED_CAROUSEL_IMAGE = createElement({
@@ -313,13 +320,4 @@ export function getDetailedInfo(id: string) {
   getPrice(id);
 
   return [id];
-}
-
-export function openDetailedPage(promiseID: Promise<string | void>) {
-  router.navigate('/catalog/');
-  promiseID.then((id) => {
-    if (id) {
-      getDetailedInfo(id);
-    }
-  });
 }

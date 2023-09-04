@@ -4,7 +4,10 @@ import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
 import BASKET_PAGE from '../../pages/basket/basket';
-import CATALOG_PAGE from '../../pages/catalog/test-catalog';
+import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
+import CATALOG_PAGE from '../../pages/catalog/catalog';
+import CONTENT from '../../pages/catalog/content';
+import search from '../../pages/catalog/product-search';
 import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-data';
 import { getProductWithKey } from '../../pages/detailed/detailed-page';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
@@ -17,19 +20,16 @@ import REG_PAGE from '../../pages/registration/registration-form';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
 import {
+  addLogoutBtn,
   HEADER,
   HEADER_ITEMS,
-  MAIN_HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
-  addLogoutBtn,
+  MAIN_HEADER_ITEMS,
   PROFILE_ITEM,
   PROFILE_LINK,
 } from '../../widgets/header/header';
 import ROUTER from './router';
-import search from '../../pages/catalog/product-search';
-import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
-import CONTENT from '../../pages/catalog/content';
 
 const render = (content: HTMLElement, linkID?: string) => {
   if (localStorage.getItem('tokenCache')) {
@@ -140,10 +140,20 @@ const getRoutes = (router: Navigo) => {
     .on('/profile', () => {
       render(PROFILE_PAGE);
     })
-    .on('/catalog/:key', async ({ data }) => {
-      const { id } = (await getProductWithKey(data.key)).body;
-      getDetailedInfo(id);
-      render(DETAILED_PAGE);
+    .on('/catalog/:key', async (match) => {
+      if (match) {
+        const { data } = match;
+
+        if (data) {
+          try {
+            const { id } = (await getProductWithKey(data.key)).body;
+            getDetailedInfo(id);
+            render(DETAILED_PAGE);
+          } catch {
+            render(NOT_FOUND);
+          }
+        }
+      }
     })
     .notFound(() => {
       render(NOT_FOUND);

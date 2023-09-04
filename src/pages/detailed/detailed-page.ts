@@ -1,5 +1,5 @@
-import buildCommonClient from '../../shared/api/create-common-client';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import buildCommonClient from '../../shared/api/create-common-client';
 import checkEnvVariables from '../../shared/helpers/utilites';
 
 export async function getProduct(ID: string) {

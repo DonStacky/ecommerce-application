@@ -1,8 +1,9 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
+import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
 
 export default function createCard(product: ProductProjection) {
-  const cardID = product.id;
+  const cardKey = product.key;
   const imgSrc = product.masterVariant.images
     ? product.masterVariant.images.filter((image) => image.url.includes('card'))[0].url ||
       product.masterVariant.images[0].url ||
@@ -61,7 +62,9 @@ export default function createCard(product: ProductProjection) {
               'click',
               (event) => {
                 event.stopPropagation();
-                console.log('click on card button.ID', cardID);
+                if (cardKey) {
+                  router.navigate(`/catalog/${cardKey}`);
+                }
               },
             ],
           ],
@@ -84,7 +87,9 @@ export default function createCard(product: ProductProjection) {
       [
         'click',
         () => {
-          console.log('click on card. ID', cardID);
+          if (cardKey) {
+            router.navigate(`/catalog/${cardKey}`);
+          }
         },
       ],
     ],
