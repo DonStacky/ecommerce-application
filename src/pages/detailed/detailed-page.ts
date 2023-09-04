@@ -2,6 +2,7 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import { getCategories, getProduct } from './detailed-data';
 import { MODAL, MODAL_BODY } from './detailed-modal';
 import './detailed-page.scss';
+import { Image, CategoryReference } from '@commercetools/platform-sdk';
 
 const DETAILED_TEXT_COLUMN = createElement({
   tagname: 'div',
@@ -121,10 +122,10 @@ export const DETAILED_PAGE = createElement({
   childElements: [DETAILED_GRID_ROW, MODAL],
 });
 
-const charachteristics = ['Material', 'Season', 'Category', 'Size'];
+const details = ['Material', 'Season', 'Category', 'Size'];
 
-const CHARACTER_DTS = charachteristics.map((text) => {
-  const CHARACTER_DT = createElement({
+const DETAILS_DTS = details.map((text) => {
+  const DETAILS_DT = createElement({
     tagname: 'dt',
     options: [
       ['className', 'detailed__term'],
@@ -132,58 +133,56 @@ const CHARACTER_DTS = charachteristics.map((text) => {
     ],
   });
 
-  return CHARACTER_DT;
+  return DETAILS_DT;
 });
 
-const CHARACTER_DDS = charachteristics.map(() => {
-  const CHARACTER_DD = createElement({
+const DETAILS_DDS = details.map(() => {
+  const DETAILS_DD = createElement({
     tagname: 'dd',
     options: [['className', 'detailed__description']],
   });
 
-  return CHARACTER_DD;
+  return DETAILS_DD;
 });
 
-async function getCharachteristics(id: string) {
-  const categoriesID = (await getProduct(id)).body.masterData.current.categories;
+async function getCharachteristics(categoriesRef: CategoryReference[], size: string) {
+  const categoriesID = categoriesRef;
 
   const categories = categoriesID.map(async (item) => {
     return (await getCategories(item.id)).body.name;
   });
 
-  CHARACTER_DDS.forEach(async (dd, index) => {
+  DETAILS_DDS.forEach(async (dd, index) => {
     const definitionDescription = dd;
 
     if (index < 3) {
       definitionDescription.textContent = (await categories[index]).en;
     } else {
-      definitionDescription.textContent = (
-        await getProduct(id)
-      ).body.masterData.current.masterVariant.attributes?.[0].value;
+      definitionDescription.textContent = size;
     }
   });
 }
 
-const CHARACTER_DLS = charachteristics.map((stub, index) => {
-  const CHARACTER_DL = createElement({
+const DETAILS_DLS = details.map((stub, index) => {
+  const DETAILS_DL = createElement({
     tagname: 'dl',
     options: [['className', 'detailed__list']],
-    childElements: [CHARACTER_DTS[index], CHARACTER_DDS[index]],
+    childElements: [DETAILS_DTS[index], DETAILS_DDS[index]],
   });
 
-  return CHARACTER_DL;
+  return DETAILS_DL;
 });
 
-const DETAILED_CHARACTER = createElement({
+const DETAILED_WRAPPER = createElement({
   tagname: 'div',
   options: [
     ['className', 'characteristic-wrapper'],
     ['id', 'detailedCharacteristic'],
   ],
-  childElements: [...CHARACTER_DLS],
+  childElements: [...DETAILS_DLS],
 });
 
-const DETAILED_CHARACTER_LINK = createElement({
+const DETAILED_LINK = createElement({
   tagname: 'span',
   options: [
     ['className', 'characteristic-link mb-3'],
@@ -192,8 +191,8 @@ const DETAILED_CHARACTER_LINK = createElement({
   ],
 });
 
-DETAILED_CHARACTER_LINK.addEventListener('click', () => {
-  DETAILED_CHARACTER.classList.toggle('characteristic-wrapper--show');
+DETAILED_LINK.addEventListener('click', () => {
+  DETAILED_WRAPPER.classList.toggle('characteristic-wrapper--show');
 });
 
 MODAL.addEventListener('hide.bs.modal', () => {
@@ -212,7 +211,7 @@ MODAL.addEventListener('hide.bs.modal', () => {
   );
 });
 
-DETAILED_TEXT_COLUMN.append(DETAILED_CHARACTER_LINK, DETAILED_CHARACTER);
+DETAILED_TEXT_COLUMN.append(DETAILED_LINK, DETAILED_WRAPPER);
 
 const DETAILED_PRICE = createElement({
   tagname: 'span',
@@ -229,58 +228,45 @@ const DETAILED_PRICE_FIELD = createElement({
   childElements: [DETAILED_PRICE],
 });
 
-function getTitle(id: string) {
-  getProduct(id).then(({ body }) => {
-    DETAILED_TITLE.textContent = body.masterData.current.name.en;
-  });
+function getTitle(title: string) {
+  DETAILED_TITLE.textContent = title;
 
   DETAILED_TEXT_COLUMN.prepend(DETAILED_TITLE);
 }
 
-function getText(id: string) {
-  getProduct(id).then(({ body }) => {
-    const text = body.masterData.current.description?.en;
-    if (text) {
-      DETAILED_DESC_TEXT.textContent = text;
-    }
-  });
+function getText(text: string) {
+  DETAILED_DESC_TEXT.textContent = text;
 
   DETAILED_TEXT_COLUMN.prepend(DETAILED_DESC_TEXT);
 }
 
-async function getDiscount(id: string) {
+async function getDiscount(discount: number) {
   DETAILED_DISCOUNT.textContent = '';
-  const discountCent = (await getProduct(id)).body.masterData.current.masterVariant.prices?.[0].discounted?.value
-    .centAmount;
 
-  if (discountCent) {
-    DETAILED_DISCOUNT.textContent = `${(discountCent / 100).toFixed(2)} $`;
+  if (discount) {
+    DETAILED_DISCOUNT.textContent = `${(discount / 100).toFixed(2)} $`;
     DETAILED_PRICE_FIELD.prepend(DETAILED_DISCOUNT);
     DETAILED_PRICE.classList.add('detailed__discount');
   }
 }
 
-function getPrice(id: string) {
+function getPrice(price: number, discount?: number) {
   DETAILED_PRICE_FIELD.innerHTML = '';
   DETAILED_PRICE.textContent = '';
   DETAILED_PRICE.classList.remove('detailed__discount');
   DETAILED_PRICE_FIELD.append(DETAILED_PRICE);
 
-  getProduct(id).then(({ body }) => {
-    const priceCent = body.masterData.current.masterVariant.prices?.[0].value.centAmount;
+  DETAILED_PRICE.textContent = `${(price / 100).toFixed(2)} $`;
 
-    if (priceCent) {
-      DETAILED_PRICE.textContent = `${(priceCent / 100).toFixed(2)} $`;
-    }
-  });
-
-  getDiscount(id);
+  if (discount) {
+    getDiscount(discount);
+  }
 }
 
 DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD);
 
-async function getCarousel(id: string) {
-  const detailedCarouselImages = (await getProduct(id)).body.masterData.current.masterVariant.images;
+async function getCarousel(images: Image[]) {
+  const detailedCarouselImages = images;
 
   if (detailedCarouselImages) {
     const DETAILED_CAROUSEL_IMAGES = detailedCarouselImages.map((image) => {
@@ -310,12 +296,27 @@ async function getCarousel(id: string) {
   }
 }
 
-export function getDetailedInfo(id: string) {
-  getText(id);
-  getTitle(id);
-  getCarousel(id);
-  getCharachteristics(id);
-  getPrice(id);
+export async function getDetailedInfo(id: string) {
+  const product = (await getProduct(id)).body.masterData.current;
+  const text = product.description?.en;
+  const title = product.name.en;
+  const { images } = product.masterVariant;
+  const { categories } = product;
+  const size: string = product.masterVariant.attributes?.[0].value;
+  const price = product.masterVariant.prices?.[0].value.centAmount;
+  const discount = product.masterVariant.prices?.[0].discounted?.value.centAmount;
 
-  return [id];
+  if (text && images && price) {
+    getText(text);
+    getCarousel(images);
+
+    if (discount) {
+      getPrice(price, discount);
+    } else {
+      getPrice(price);
+    }
+  }
+
+  getTitle(title);
+  getCharachteristics(categories, size);
 }
