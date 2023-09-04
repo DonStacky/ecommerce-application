@@ -26,3 +26,26 @@ export type CustomerData = {
   billingAddress: Address;
   shippingAddress: Address;
 };
+
+export enum Order {
+  asc = 'asc',
+  desc = 'desc',
+}
+
+export type SearchInput = {
+  seasons?: string[];
+  materials?: string[];
+  productType?: string[];
+  searchTextInput?: string;
+  sort?: string[];
+  price?: string;
+};
+
+export type InputTemplate = {
+  seasons: [HTMLInputElement, string][];
+  materials: [HTMLInputElement, string][];
+  productType: [HTMLInputElement, string][];
+  searchTextInput: HTMLInputElement[];
+  sort: HTMLInputElement[][];
+  price: HTMLInputElement[];
+};

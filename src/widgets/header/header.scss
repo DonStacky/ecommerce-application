@@ -1,7 +1,7 @@
 .header-bottom {
   &__link {
     display: inline-block;
-    color: #555;
+    color: $bottom-header-item-color;
     transition: 0.3s;
     text-decoration: none;
     padding: 0 2rem;
@@ -17,7 +17,6 @@
   &__item {
     &.active .nav-link {
       transition: 0.3s;
-      color: #111;
     }
 
     @include media-breakpoint-down(sm) {
@@ -41,7 +40,7 @@
   transform-style: inherit;
   transition: 1s;
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1)), url('@image/carpenter-tool-collection.jpg') 0 0 / cover no-repeat;
+  background: linear-gradient(#0000004d, #0000001a), url('@image/carpenter-tool-collection.jpg') 0 0 / cover no-repeat;
   background-attachment: fixed;
 
   &__item {
@@ -49,13 +48,13 @@
   }
 
   &__toggler {
-    color: aliceblue;
+    color: $main-header-item-color;
     border: 1px solid #f8f9fa;
     position: absolute;
     left: 0;
 
     &:hover {
-      background-color: rgba(130, 126, 126, 0.5);
+      background-color: #827e7e80;
     }
   }
 
@@ -104,29 +103,29 @@
 
   &.active {
     border-radius: 0.5rem;
-    background-color: rgb(255, 255, 255);
+    background-color: $background-header-item-color;
   }
 
   &.active .header__link {
     transition: 0.3s;
-    color: #111;
+    color: $active-header-item-color;
   }
 
   & .header__link, .footer__item {
     transition: 0.3s;
-    color: #f0f8ff;
+    color: $main-header-item-color;
     padding: 0 2rem;
     margin: 0.3rem;
   }
 
   &:hover {
     transition: 0.3s;
-    background-color: rgb(255, 255, 255);
+    background-color: $background-header-item-color;
     border-radius: 0.5rem;
 
     & .header__link, & .nav-link {
       transition: 0.3s;
-      color: #111;
+      color: $active-header-item-color;
     }
   }
 }
@@ -161,7 +160,7 @@
 }
 
 .logout--main {
-  background-color: rgb(200, 237, 207);
+  background-color: #c8edcf;
   border-radius: 0.5rem;
   transition: 0.3s;
   padding: 0 20px;

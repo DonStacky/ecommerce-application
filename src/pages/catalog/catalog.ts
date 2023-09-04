@@ -1,14 +1,18 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
-
-const CATALOG_TITLE = createElement({
-  tagname: 'h1',
-  options: [['textContent', 'There will be a "Catalog" page']],
-});
+import { BREADCRUMB } from './breadcrumb';
+import CONTENT from './content';
+import { SEARCH_BAR } from './search-form';
+import 'bootstrap';
+import ACCORDION from './side-bar';
 
 const CATALOG_PAGE = createElement({
   tagname: 'section',
-  options: [['className', 'catalog d-flex justify-content-center align-items-center']],
-  childElements: [CATALOG_TITLE],
+  options: [['className', 'catalog']],
+  childElements: [
+    SEARCH_BAR,
+    BREADCRUMB,
+    createElement({ tagname: 'div', options: [['className', 'd-flex']], childElements: [ACCORDION, CONTENT] }),
+  ],
 });
 
 export default CATALOG_PAGE;

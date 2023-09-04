@@ -1,0 +1,9 @@
+.catalog {
+  @extend .container-xl;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+}
+.main:has(.catalog) {
+  flex-grow: 1;
+}

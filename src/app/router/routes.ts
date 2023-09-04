@@ -26,6 +26,9 @@ import {
   PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
+import search from '../../pages/catalog/product-search';
+import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
+import CONTENT from '../../pages/catalog/content';
 
 const render = (content: HTMLElement, linkID?: string) => {
   if (localStorage.getItem('tokenCache')) {
@@ -80,6 +83,35 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/catalog', () => {
       render(CATALOG_PAGE, '#catalog');
+      if (!CONTENT.childElementCount) {
+        search({});
+        showBreadCrumb(['All']);
+      }
+    })
+    .on('/catalog/all/', () => {
+      render(CATALOG_PAGE, '#catalog');
+      search({});
+      showBreadCrumb(['All']);
+    })
+    .on('/catalog/all/winter', () => {
+      render(CATALOG_PAGE, '#catalog');
+      search({ seasons: ['winter'] });
+      showBreadCrumb(['All', 'Winter']);
+    })
+    .on('/catalog/all/spring', () => {
+      render(CATALOG_PAGE, '#catalog');
+      search({ seasons: ['spring'] });
+      showBreadCrumb(['All', 'Spring']);
+    })
+    .on('/catalog/all/summer', () => {
+      render(CATALOG_PAGE, '#catalog');
+      search({ seasons: ['summer'] });
+      showBreadCrumb(['All', 'Summer']);
+    })
+    .on('/catalog/all/autumn', () => {
+      render(CATALOG_PAGE, '#catalog');
+      search({ seasons: ['autumn'] });
+      showBreadCrumb(['All', 'Autumn']);
     })
     .on('/basket', () => {
       render(BASKET_PAGE, '#basket');

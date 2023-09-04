@@ -1,0 +1,41 @@
+.accordion {
+  .btn-primary {
+    background-color: $catalog-button-color;
+    border-color: $catalog-button-color;
+  }
+  .btn-primary:hover {
+    background-color: darken($color: $catalog-button-color, $amount: 20%);
+    border-color: darken($color: $catalog-button-color, $amount: 20%);
+  }
+  .btn-primary:active {
+    background-color: darken($color: $catalog-button-color, $amount: 30%);
+    border-color: darken($color: $catalog-button-color, $amount: 30%);
+  }
+  @extend .ms-2;
+  row-gap: 0.5rem;
+  #winter,
+  #spring,
+  #summer,
+  #autumn {
+    border-left: 1px solid black;
+    & div {
+      display: block;
+      width: fit-content;
+    }
+  }
+  & div:hover {
+    cursor: pointer;
+  }
+  & .btn.btn-primary::before {
+    @extend .me-2;
+    content: url('@svg/arrow.svg');
+    transition: transform 0.5s;
+  }
+  & .btn.btn-primary[aria-expanded='true']::before {
+    content: url('@svg/arrow.svg');
+    transform: rotateZ(90deg);
+  }
+}
+.accordion::before {
+  content: 'Categories';
+}
