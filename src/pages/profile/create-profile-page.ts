@@ -77,7 +77,7 @@ export default class ProfilePage extends GetUserData {
     // Card elements
     this.PROFILE_CONTAINER = createElementBase('div', ['container', 'container_margin'], 'profile-page');
     this.PROFILE_BODY = createElementBase('div', ['main-body']);
-    this.PROFILE_PAGE = createElementBase('div', ['row', 'gutters-sm', 'justify-content-end']);
+    this.PROFILE_PAGE = createElementBase('div', ['row', 'gutters-sm', 'justify-content-end', 'profile']);
     this.PROFILE_CARD = createElementBase('div', ['col-md-4', 'mb-3', 'card']);
     this.CARD_BODY_USER = createElementBase('div', [
       'card-body',

@@ -4,7 +4,12 @@ import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
 import BASKET_PAGE from '../../pages/basket/basket';
+import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
+import CONTENT from '../../pages/catalog/content';
+import search from '../../pages/catalog/product-search';
+import { getProductWithKey } from '../../pages/detailed/detailed-data';
+import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-page';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
@@ -26,9 +31,6 @@ import {
   PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
-import search from '../../pages/catalog/product-search';
-import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
-import CONTENT from '../../pages/catalog/content';
 
 const render = (content: HTMLElement, linkID?: string) => {
   if (localStorage.getItem('tokenCache')) {
@@ -138,6 +140,21 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/profile', () => {
       render(new ProfilePage().PROFILE_CONTAINER);
+    })
+    .on('/catalog/:key', async (match) => {
+      if (match) {
+        const { data } = match;
+
+        if (data) {
+          try {
+            const { id } = (await getProductWithKey(data.key)).body;
+            getDetailedInfo(id);
+            render(DETAILED_PAGE);
+          } catch {
+            render(NOT_FOUND);
+          }
+        }
+      }
     })
     .notFound(() => {
       render(NOT_FOUND);

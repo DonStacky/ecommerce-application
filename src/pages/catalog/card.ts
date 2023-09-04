@@ -1,8 +1,9 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
+import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
 
 export default function createCard(product: ProductProjection) {
-  const cardID = product.id;
+  const cardKey = product.key;
   const imgSrc = product.masterVariant.images
     ? product.masterVariant.images.filter((image) => image.url.includes('card'))[0].url ||
       product.masterVariant.images[0].url ||
@@ -12,10 +13,10 @@ export default function createCard(product: ProductProjection) {
   const productDescription = product.description?.en || '';
   const productPrices = product.masterVariant.prices;
   const productMainPrice = productPrices?.[0].value.centAmount
-    ? `${productPrices[0].value.centAmount / 100}`
+    ? `${productPrices[0].value.centAmount / 100} $`
     : undefined;
   const productDiscountPrice = productPrices?.[0].discounted?.value.centAmount
-    ? `${productPrices[0].discounted.value.centAmount / 100}`
+    ? `${productPrices[0].discounted.value.centAmount / 100} $`
     : undefined;
 
   return createElement({
@@ -61,7 +62,9 @@ export default function createCard(product: ProductProjection) {
               'click',
               (event) => {
                 event.stopPropagation();
-                console.log('click on card button.ID', cardID);
+                if (cardKey) {
+                  router.navigate(`/catalog/${cardKey}`);
+                }
               },
             ],
           ],
@@ -84,7 +87,9 @@ export default function createCard(product: ProductProjection) {
       [
         'click',
         () => {
-          console.log('click on card. ID', cardID);
+          if (cardKey) {
+            router.navigate(`/catalog/${cardKey}`);
+          }
         },
       ],
     ],

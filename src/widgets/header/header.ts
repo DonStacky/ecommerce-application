@@ -296,11 +296,12 @@ const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
 const HEADER_CAROUSEL_ITEMS = HEADER_CAROUSEL_IMAGES.map((image) => {
   const HEADER_CAROUSEL_ITEM = createElement({
     tagname: 'div',
-    options: [['className', 'carousel-item active']],
+    options: [['className', 'carousel-item']],
     childElements: [image],
   });
   return HEADER_CAROUSEL_ITEM;
 });
+HEADER_CAROUSEL_ITEMS[0].classList.add('active');
 
 const HEADER_CAROUSEL_INNER = createElement({
   tagname: 'div',
