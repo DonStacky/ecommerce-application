@@ -14,7 +14,7 @@ import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
 import NOT_FOUND from '../../pages/not_found/not_found';
-import PROFILE_PAGE from '../../pages/profile/profile-stub';
+import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
@@ -27,7 +27,8 @@ import {
   LOG_OUT_ITEM,
   MAIN_HEADER_ITEMS,
   PROFILE_ITEM,
-  PROFILE_LINK,
+  // eslint-disable-next-line prettier/prettier
+  PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
 
@@ -138,7 +139,7 @@ const getRoutes = (router: Navigo) => {
       render(PROMO_PAGE);
     })
     .on('/profile', () => {
-      render(PROFILE_PAGE);
+      render(new ProfilePage().PROFILE_CONTAINER);
     })
     .on('/catalog/:key', async (match) => {
       if (match) {

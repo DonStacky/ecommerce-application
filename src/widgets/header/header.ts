@@ -383,6 +383,7 @@ const showLinks = (item: HTMLLIElement) => {
 
 function logout() {
   localStorage.removeItem('tokenCache');
+  localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
   PROFILE_ITEM.remove();
   HEADER_ITEMS.forEach((item) => showLinks(item));
