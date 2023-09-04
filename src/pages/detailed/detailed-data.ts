@@ -316,7 +316,7 @@ export function getDetailedInfo(id: string) {
 }
 
 export function openDetailedPage(promiseID: Promise<string | void>) {
-  router.navigate('/detailed');
+  router.navigate('/catalog/');
   promiseID.then((id) => {
     if (id) {
       getDetailedInfo(id);
