@@ -184,5 +184,3 @@ export function changePassword(currentPassword: string, newPassword: string) {
     })
     .execute();
 }
-
-// const a: CustomerDraft =

@@ -4,9 +4,10 @@ import {
   birthDateValidation,
   firstNameValidation,
   lastNameValidation,
-  loginValidation,
+  // eslint-disable-next-line prettier/prettier
+  loginValidation
 } from '../../shared/helpers/validation';
-import { UserValidateResault, UserValidateResaultIndex, UserValidation } from './types';
+import { UserValidateResault, UserValidateResultIndex, UserValidation } from './types';
 
 export default class EditUserForm extends GetUserData {
   validationResults: UserValidation;
@@ -185,7 +186,7 @@ export default class EditUserForm extends GetUserData {
     validation: UserValidateResault,
     element: HTMLDivElement,
     target: HTMLInputElement,
-    validationResultsIndex: UserValidateResaultIndex
+    validationResultsIndex: UserValidateResultIndex
   ) {
     const ELEMENT = element;
     if (typeof validation === 'string') {

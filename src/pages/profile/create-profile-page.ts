@@ -8,7 +8,7 @@ import {
   setDefaultBillingAddress,
   setDefaultShippingAddress,
   // eslint-disable-next-line prettier/prettier
-  updateUserInformation,
+  updateUserInformation
 } from '../../shared/api/update-customer';
 import { createElementBase, findDomElement } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
@@ -18,6 +18,7 @@ import EditAddressForm from './edit-address-form';
 import EditPasswordForm from './edit-password-form';
 import EditUserForm from './edit-user-form';
 import ModalProfileChange from './modal-profile';
+import { AddressData } from './types';
 
 export default class ProfilePage extends GetUserData {
   PROFILE_CONTAINER: HTMLDivElement;
@@ -159,7 +160,7 @@ export default class ProfilePage extends GetUserData {
   }
 
   private createAddressFormBody() {
-    const nameData = ['Shipping address', 'Billing address'];
+    const nameData: AddressData = ['Shipping address', 'Billing address'];
     const titleData = [this.getShippingAddress(), this.getBillingAddress()];
     const id = ['shippingCollapse', 'billingCollapse'];
     const ELEMENT = createElementBase('div', ['card-body']);
@@ -372,6 +373,15 @@ export default class ProfilePage extends GetUserData {
           city: true,
           street: true,
         };
+
+        if (
+          (target.id === this.userData?.defaultShippingAddressId && target.closest('#shippingField')) ||
+          (target.id === this.userData?.defaultBillingAddressId && target.closest('#billingField'))
+        ) {
+          this.editAddressForm.SET_DEFAULT.setAttribute('disabled', '');
+        } else {
+          this.editAddressForm.SET_DEFAULT.removeAttribute('disabled');
+        }
       } else {
         // установить дефолтные значения для полей
         FIELDS.forEach((item) => {
@@ -394,6 +404,7 @@ export default class ProfilePage extends GetUserData {
         this.editAddressForm.COUNTRY_PRESELECTED_OPTION.setAttribute('selected', 'true');
         this.editAddressForm.DELETE_BUTTON.setAttribute('disabled', '');
         this.editAddressForm.addressId = '';
+        this.editAddressForm.SET_DEFAULT.removeAttribute('disabled');
       }
     });
 

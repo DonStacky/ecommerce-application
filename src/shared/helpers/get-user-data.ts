@@ -1,4 +1,5 @@
 import { Customer } from '@commercetools/platform-sdk';
+import { AddressType } from '../../pages/profile/types';
 
 export default class GetUserData {
   userData: Customer | undefined;
@@ -30,7 +31,7 @@ export default class GetUserData {
     return this.userData?.email || '';
   }
 
-  getAddresses(type: string) {
+  getAddresses(type: AddressType) {
     const address = this.userData?.addresses;
     if (!address) return [];
 

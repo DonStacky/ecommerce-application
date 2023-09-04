@@ -1,7 +1,7 @@
 import { createElementBase } from '../../shared/helpers/dom-utilites';
 import GetUserData from '../../shared/helpers/get-user-data';
 import { oldPasswordValidation, passwordValidation } from '../../shared/helpers/validation';
-import { PasswordValidateResault, PasswordValidateResaultIndex, PasswordValidation } from './types';
+import { PasswordValidateResult, PasswordValidateResultIndex, PasswordValidation } from './types';
 
 export default class EditPasswordForm extends GetUserData {
   validationResults: PasswordValidation;
@@ -143,10 +143,10 @@ export default class EditPasswordForm extends GetUserData {
   }
 
   private applyValidation(
-    validation: PasswordValidateResault,
+    validation: PasswordValidateResult,
     element: HTMLDivElement,
     target: HTMLInputElement,
-    validationResultsIndex: PasswordValidateResaultIndex
+    validationResultsIndex: PasswordValidateResultIndex
   ) {
     const ELEMENT = element;
     if (typeof validation === 'string') {

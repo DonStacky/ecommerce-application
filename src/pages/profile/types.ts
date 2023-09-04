@@ -5,7 +5,7 @@ export interface UserValidation {
   birthDate: boolean;
 }
 
-export type UserValidateResaultIndex = 'firstName' | 'lastName' | 'email' | 'birthDate';
+export type UserValidateResultIndex = 'firstName' | 'lastName' | 'email' | 'birthDate';
 
 export type UserValidateResault =
   | string
@@ -19,9 +19,9 @@ export interface PasswordValidation {
   repeatPassword: boolean;
 }
 
-export type PasswordValidateResaultIndex = 'oldPassword' | 'newPassword' | 'repeatPassword';
+export type PasswordValidateResultIndex = 'oldPassword' | 'newPassword' | 'repeatPassword';
 
-export type PasswordValidateResault =
+export type PasswordValidateResult =
   | string
   | {
       title: string;
@@ -34,10 +34,13 @@ export interface AddressValidation {
   street: boolean;
 }
 
-export type AddressValidateResaultIndex = 'country' | 'postalCode' | 'city' | 'street';
+export type AddressValidateResultIndex = 'country' | 'postalCode' | 'city' | 'street';
 
-export type AddressValidateResault =
+export type AddressValidateResult =
   | string
   | {
       title: string;
     };
+
+export type AddressType = 'Shipping address' | 'Billing address';
+export type AddressData = ['Shipping address', 'Billing address'];

@@ -4,7 +4,7 @@ import GetUserData from '../../shared/helpers/get-user-data';
 import { cityValidation, countryValidation, streetValidation } from '../../shared/helpers/validation';
 import { findCountry } from '../registration/form-validation';
 import countries from '../registration/postal-codes';
-import { AddressValidateResault, AddressValidateResaultIndex, AddressValidation } from './types';
+import { AddressValidateResult, AddressValidateResultIndex, AddressValidation } from './types';
 
 export default class EditAddressForm extends GetUserData {
   validationResults: AddressValidation;
@@ -235,10 +235,10 @@ export default class EditAddressForm extends GetUserData {
   }
 
   private applyValidation(
-    validation: AddressValidateResault,
+    validation: AddressValidateResult,
     element: HTMLDivElement,
     target: HTMLElement,
-    validationResultsIndex: AddressValidateResaultIndex
+    validationResultsIndex: AddressValidateResultIndex
   ) {
     const ELEMENT = element;
     if (typeof validation === 'string') {
