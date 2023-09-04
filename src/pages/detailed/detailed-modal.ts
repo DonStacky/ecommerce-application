@@ -12,7 +12,7 @@ CLOSE_BTN.dataset.bsDismiss = 'modal';
 
 export const MODAL_BODY = createElement({
   tagname: 'div',
-  options: [['className', 'modal-body']],
+  options: [['className', 'modal-body detailed-modal-body']],
   childElements: [CLOSE_BTN],
 });
 
@@ -24,14 +24,14 @@ const MODAL_CONTENT = createElement({
 
 const MODAL_DIALOG = createElement({
   tagname: 'div',
-  options: [['className', 'modal-dialog modal-dialog-centered']],
+  options: [['className', 'modal-dialog detailed-modal-dialog modal-dialog-centered']],
   childElements: [MODAL_CONTENT],
 });
 
 export const MODAL = createElement({
   tagname: 'div',
   options: [
-    ['className', 'modal container-xl fade'],
+    ['className', 'modal detailed-modal container-xl fade'],
     ['id', 'detailed-modal'],
     ['tabIndex', '-1'],
     ['ariaHidden', 'true'],
