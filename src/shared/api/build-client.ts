@@ -1,4 +1,10 @@
-import { ClientBuilder, HttpMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import {
+  ClientBuilder,
+  ExistingTokenMiddlewareOptions,
+  HttpMiddlewareOptions,
+  // eslint-disable-next-line prettier/prettier
+  PasswordAuthMiddlewareOptions
+} from '@commercetools/sdk-client-v2';
 import checkEnvVariables from '../helpers/utilites';
 import MyTokenCache from './token-cache';
 
@@ -25,4 +31,17 @@ export default function buildClientWithPassowrdFlow(email: string, password: str
   };
 
   return new ClientBuilder().withPasswordFlow(options).withHttpMiddleware(httpMiddlewareOptions).build();
+}
+
+export function buildClientUpdate(token: string) {
+  const httpMiddlewareOptions: HttpMiddlewareOptions = {
+    host: checkEnvVariables(process.env.CTP_API_URL),
+    fetch,
+  };
+
+  const options: ExistingTokenMiddlewareOptions = {
+    force: true,
+  };
+
+  return new ClientBuilder().withExistingTokenFlow(token, options).withHttpMiddleware(httpMiddlewareOptions).build();
 }

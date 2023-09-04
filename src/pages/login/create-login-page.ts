@@ -3,10 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 import ROUTER from '../../app/router/router';
 import loginCustomer from '../../shared/api/login-customer';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import loginValidationResults from './data';
-import { loginValidation, passwordValidation } from './login-validation';
-import { LoginValidation } from './types';
+import { loginValidation, passwordValidation } from '../../shared/helpers/validation';
 import { addLogoutBtn } from '../../widgets/header/header';
+import loginValidationResults from './data';
+import { LoginValidation } from './types';
 
 class LoginForm {
   LINK_TO_REG: HTMLAnchorElement;
@@ -212,7 +212,7 @@ class LoginForm {
     }
 
     if (target.id === 'InputEmail') {
-      const validation = loginValidation({ login: text });
+      const validation = loginValidation({ title: text });
 
       if (typeof validation === 'string') {
         this.HELP_EMAIL.innerText = validation;
@@ -226,7 +226,7 @@ class LoginForm {
     }
 
     if (target.id === 'InputPassword') {
-      const validation = passwordValidation({ password: text });
+      const validation = passwordValidation({ title: text });
 
       if (typeof validation === 'string') {
         this.HELP_PASSWD.innerText = validation;
@@ -256,7 +256,8 @@ class LoginForm {
     event.preventDefault();
 
     loginCustomer(this.INPUT_EMAIL.value, this.INPUT_PASSWD.value)
-      .then(() => {
+      .then(({ body: { customer } }) => {
+        localStorage.setItem('userInformation', JSON.stringify(customer));
         this.HELP_PASSWD.innerText = '';
         this.INPUT_EMAIL.value = '';
         this.INPUT_PASSWD.value = '';

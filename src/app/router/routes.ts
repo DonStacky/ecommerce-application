@@ -9,20 +9,21 @@ import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
 import NOT_FOUND from '../../pages/not_found/not_found';
-import PROFILE_PAGE from '../../pages/profile/profile-stub';
+import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
 import { findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
 import {
+  addLogoutBtn,
   HEADER,
   HEADER_ITEMS,
-  MAIN_HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
-  addLogoutBtn,
+  MAIN_HEADER_ITEMS,
   PROFILE_ITEM,
-  PROFILE_LINK,
+  // eslint-disable-next-line prettier/prettier
+  PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
 import search from '../../pages/catalog/product-search';
@@ -136,7 +137,7 @@ const getRoutes = (router: Navigo) => {
       render(PROMO_PAGE);
     })
     .on('/profile', () => {
-      render(PROFILE_PAGE);
+      render(new ProfilePage().PROFILE_CONTAINER);
     })
     .notFound(() => {
       render(NOT_FOUND);
