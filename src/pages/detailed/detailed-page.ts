@@ -186,7 +186,7 @@ const DETAILED_LINK = createElement({
   tagname: 'span',
   options: [
     ['className', 'characteristic-link mb-3'],
-    ['textContent', 'Characteristics'],
+    ['textContent', 'Product details'],
     ['ariaExpanded', 'false'],
   ],
 });
