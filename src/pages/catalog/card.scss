@@ -1,0 +1,93 @@
+.my-card {
+  position: relative;
+  width: 27rem;
+  overflow: hidden;
+  height: 37rem;
+  border-radius: 10px;
+  border: 1px solid green;
+  transition: box-shadow 0.2s;
+
+  .btn-primary {
+    background-color: $catalog-button-color;
+    border-color: $catalog-button-color;
+  }
+
+  .btn-primary:hover {
+    background-color: darken($color: $catalog-button-color, $amount: 20%);
+    border-color: darken($color: $catalog-button-color, $amount: 20%);
+  }
+
+  .btn-primary:active {
+    background-color: darken($color: $catalog-button-color, $amount: 30%);
+    border-color: darken($color: $catalog-button-color, $amount: 30%);
+  }
+
+  button {
+    position: absolute;
+    top: 23rem;
+    right: 0.5rem;
+  }
+
+  button::before {
+    content: 'Price: ';
+  }
+
+  button::after {
+    content: ' $';
+  }
+
+  &:hover {
+    box-shadow: 0.1rem 0.2rem 4rem 0.1rem black;
+    cursor: pointer;
+
+    .my-card-image {
+      height: 37rem;
+    }
+
+    .my-card-body {
+      background-color: rgba(0, 0, 0, 0.5);
+      top: 0;
+      color: white;
+    }
+  }
+}
+
+.my-card:has(.discount) {
+  border: 1px solid violet;
+
+  &:hover {
+    box-shadow: 0.1rem 0.2rem 4rem 0.1rem violet;
+  }
+}
+
+.my-card-image {
+  width: 27rem;
+  height: 27rem;
+  transition: height 0.5s;
+  object-fit: cover;
+}
+.my-card-body {
+  position: absolute;
+  top: 27rem;
+  height: 37rem;
+  width: 27rem;
+  transition: top 0.5s, color 0.5s;
+}
+
+.my-card-text {
+  padding: 0.5rem;
+}
+
+span.discount {
+  text-decoration: line-through;
+  position: absolute;
+  transform: rotateZ(45deg) translateX(-2rem);
+  transform-origin: center;
+  color: violet;
+  text-shadow: 1px 1px violet;
+  white-space: nowrap;
+
+  &::after {
+    content: ' $';
+  }
+}
