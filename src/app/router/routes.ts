@@ -139,7 +139,11 @@ const getRoutes = (router: Navigo) => {
       render(PROMO_PAGE);
     })
     .on('/profile', () => {
-      render(new ProfilePage().PROFILE_CONTAINER);
+      if (localStorage.getItem('tokenCache')) {
+        render(new ProfilePage().PROFILE_CONTAINER);
+      } else {
+        ROUTER.navigate('/login');
+      }
     })
     .on('/catalog/:key', async (match) => {
       if (match) {
