@@ -31,6 +31,7 @@ import {
   PROFILE_LINK
 } from '../../widgets/header/header';
 import ROUTER from './router';
+import { passProductId } from '../../pages/detailed/cart-interaction';
 
 const render = (content: HTMLElement, linkID?: string) => {
   if (localStorage.getItem('tokenCache')) {
@@ -153,6 +154,7 @@ const getRoutes = (router: Navigo) => {
           try {
             const { id } = (await getProductWithKey(data.key)).body;
             getDetailedInfo(id);
+            passProductId(id);
             render(DETAILED_PAGE);
           } catch {
             render(NOT_FOUND);

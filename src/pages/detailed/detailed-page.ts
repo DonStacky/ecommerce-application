@@ -3,8 +3,9 @@ import { getCategories, getProduct } from './detailed-data';
 import { MODAL, MODAL_BODY } from './detailed-modal';
 import './detailed-page.scss';
 import { Image, CategoryReference } from '@commercetools/platform-sdk';
+import { detailedBtnBox } from './cart-interaction';
 
-const DETAILED_TEXT_COLUMN = createElement({
+export const DETAILED_TEXT_COLUMN = createElement({
   tagname: 'div',
   options: [
     [
@@ -263,7 +264,7 @@ function setPrice(price: number, discount?: number) {
   }
 }
 
-DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD);
+DETAILED_TEXT_COLUMN.append(DETAILED_PRICE_FIELD, detailedBtnBox);
 
 async function setCarousel(images: Image[]) {
   const detailedCarouselImages = images;
