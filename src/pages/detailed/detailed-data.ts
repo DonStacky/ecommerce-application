@@ -28,11 +28,11 @@ export function createCart() {
     .execute();
 }
 
-// export function getChannels() {
-//   return apiRoot.channels().get().execute();
-// }
+export function getCart(ID: string) {
+  return apiRoot.carts().withId({ ID }).get().execute();
+}
 
-export function addLineItem(ID: string, productId: string, cartVersion = 1) {
+export function addLineItem(ID: string, productId: string, cartVersion: number) {
   return apiRoot
     .carts()
     .withId({ ID })
@@ -56,14 +56,6 @@ export function addLineItem(ID: string, productId: string, cartVersion = 1) {
           },
         ],
       },
-      // 'shippingDetails': {
-      //   'targets': [
-      //     {
-      //       'addressKey': 'AddressKeyStringFromAddress',
-      //       'quantity': 2
-      //     }
-      //   ]
-      // }
     })
     .execute();
 }
