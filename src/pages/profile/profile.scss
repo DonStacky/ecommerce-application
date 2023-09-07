@@ -1,0 +1,43 @@
+.card__image_width {
+  width: 150px;
+}
+
+.text-secondary_edit {
+  cursor: pointer;
+
+  @include hover {
+    color: var(--bs-heading-color) !important;
+    &::after {
+      content: '✎';
+      padding-left: 10px;
+    }
+  }
+}
+
+.modal-dialog_width {
+  max-width: max-content;
+}
+
+.modal-form {
+  margin: 0;
+}
+
+.modal-content_border {
+  border-radius: 1rem;
+}
+
+.close_align {
+  align-self: end;
+}
+
+.container_margin {
+  margin-top: 7rem;
+}
+
+.form-text_width {
+  width: 100%;
+}
+
+.profile {
+  padding: 20px;
+}

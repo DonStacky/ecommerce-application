@@ -1,0 +1,171 @@
+.header-bottom {
+  &__link {
+    display: inline-block;
+    color: $bottom-header-item-color;
+    transition: 0.3s;
+    text-decoration: none;
+    padding: 0 2rem;
+    margin: 0.3rem;
+  }
+
+  &__list {
+    @include media-breakpoint-down(md) {
+      align-items: center;
+    }
+  }
+
+  &__item {
+    &.active .nav-link {
+      transition: 0.3s;
+    }
+
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  &__nav {
+    background-color: #e0e0e0;
+  }
+
+  @include media-breakpoint-down(lg) {
+    padding: 0 10px;
+    margin: 0;
+  }
+}
+
+.header {
+  height: 100vh;
+  transform-style: inherit;
+  transition: 1s;
+  position: relative;
+  background: linear-gradient(#0000004d, #0000001a), url('@image/carpenter-tool-collection.jpg') 0 0 / cover no-repeat;
+  background-attachment: fixed;
+
+  &__item {
+    margin: 0.3rem;
+  }
+
+  &__toggler {
+    color: $main-header-item-color;
+    border: 1px solid #f8f9fa;
+    position: absolute;
+    left: 0;
+
+    &:hover {
+      background-color: #827e7e80;
+    }
+  }
+
+  &__close {
+    display: block;
+
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
+  }
+
+  &__text {
+    padding: 0% 0% 0% 5%;
+
+    @include media-breakpoint-down(sm) {
+      padding: 0 15%;
+    }
+  }
+
+  &__products {
+    @include media-breakpoint-down(sm) {
+      height: 100%;
+      position: relative;
+    }
+
+    &-row {
+      @include media-breakpoint-down(sm) {
+        display: flex;
+        flex-direction: column;
+        gap: 5rem;
+        height: 100%;
+        margin: 7rem 0;
+      }
+    }
+  }
+
+  &__carousel .carousel-inner {
+    @include media-breakpoint-down(sm) {
+      width: 50% !important;
+    }
+  }
+}
+
+.navbar-nav .nav-item {
+  margin: 0.3rem;
+
+  &.active {
+    border-radius: 0.5rem;
+    background-color: $background-header-item-color;
+  }
+
+  &.active .header__link {
+    transition: 0.3s;
+    color: $active-header-item-color;
+  }
+
+  & .header__link, .footer__item {
+    transition: 0.3s;
+    color: $main-header-item-color;
+    padding: 0 2rem;
+    margin: 0.3rem;
+  }
+
+  &:hover {
+    transition: 0.3s;
+    background-color: $background-header-item-color;
+    border-radius: 0.5rem;
+
+    & .header__link, & .nav-link {
+      transition: 0.3s;
+      color: $active-header-item-color;
+    }
+  }
+}
+
+.logo {
+  &__link {
+    display: block;
+    width: 30rem;
+    margin: 0 auto;
+  }
+
+  &__img {
+    width: 100%;
+  }
+}
+
+.btn__box {
+  right: 0;
+}
+
+@include media-breakpoint-down(sm) {
+  .header, .our-products, .our-clients {
+    height: auto;
+  }
+  .our-products, .our-clients {
+    padding: 10rem 0;
+  }
+}
+
+.logout>.fa-solid {
+  width: 16px;
+}
+
+.logout--main {
+  background-color: #c8edcf;
+  border-radius: 0.5rem;
+  transition: 0.3s;
+  padding: 0 20px;
+}
+
+.hide {
+  display: none;
+}
