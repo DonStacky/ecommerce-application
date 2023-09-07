@@ -3,7 +3,7 @@ import loginBack from '@image/hand-holding-string.jpg';
 import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-import BASKET_PAGE from '../../pages/basket/basket';
+import BasketPage from '../../pages/basket/create-basket-page';
 import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import CONTENT from '../../pages/catalog/content';
@@ -116,7 +116,7 @@ const getRoutes = (router: Navigo) => {
       showBreadCrumb(['All', 'Autumn']);
     })
     .on('/basket', () => {
-      render(BASKET_PAGE, '#basket');
+      render(new BasketPage().LIST, '#basket');
     })
     .on('/login', () => {
       if (localStorage.getItem('tokenCache')) {
