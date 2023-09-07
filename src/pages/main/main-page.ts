@@ -1,9 +1,8 @@
-import { createElement, findDomElement } from '../../shared/helpers/dom-utilites';
+import { createElement } from '../../shared/helpers/dom-utilites';
 import sailboat from '@image/sailboat.jpg';
 import happyWoman from '@image/happy-woman.jpg';
 import { HEADER, MAIN_HEADER } from '../../widgets/header/header';
 import FOOTER from '../../widgets/footer/footer';
-import throttle from '../../shared/helpers/throttle';
 import './main-page.scss';
 
 // ------------- OUR PRODUCTS -------------
@@ -154,14 +153,3 @@ export const PAGE = createElement({
   options: [['className', 'page']],
   childElements: [HEADER, STUB, MAIN, FOOTER],
 });
-
-function toggleHeader() {
-  const stickyHeader = findDomElement(document.body, '.header-bottom__nav');
-  if (window.scrollY > 200) {
-    stickyHeader.classList.add('element-show');
-  } else {
-    stickyHeader.classList.remove('element-show');
-  }
-}
-
-window.addEventListener('scroll', throttle(toggleHeader, 33));

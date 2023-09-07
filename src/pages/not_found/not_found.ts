@@ -1,5 +1,6 @@
 import notFound from '@svg/404_not_found.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import './not_found.scss';
 
 const NOT_FOUND_TEXT = createElement({
   tagname: 'p',
@@ -56,7 +57,7 @@ const NOT_FOUND_CONTAINER = createElement({
 
 const NOT_FOUND = createElement({
   tagname: 'section',
-  options: [['className', 'd-flex align-items-center']],
+  options: [['className', 'd-flex align-items-center not-found']],
   childElements: [NOT_FOUND_CONTAINER],
 });
 

@@ -21,6 +21,25 @@ export function createElement<T extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
+export function createElementBase<T extends keyof HTMLElementTagNameMap>(
+  tag: T,
+  classNameArrow?: string[],
+  id?: string,
+  text?: string
+) {
+  const ELEM = document.createElement(tag);
+  if (classNameArrow) {
+    ELEM.classList.add(...classNameArrow);
+  }
+  if (id) {
+    ELEM.setAttribute('id', id);
+  }
+  if (text) {
+    ELEM.innerText = text;
+  }
+  return ELEM;
+}
+
 // Находит элемент в дереве DOM или выбрасывает ошибку, если такого элемента нет
 export function findDomElement<T extends keyof HTMLElementTagNameMap>(parentElement: HTMLElement, selector: string) {
   const element = parentElement.querySelector<HTMLElementTagNameMap[T]>(selector);

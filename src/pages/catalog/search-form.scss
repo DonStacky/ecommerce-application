@@ -1,0 +1,127 @@
+.filter::before {
+  content: url('@svg/filter.svg');
+}
+
+.controls {
+  width: fit-content;
+  margin: 0 auto;
+  padding-left: 0.5rem;
+}
+
+.navbar {
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.filters {
+  padding: 2rem;
+  border-radius: 2rem;
+  color: white;
+  display: none;
+  opacity: 0;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+
+  .category-header {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.filters-show {
+  display: flex;
+  animation: show 0.5s linear 1 forwards;
+}
+
+.category-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+}
+
+input.category {
+  display: none;
+}
+
+.season-category {
+  background-color: $season-category-color;
+}
+
+.materials-category {
+  background-color: $materials-category-color;
+}
+
+.product-type-category {
+  background-color: $product-type-category-color;
+  color: white;
+}
+
+.sort-category,
+.sort-button {
+  background-color: $product-type-category-sort;
+}
+
+.season-category:hover,
+.btn.season-category:active,
+.season-category:has(input:checked) {
+  background-color: darken($color: $season-category-color, $amount: 20%);
+}
+
+.materials-category:hover,
+.btn.materials-category:active,
+.materials-category:has(input:checked) {
+  background-color: darken($color: $materials-category-color, $amount: 20%);
+}
+
+.product-type-category:hover,
+.btn.product-type-category:active,
+.product-type-category:has(input:checked) {
+  background-color: darken($color: $product-type-category-color, $amount: 20%);
+  color: white;
+}
+
+.sort-button:hover,
+.sort-category:hover,
+.btn.sort-category:active,
+.sort-category:has(input:checked) {
+  background-color: darken($color: $product-type-category-sort, $amount: 20%);
+}
+
+label.season-category:has(input:checked),
+label.materials-category:has(input:checked),
+label.product-type-category:has(input:checked),
+label.sort-category:has(input:checked) {
+  border-color: rgb(25, 135, 84);
+  box-shadow: 0 0 0 0.25rem rgba(0, 255, 0, 0.5);
+}
+
+label.sort-button::after {
+  content: 'descending';
+}
+
+label.sort-button:has(input:checked)::after {
+  content: 'ascending';
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.my-search-form {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: -20px;
+}
