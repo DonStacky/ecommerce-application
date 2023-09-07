@@ -64,9 +64,9 @@ export async function checkProductInCart(currentProductId: string) {
 
   if (cartId) {
     const { lineItems } = (await getCart(cartId)).body;
-    const { body } = await getCart(cartId);
+    const cartVersion = (await getCart(cartId)).body.version;
 
-    console.log('body', body);
+    localStorage.setItem('cartVersion', cartVersion.toString());
 
     if (lineItems.some(({ productId }) => productId === currentProductId)) {
       disableAddToCartBtn();
