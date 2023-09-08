@@ -4,6 +4,7 @@ import lights from '@image/lights.jpg';
 import seaSet from '@image/morskoj-nabor.jpg';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
+import { Carousel } from 'bootstrap';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import './header.scss';
 
@@ -317,7 +318,13 @@ const HEADER_CAROUSEL = createElement({
   ],
   childElements: [HEADER_CAROUSEL_INNER],
 });
-HEADER_CAROUSEL.setAttribute('data-bs-ride', 'carousel');
+
+const carousel = new Carousel(HEADER_CAROUSEL, {
+  interval: 3000,
+  pause: 'hover',
+  ride: 'carousel',
+});
+carousel.next();
 
 const HEADER_CAROUSEL_COLUMN = createElement({
   tagname: 'div',
