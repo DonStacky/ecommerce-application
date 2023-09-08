@@ -116,7 +116,7 @@ const getRoutes = (router: Navigo) => {
       showBreadCrumb(['All', 'Autumn']);
     })
     .on('/basket', () => {
-      render(new BasketPage().LIST, '#basket');
+      render(new BasketPage().PAGE, '#basket');
     })
     .on('/login', () => {
       if (localStorage.getItem('tokenCache')) {

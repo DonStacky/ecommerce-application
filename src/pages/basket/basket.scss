@@ -1,0 +1,24 @@
+.count {
+  display: flex;
+  position: relative;
+}
+
+.image {
+  max-width: 100px;
+}
+.count-input {
+  width: 34px;
+  border: none;
+  text-align: center;
+  padding: 0 4px;
+}
+
+.list-item {
+  padding: var(--bs-list-group-item-padding-y) var(--bs-list-group-item-padding-x);
+  border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color);
+  
+  &::before {
+    content: counters(section, ".") ". ";
+    counter-increment: section;
+  }
+}
