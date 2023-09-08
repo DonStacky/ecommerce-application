@@ -33,7 +33,7 @@ import {
 import ROUTER from './router';
 
 const render = (content: HTMLElement, linkID?: string) => {
-  if (localStorage.getItem('tokenCache')) {
+  if (localStorage.getItem('isLogged')) {
     if (linkID === '#home') {
       addLogoutBtn();
     } else {
@@ -119,14 +119,14 @@ const getRoutes = (router: Navigo) => {
       render(BASKET_PAGE, '#basket');
     })
     .on('/login', () => {
-      if (localStorage.getItem('tokenCache')) {
+      if (localStorage.getItem('isLogged')) {
         ROUTER.navigate('/');
       } else {
         render(LOGIN_PAGE, '#login');
       }
     })
     .on('/registration', () => {
-      if (localStorage.getItem('tokenCache')) {
+      if (localStorage.getItem('isLogged')) {
         ROUTER.navigate('/');
       } else {
         render(REG_PAGE, '#registration');
@@ -139,7 +139,7 @@ const getRoutes = (router: Navigo) => {
       render(PROMO_PAGE);
     })
     .on('/profile', () => {
-      if (localStorage.getItem('tokenCache')) {
+      if (localStorage.getItem('isLogged')) {
         render(new ProfilePage().PROFILE_CONTAINER);
       } else {
         ROUTER.navigate('/login');
