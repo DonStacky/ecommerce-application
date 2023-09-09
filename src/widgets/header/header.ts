@@ -389,6 +389,7 @@ const showLinks = (item: HTMLLIElement) => {
 };
 
 function logout() {
+  localStorage.removeItem('isLogged');
   localStorage.removeItem('tokenCache');
   localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
@@ -411,7 +412,7 @@ export function addLogoutBtn() {
   HEADER_ITEMS.forEach((item) => hideLinks(item));
   MAIN_HEADER_ITEMS.forEach((item) => hideLinks(item));
 
-  if (localStorage.getItem('tokenCache')) {
+  if (localStorage.getItem('isLogged')) {
     LOG_OUT_ITEM.classList.add('logout--main');
     PROFILE_ITEM.classList.add('header__item');
     PROFILE_LINK.classList.add('header__link');
@@ -421,6 +422,6 @@ export function addLogoutBtn() {
   }
 }
 
-if (localStorage.getItem('tokenCache')) {
+if (localStorage.getItem('isLogged')) {
   addLogoutBtn();
 }
