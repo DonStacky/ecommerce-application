@@ -63,10 +63,14 @@ export async function checkProductInCart(currentProductId: string) {
   const cartId = localStorage.getItem('cartId');
 
   if (cartId) {
-    const { lineItems } = (await getCart(cartId)).body;
-    const cartVersion = (await getCart(cartId)).body.version;
-
+    const { body } = await getCart(cartId);
+    const { lineItems } = body;
+    const cartVersion = body.version;
+    console.log('anonim cart', body.id);
     localStorage.setItem('cartVersion', cartVersion.toString());
+
+    // const customerCart = getCartByCustomerId();
+    // console.log('customer cart', (await customerCart).body.id);
 
     if (lineItems.some(({ productId }) => productId === currentProductId)) {
       disableAddToCartBtn();

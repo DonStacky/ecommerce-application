@@ -23,6 +23,7 @@ export function getProductWithKey(key: string) {
 
 export function createCart() {
   return apiRoot
+    .me()
     .carts()
     .post({ body: { currency: 'USD' } })
     .execute();
@@ -30,6 +31,10 @@ export function createCart() {
 
 export function getCart(ID: string) {
   return apiRoot.carts().withId({ ID }).get().execute();
+}
+
+export function getCartByCustomerId() {
+  return apiRoot.carts().withCustomerId({ customerId: '683a47a2-cb36-422c-98b4-f98b7134fbf5' }).get().execute();
 }
 
 export function addLineItem(ID: string, productId: string, cartVersion: number) {
