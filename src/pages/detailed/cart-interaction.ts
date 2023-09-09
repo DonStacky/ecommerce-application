@@ -1,7 +1,7 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import './cart-interaction.scss';
-import { addLineItem, createCart, getCart } from './detailed-data';
+import { addLineItem, createCart, getCart, removeLineItem } from './detailed-data';
 
 export async function checkCartAvailability() {
   if (!localStorage.getItem('cartId')) {
@@ -10,7 +10,6 @@ export async function checkCartAvailability() {
     localStorage.setItem('cartId', cartId);
     localStorage.setItem('cartVersion', cartVersion.toString());
   }
-  console.log('Cart created with id =', localStorage.getItem('cartId'));
 }
 
 const ADD_TO_CART_BTN = createElement({
@@ -29,30 +28,81 @@ const REMOVE_FROM_CART_BTN = createElement({
   ],
 });
 
-function disableAddToCartBtn() {
-  ADD_TO_CART_BTN.classList.add('disabled');
-  REMOVE_FROM_CART_BTN.classList.add('detailed__remove-btn--active');
+function toggleCartBtn() {
+  ADD_TO_CART_BTN.classList.toggle('disabled');
+  REMOVE_FROM_CART_BTN.classList.toggle('detailed__remove-btn--active');
 }
 
 async function addProductToCart() {
-  disableAddToCartBtn();
-
   const currentProductId = localStorage.getItem('currentProductId');
   const cartId = localStorage.getItem('cartId');
   const cartVersion = localStorage.getItem('cartVersion');
-  console.log(cartVersion);
 
   if (currentProductId && cartId && cartVersion) {
-    const result = await addLineItem(cartId, currentProductId, Number(cartVersion));
-    console.log(result);
-  }
+    const response = await addLineItem(cartId, currentProductId, Number(cartVersion));
+    const lineItemId = response.body.lineItems?.at(-1)?.id;
+    const centAmount = response.body.lineItems?.at(-1)?.totalPrice?.centAmount;
+    const newCartVersion = response.body.version;
 
-  showModal(true, 'add product to cart');
+    localStorage.setItem('cartVersion', newCartVersion.toString());
+
+    if (lineItemId && centAmount) {
+      if (localStorage.getItem('lineItemInfo')) {
+        const lineItemInfo = new Map(Object.entries(JSON.parse(localStorage.getItem('lineItemInfo') as string)));
+        lineItemInfo.set(currentProductId, `${lineItemId}+${centAmount}`);
+        localStorage.setItem('lineItemInfo', JSON.stringify(Object.fromEntries(lineItemInfo.entries())));
+      } else {
+        const lineItemInfo = new Map();
+        lineItemInfo.set(currentProductId, `${lineItemId}+${centAmount}`);
+        localStorage.setItem('lineItemInfo', JSON.stringify(Object.fromEntries(lineItemInfo.entries())));
+      }
+    }
+
+    if (response.statusCode === 200) {
+      toggleCartBtn();
+      showModal(true, 'add product to cart');
+    } else {
+      showModal(false, 'Add product to cart');
+    }
+  }
+}
+
+async function removeProductFromCart() {
+  const cartId = localStorage.getItem('cartId');
+  const cartVersion = localStorage.getItem('cartVersion');
+  const productId = localStorage.getItem('currentProductId');
+
+  if (productId) {
+    const lineItemInfo = new Map(
+      Object.entries(JSON.parse(localStorage.getItem('lineItemInfo') as string) as [string, string])
+    );
+
+    const lineItemId = lineItemInfo?.get(productId)?.split('+')[0];
+    const centAmount = lineItemInfo?.get(productId)?.split('+')[1];
+
+    try {
+      if (cartId && cartVersion && lineItemId && centAmount) {
+        const response = await removeLineItem(cartId, Number(cartVersion), lineItemId, Number(centAmount));
+        const newCartVersion = response.body.version;
+
+        localStorage.setItem('cartVersion', newCartVersion.toString());
+
+        if (response.statusCode === 200) {
+          toggleCartBtn();
+          showModal(true, 'remove product from cart');
+        } else {
+          showModal(false, 'Remove product from cart');
+        }
+      }
+    } catch (err) {
+      showModal(false, `${err}. Remove product from cart`);
+    }
+  }
 }
 
 ADD_TO_CART_BTN.addEventListener('click', addProductToCart);
+REMOVE_FROM_CART_BTN.addEventListener('click', removeProductFromCart);
 
-// eslint-disable-next-line import/prefer-default-export
 export const detailedBtnBox = createElement({
   tagname: 'div',
   options: [['className', 'detailed__btn-box']],
@@ -66,19 +116,12 @@ export async function checkProductInCart(currentProductId: string) {
     const { body } = await getCart(cartId);
     const { lineItems } = body;
     const cartVersion = body.version;
-    console.log('anonim cart', body.id);
     localStorage.setItem('cartVersion', cartVersion.toString());
 
-    // const customerCart = getCartByCustomerId();
-    // console.log('customer cart', (await customerCart).body.id);
-
     if (lineItems.some(({ productId }) => productId === currentProductId)) {
-      disableAddToCartBtn();
-      console.log('yes');
+      ADD_TO_CART_BTN.classList.add('disabled');
+      REMOVE_FROM_CART_BTN.classList.add('detailed__remove-btn--active');
     } else {
-      console.log('no');
-      console.log(lineItems);
-      console.log(currentProductId);
       ADD_TO_CART_BTN.classList.remove('disabled');
       REMOVE_FROM_CART_BTN.classList.remove('detailed__remove-btn--active');
     }
