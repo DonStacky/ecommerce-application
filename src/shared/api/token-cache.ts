@@ -1,7 +1,7 @@
 import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 
 export default class MyTokenCache implements TokenCache {
-  myCaсhe: TokenStore = {
+  myCaсhe: TokenStore = JSON.parse(localStorage.getItem('tokenCache') || 'null') || {
     token: 'null',
     expirationTime: 0,
     refreshToken: undefined,
