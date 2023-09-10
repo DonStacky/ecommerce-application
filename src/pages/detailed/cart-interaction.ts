@@ -1,4 +1,4 @@
-import { createElement } from '../../shared/helpers/dom-utilites';
+import { createElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import './cart-interaction.scss';
 import { addLineItem, createCart, getCart, removeLineItem } from './detailed-data';
@@ -9,6 +9,30 @@ export async function checkCartAvailability() {
     const cartVersion = (await createCart()).body.version;
     localStorage.setItem('cartId', cartId);
     localStorage.setItem('cartVersion', cartVersion.toString());
+  }
+}
+
+export async function checkCartLineItemsQty() {
+  const cartId = localStorage.getItem('cartId');
+  console.log('Update cartQty');
+
+  if (cartId) {
+    const lineItemsQty = findDomElements(document.body, '.nav-link__line-items-qty');
+
+    const { lineItems } = (await getCart(cartId)).body;
+
+    if (lineItems.length > 0) {
+      console.log('cartQty active');
+      console.log(lineItemsQty);
+      lineItemsQty.forEach((link) => {
+        link.classList.add('nav-link__line-items-qty--active');
+      });
+    } else {
+      lineItemsQty.forEach((link) => {
+        console.log('cartQty unactive');
+        link.classList.remove('nav-link__line-items-qty--active');
+      });
+    }
   }
 }
 
@@ -60,6 +84,7 @@ async function addProductToCart() {
 
     if (response.statusCode === 200) {
       toggleCartBtn();
+      checkCartLineItemsQty();
       showModal(true, 'add product to cart');
     } else {
       showModal(false, 'Add product to cart');
@@ -88,6 +113,7 @@ async function removeProductFromCart() {
         localStorage.setItem('cartVersion', newCartVersion.toString());
 
         if (response.statusCode === 200) {
+          checkCartLineItemsQty();
           toggleCartBtn();
           showModal(true, 'remove product from cart');
         } else {

@@ -13,10 +13,10 @@ import './header.scss';
 const headerLinkText: string[][] = [
   ['Home', 'home'],
   ['Catalog', 'catalog'],
-  ['Basket', 'basket'],
   ['About us', 'about'],
   ['Log in', 'login'],
   ['Sign up', 'registration'],
+  ['Basket', 'basket'],
 ];
 
 const HEADER_LINKS = headerLinkText.map(([text, link]) => {
@@ -33,6 +33,15 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
 
   if (link === 'home') {
     HEADER_LINK.setAttribute('href', '/');
+  }
+
+  if (link === 'basket') {
+    console.log('Basket is');
+    HEADER_LINK.innerHTML = `Cart
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
+        &nbsp;5&nbsp;
+      <span class="visually-hidden">products in cart</span>
+    </span>`;
   }
 
   return HEADER_LINK;
@@ -141,6 +150,15 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
     MAIN_HEADER_LINK.setAttribute('href', '/');
   }
 
+  if (link === 'basket') {
+    console.log('Basket is');
+    MAIN_HEADER_LINK.innerHTML = `Cart
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
+        &nbsp;5&nbsp;
+      <span class="visually-hidden">products in cart</span>
+    </span>`;
+  }
+
   return MAIN_HEADER_LINK;
 });
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
@@ -237,6 +255,100 @@ const MAIN_HEADER_STARTLINE = createElement({
   options: [['className', 'container-xl header__startline']],
   childElements: [MAIN_HEADER_NAV_TOP, MAIN_HEADER_NAV_BOTTOM],
 });
+
+const LOG_OUT_LINK = createElement({
+  tagname: 'a',
+  options: [
+    ['className', 'header-bottom__link nav-link text-success logout'],
+    ['href', `/`],
+    ['id', 'logout'],
+  ],
+});
+LOG_OUT_LINK.innerHTML = `<i class="fa-solid fa-arrow-right-from-bracket" style="color: #218b5a;"></i> Log out`;
+LOG_OUT_LINK.dataset.navigo = 'true';
+
+export const PROFILE_LINK = createElement({
+  tagname: 'a',
+  options: [
+    ['className', 'nav-link header__link'],
+    ['href', `/profile`],
+    ['id', 'profile'],
+    ['textContent', 'Profile'],
+  ],
+});
+PROFILE_LINK.dataset.navigo = 'true';
+
+// const CART_LINK = createElement({
+//   tagname: 'a',
+//   options: [
+//     ['className', 'nav-link header__link'],
+//     ['href', `/basket`],
+//     ['id', 'basket'],
+//   ],
+// });
+// CART_LINK.innerHTML = `<i class="fa-solid fa-cart-shopping" style="color: #f0f8ff;"></i>`;
+// CART_LINK.dataset.navigo = 'true';
+
+// export const CART_ITEM = createElement({
+//   tagname: 'li',
+//   options: [['className', 'header__item nav-item cart-item']],
+//   childElements: [CART_LINK],
+// });
+// MAIN_HEADER_LIST_WRAPPER.append(CART_ITEM);
+
+export const LOG_OUT_ITEM = createElement({
+  tagname: 'li',
+  options: [['className', 'header-bottom__item nav-item']],
+  childElements: [LOG_OUT_LINK],
+});
+
+export const PROFILE_ITEM = createElement({
+  tagname: 'li',
+  options: [['className', 'header__item nav-item']],
+  childElements: [PROFILE_LINK],
+});
+
+const showLinks = (item: HTMLLIElement) => {
+  item.classList.remove('hide');
+};
+
+function logout() {
+  localStorage.removeItem('isLogged');
+  localStorage.removeItem('tokenCache');
+  localStorage.removeItem('userInformation');
+  LOG_OUT_ITEM.remove();
+  PROFILE_ITEM.remove();
+  HEADER_ITEMS.forEach((item) => showLinks(item));
+  MAIN_HEADER_ITEMS.forEach((item) => showLinks(item));
+}
+
+LOG_OUT_LINK.addEventListener('click', logout);
+
+const hideLinks = (item: HTMLLIElement) => {
+  const link = item.childNodes[0];
+
+  if (link.textContent === 'Log in' || link.textContent === 'Sign up') {
+    item.classList.add('hide');
+  }
+};
+
+export function addLogoutBtn() {
+  HEADER_ITEMS.forEach((item) => hideLinks(item));
+  MAIN_HEADER_ITEMS.forEach((item) => hideLinks(item));
+
+  if (localStorage.getItem('isLogged')) {
+    LOG_OUT_ITEM.classList.add('logout--main');
+    PROFILE_ITEM.classList.add('header__item');
+    PROFILE_LINK.classList.add('header__link');
+    PROFILE_ITEM.classList.remove('header-bottom__link');
+    PROFILE_ITEM.classList.remove('header-bottom__item');
+    MAIN_HEADER_LIST.append(PROFILE_ITEM, LOG_OUT_ITEM);
+  }
+}
+
+if (localStorage.getItem('isLogged')) {
+  addLogoutBtn();
+}
 
 // --------------------- MAIN PAGE HEADER-BODY ---------------------
 
@@ -349,79 +461,3 @@ export const MAIN_HEADER = createElement({
   options: [['className', 'header d-flex flex-column']],
   childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
 });
-
-const LOG_OUT_LINK = createElement({
-  tagname: 'a',
-  options: [
-    ['className', 'header-bottom__link nav-link text-success logout'],
-    ['href', `/`],
-    ['id', 'logout'],
-  ],
-});
-LOG_OUT_LINK.innerHTML = `<i class="fa-solid fa-arrow-right-from-bracket" style="color: #218b5a;"></i> Log out`;
-LOG_OUT_LINK.dataset.navigo = 'true';
-
-export const PROFILE_LINK = createElement({
-  tagname: 'a',
-  options: [
-    ['className', 'nav-link header__link'],
-    ['href', `/profile`],
-    ['id', 'profile'],
-    ['textContent', 'Profile'],
-  ],
-});
-PROFILE_LINK.dataset.navigo = 'true';
-
-export const LOG_OUT_ITEM = createElement({
-  tagname: 'li',
-  options: [['className', 'header-bottom__item nav-item']],
-  childElements: [LOG_OUT_LINK],
-});
-
-export const PROFILE_ITEM = createElement({
-  tagname: 'li',
-  options: [['className', 'header__item nav-item']],
-  childElements: [PROFILE_LINK],
-});
-
-const showLinks = (item: HTMLLIElement) => {
-  item.classList.remove('hide');
-};
-
-function logout() {
-  localStorage.removeItem('isLogged');
-  localStorage.removeItem('tokenCache');
-  localStorage.removeItem('userInformation');
-  LOG_OUT_ITEM.remove();
-  PROFILE_ITEM.remove();
-  HEADER_ITEMS.forEach((item) => showLinks(item));
-  MAIN_HEADER_ITEMS.forEach((item) => showLinks(item));
-}
-
-LOG_OUT_LINK.addEventListener('click', logout);
-
-const hideLinks = (item: HTMLLIElement) => {
-  const link = item.childNodes[0];
-
-  if (link.textContent === 'Log in' || link.textContent === 'Sign up') {
-    item.classList.add('hide');
-  }
-};
-
-export function addLogoutBtn() {
-  HEADER_ITEMS.forEach((item) => hideLinks(item));
-  MAIN_HEADER_ITEMS.forEach((item) => hideLinks(item));
-
-  if (localStorage.getItem('isLogged')) {
-    LOG_OUT_ITEM.classList.add('logout--main');
-    PROFILE_ITEM.classList.add('header__item');
-    PROFILE_LINK.classList.add('header__link');
-    PROFILE_ITEM.classList.remove('header-bottom__link');
-    PROFILE_ITEM.classList.remove('header-bottom__item');
-    MAIN_HEADER_LIST.append(PROFILE_ITEM, LOG_OUT_ITEM);
-  }
-}
-
-if (localStorage.getItem('isLogged')) {
-  addLogoutBtn();
-}
