@@ -1,4 +1,7 @@
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import buildCommonClient from '../../shared/api/create-common-client';
 import { createElementBase } from '../../shared/helpers/dom-utilites';
+import checkEnvVariables from '../../shared/helpers/utilites';
 
 export default class BasketPage {
   LIST: HTMLOListElement;
@@ -11,6 +14,7 @@ export default class BasketPage {
 
     this.createListItem();
     this.PAGE.append(this.LIST);
+    this.getBusket();
   }
 
   private createListItem() {
@@ -48,5 +52,25 @@ export default class BasketPage {
       LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCT_SUMM, BUTTON_REMOOVE);
       this.LIST.append(LIST_ITEM);
     }
+  }
+
+  private getBusket() {
+    const ctpClient = buildCommonClient();
+    const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+      projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+    });
+
+    apiRoot
+      .carts()
+      .get()
+      /* .get({
+        queryArgs: {
+          id: '33503b72-97cd-4c71-aec6-340f94f3940a',
+        },
+      }) */
+      .execute()
+      .then((data) => {
+        console.log(data);
+      });
   }
 }
