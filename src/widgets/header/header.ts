@@ -36,11 +36,8 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
   }
 
   if (link === 'basket') {
-    console.log('Basket is');
     HEADER_LINK.innerHTML = `Cart
     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
-        &nbsp;5&nbsp;
-      <span class="visually-hidden">products in cart</span>
     </span>`;
   }
 
@@ -151,11 +148,8 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
   }
 
   if (link === 'basket') {
-    console.log('Basket is');
     MAIN_HEADER_LINK.innerHTML = `Cart
     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
-        &nbsp;5&nbsp;
-      <span class="visually-hidden">products in cart</span>
     </span>`;
   }
 
@@ -277,24 +271,6 @@ export const PROFILE_LINK = createElement({
   ],
 });
 PROFILE_LINK.dataset.navigo = 'true';
-
-// const CART_LINK = createElement({
-//   tagname: 'a',
-//   options: [
-//     ['className', 'nav-link header__link'],
-//     ['href', `/basket`],
-//     ['id', 'basket'],
-//   ],
-// });
-// CART_LINK.innerHTML = `<i class="fa-solid fa-cart-shopping" style="color: #f0f8ff;"></i>`;
-// CART_LINK.dataset.navigo = 'true';
-
-// export const CART_ITEM = createElement({
-//   tagname: 'li',
-//   options: [['className', 'header__item nav-item cart-item']],
-//   childElements: [CART_LINK],
-// });
-// MAIN_HEADER_LIST_WRAPPER.append(CART_ITEM);
 
 export const LOG_OUT_ITEM = createElement({
   tagname: 'li',

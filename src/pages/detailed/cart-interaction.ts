@@ -14,22 +14,25 @@ export async function checkCartAvailability() {
 
 export async function checkCartLineItemsQty() {
   const cartId = localStorage.getItem('cartId');
-  console.log('Update cartQty');
 
   if (cartId) {
-    const lineItemsQty = findDomElements(document.body, '.nav-link__line-items-qty');
+    const lineItemsBadges = findDomElements(document.body, '.nav-link__line-items-qty');
 
     const { lineItems } = (await getCart(cartId)).body;
 
     if (lineItems.length > 0) {
-      console.log('cartQty active');
-      console.log(lineItemsQty);
-      lineItemsQty.forEach((link) => {
-        link.classList.add('nav-link__line-items-qty--active');
+      const lineItemsQty = lineItems.reduce((acc, item) => {
+        return acc + item.quantity;
+      }, 0);
+
+      lineItemsBadges.forEach((link) => {
+        const lineItemsBadge = link;
+
+        lineItemsBadge.classList.add('nav-link__line-items-qty--active');
+        lineItemsBadge.innerHTML = `&nbsp;${lineItemsQty}&nbsp;`;
       });
     } else {
-      lineItemsQty.forEach((link) => {
-        console.log('cartQty unactive');
+      lineItemsBadges.forEach((link) => {
         link.classList.remove('nav-link__line-items-qty--active');
       });
     }
