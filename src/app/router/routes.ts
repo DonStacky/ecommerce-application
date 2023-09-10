@@ -22,12 +22,11 @@ import NOT_FOUND from '../../pages/not_found/not_found';
 import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
-import { findDomElement } from '../../shared/helpers/dom-utilites';
+import { findDomElements, findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
 import {
   addLogoutBtn,
   HEADER,
-  HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
   MAIN_HEADER_ITEMS,
@@ -62,6 +61,7 @@ const render = (content: HTMLElement, linkID?: string) => {
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${footerBack}) 0 100% / cover no-repeat`;
   }
 
+  const HEADER_ITEMS = findDomElements(document.body, '.header-bottom__item');
   HEADER_ITEMS.forEach((item) => item.classList.remove('active'));
 
   if (linkID) {
@@ -147,7 +147,7 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/profile', () => {
       if (localStorage.getItem('isLogged')) {
-        render(new ProfilePage().PROFILE_CONTAINER);
+        render(new ProfilePage().PROFILE_CONTAINER, '#profile');
       } else {
         ROUTER.navigate('/login');
       }
