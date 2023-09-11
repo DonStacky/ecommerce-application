@@ -8,6 +8,11 @@ import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import CONTENT from '../../pages/catalog/content';
 import search from '../../pages/catalog/product-search';
+import {
+  checkCartAvailability,
+  checkProductInCart,
+  checkCartLineItemsQty,
+} from '../../pages/detailed/cart-interaction';
 import { getProductWithKey } from '../../pages/detailed/detailed-data';
 import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-page';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
@@ -17,12 +22,11 @@ import NOT_FOUND from '../../pages/not_found/not_found';
 import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
-import { findDomElement } from '../../shared/helpers/dom-utilites';
+import { findDomElements, findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
 import {
   addLogoutBtn,
   HEADER,
-  HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
   MAIN_HEADER_ITEMS,
@@ -57,6 +61,7 @@ const render = (content: HTMLElement, linkID?: string) => {
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${footerBack}) 0 100% / cover no-repeat`;
   }
 
+  const HEADER_ITEMS = findDomElements(document.body, '.header-bottom__item');
   HEADER_ITEMS.forEach((item) => item.classList.remove('active'));
 
   if (linkID) {
@@ -69,6 +74,8 @@ const render = (content: HTMLElement, linkID?: string) => {
   HEADER.classList.add('header-bottom__nav--common');
   MAIN.innerHTML = '';
   MAIN.append(content);
+
+  checkCartLineItemsQty();
 };
 
 const getRoutes = (router: Navigo) => {
@@ -140,7 +147,7 @@ const getRoutes = (router: Navigo) => {
     })
     .on('/profile', () => {
       if (localStorage.getItem('isLogged')) {
-        render(new ProfilePage().PROFILE_CONTAINER);
+        render(new ProfilePage().PROFILE_CONTAINER, '#profile');
       } else {
         ROUTER.navigate('/login');
       }
@@ -153,6 +160,10 @@ const getRoutes = (router: Navigo) => {
           try {
             const { id } = (await getProductWithKey(data.key)).body;
             getDetailedInfo(id);
+            checkProductInCart(id);
+            localStorage.setItem('currentProductId', id);
+            checkCartAvailability();
+
             render(DETAILED_PAGE);
           } catch {
             render(NOT_FOUND);

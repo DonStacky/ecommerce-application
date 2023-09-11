@@ -1,0 +1,15 @@
+.detailed__btn-box {
+  margin-top: 2rem;
+}
+
+.detailed__add-btn {
+  margin-right: 2rem;
+}
+
+.detailed__remove-btn {
+  display: none;
+
+  &--active {
+    display: inline;
+  }
+}

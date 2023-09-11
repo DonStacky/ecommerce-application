@@ -4,6 +4,7 @@ import lights from '@image/lights.jpg';
 import seaSet from '@image/morskoj-nabor.jpg';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
+import { Carousel } from 'bootstrap';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import './header.scss';
 
@@ -12,10 +13,10 @@ import './header.scss';
 const headerLinkText: string[][] = [
   ['Home', 'home'],
   ['Catalog', 'catalog'],
-  ['Basket', 'basket'],
   ['About us', 'about'],
   ['Log in', 'login'],
   ['Sign up', 'registration'],
+  ['Basket', 'basket'],
 ];
 
 const HEADER_LINKS = headerLinkText.map(([text, link]) => {
@@ -32,6 +33,12 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
 
   if (link === 'home') {
     HEADER_LINK.setAttribute('href', '/');
+  }
+
+  if (link === 'basket') {
+    HEADER_LINK.innerHTML = `Cart
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
+    </span>`;
   }
 
   return HEADER_LINK;
@@ -140,6 +147,12 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
     MAIN_HEADER_LINK.setAttribute('href', '/');
   }
 
+  if (link === 'basket') {
+    MAIN_HEADER_LINK.innerHTML = `Cart
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
+    </span>`;
+  }
+
   return MAIN_HEADER_LINK;
 });
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
@@ -237,6 +250,82 @@ const MAIN_HEADER_STARTLINE = createElement({
   childElements: [MAIN_HEADER_NAV_TOP, MAIN_HEADER_NAV_BOTTOM],
 });
 
+const LOG_OUT_LINK = createElement({
+  tagname: 'a',
+  options: [
+    ['className', 'header-bottom__link nav-link text-success logout'],
+    ['href', `/`],
+    ['id', 'logout'],
+  ],
+});
+LOG_OUT_LINK.innerHTML = `<i class="fa-solid fa-arrow-right-from-bracket" style="color: #218b5a;"></i> Log out`;
+LOG_OUT_LINK.dataset.navigo = 'true';
+
+export const PROFILE_LINK = createElement({
+  tagname: 'a',
+  options: [
+    ['className', 'nav-link header__link'],
+    ['href', `/profile`],
+    ['id', 'profile'],
+    ['textContent', 'Profile'],
+  ],
+});
+PROFILE_LINK.dataset.navigo = 'true';
+
+export const LOG_OUT_ITEM = createElement({
+  tagname: 'li',
+  options: [['className', 'header-bottom__item nav-item']],
+  childElements: [LOG_OUT_LINK],
+});
+
+export const PROFILE_ITEM = createElement({
+  tagname: 'li',
+  options: [['className', 'header__item nav-item']],
+  childElements: [PROFILE_LINK],
+});
+
+const showLinks = (item: HTMLLIElement) => {
+  item.classList.remove('hide');
+};
+
+function logout() {
+  localStorage.removeItem('isLogged');
+  localStorage.removeItem('tokenCache');
+  localStorage.removeItem('userInformation');
+  LOG_OUT_ITEM.remove();
+  PROFILE_ITEM.remove();
+  HEADER_ITEMS.forEach((item) => showLinks(item));
+  MAIN_HEADER_ITEMS.forEach((item) => showLinks(item));
+}
+
+LOG_OUT_LINK.addEventListener('click', logout);
+
+const hideLinks = (item: HTMLLIElement) => {
+  const link = item.childNodes[0];
+
+  if (link.textContent === 'Log in' || link.textContent === 'Sign up') {
+    item.classList.add('hide');
+  }
+};
+
+export function addLogoutBtn() {
+  HEADER_ITEMS.forEach((item) => hideLinks(item));
+  MAIN_HEADER_ITEMS.forEach((item) => hideLinks(item));
+
+  if (localStorage.getItem('isLogged')) {
+    LOG_OUT_ITEM.classList.add('logout--main');
+    PROFILE_ITEM.classList.add('header__item');
+    PROFILE_LINK.classList.add('header__link');
+    PROFILE_ITEM.classList.remove('header-bottom__link');
+    PROFILE_ITEM.classList.remove('header-bottom__item');
+    MAIN_HEADER_LIST.append(PROFILE_ITEM, LOG_OUT_ITEM);
+  }
+}
+
+if (localStorage.getItem('isLogged')) {
+  addLogoutBtn();
+}
+
 // --------------------- MAIN PAGE HEADER-BODY ---------------------
 
 const MAIN_HEADER_TEXT = createElement({
@@ -317,7 +406,13 @@ const HEADER_CAROUSEL = createElement({
   ],
   childElements: [HEADER_CAROUSEL_INNER],
 });
-HEADER_CAROUSEL.setAttribute('data-bs-ride', 'carousel');
+
+const carousel = new Carousel(HEADER_CAROUSEL, {
+  interval: 3000,
+  pause: 'hover',
+  ride: 'carousel',
+});
+carousel.next();
 
 const HEADER_CAROUSEL_COLUMN = createElement({
   tagname: 'div',
@@ -342,79 +437,3 @@ export const MAIN_HEADER = createElement({
   options: [['className', 'header d-flex flex-column']],
   childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
 });
-
-const LOG_OUT_LINK = createElement({
-  tagname: 'a',
-  options: [
-    ['className', 'header-bottom__link nav-link text-success logout'],
-    ['href', `/`],
-    ['id', 'logout'],
-  ],
-});
-LOG_OUT_LINK.innerHTML = `<i class="fa-solid fa-arrow-right-from-bracket" style="color: #218b5a;"></i> Log out`;
-LOG_OUT_LINK.dataset.navigo = 'true';
-
-export const PROFILE_LINK = createElement({
-  tagname: 'a',
-  options: [
-    ['className', 'nav-link header__link'],
-    ['href', `/profile`],
-    ['id', 'profile'],
-    ['textContent', 'Profile'],
-  ],
-});
-PROFILE_LINK.dataset.navigo = 'true';
-
-export const LOG_OUT_ITEM = createElement({
-  tagname: 'li',
-  options: [['className', 'header-bottom__item nav-item']],
-  childElements: [LOG_OUT_LINK],
-});
-
-export const PROFILE_ITEM = createElement({
-  tagname: 'li',
-  options: [['className', 'header__item nav-item']],
-  childElements: [PROFILE_LINK],
-});
-
-const showLinks = (item: HTMLLIElement) => {
-  item.classList.remove('hide');
-};
-
-function logout() {
-  localStorage.removeItem('isLogged');
-  localStorage.removeItem('tokenCache');
-  localStorage.removeItem('userInformation');
-  LOG_OUT_ITEM.remove();
-  PROFILE_ITEM.remove();
-  HEADER_ITEMS.forEach((item) => showLinks(item));
-  MAIN_HEADER_ITEMS.forEach((item) => showLinks(item));
-}
-
-LOG_OUT_LINK.addEventListener('click', logout);
-
-const hideLinks = (item: HTMLLIElement) => {
-  const link = item.childNodes[0];
-
-  if (link.textContent === 'Log in' || link.textContent === 'Sign up') {
-    item.classList.add('hide');
-  }
-};
-
-export function addLogoutBtn() {
-  HEADER_ITEMS.forEach((item) => hideLinks(item));
-  MAIN_HEADER_ITEMS.forEach((item) => hideLinks(item));
-
-  if (localStorage.getItem('isLogged')) {
-    LOG_OUT_ITEM.classList.add('logout--main');
-    PROFILE_ITEM.classList.add('header__item');
-    PROFILE_LINK.classList.add('header__link');
-    PROFILE_ITEM.classList.remove('header-bottom__link');
-    PROFILE_ITEM.classList.remove('header-bottom__item');
-    MAIN_HEADER_LIST.append(PROFILE_ITEM, LOG_OUT_ITEM);
-  }
-}
-
-if (localStorage.getItem('isLogged')) {
-  addLogoutBtn();
-}

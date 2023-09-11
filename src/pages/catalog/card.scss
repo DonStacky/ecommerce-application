@@ -48,14 +48,6 @@
   }
 }
 
-// .my-card:has(.discount) {
-//   border: 1px solid violet;
-
-//   &:hover {
-//     box-shadow: 0.1rem 0.2rem 4rem 0.1rem violet;
-//   }
-// }
-
 .my-card-image {
   width: 27rem;
   height: 27rem;
@@ -76,12 +68,8 @@
 
 span.discount {
   text-decoration: line-through;
-  // position: absolute;
-  // transform: rotateZ(45deg) translateX(-2rem);
-  // transform-origin: center;
   color: rgb(221, 221, 221);
   font-size: 1.7rem;
-  // text-shadow: 1px 1px violet;
   margin-left: 5px;
   white-space: nowrap;
 }
