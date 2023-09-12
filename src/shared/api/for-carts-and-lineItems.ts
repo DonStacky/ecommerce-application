@@ -1,6 +1,6 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import buildCommonClient from './create-common-client';
 import checkEnvVariables from '../helpers/utilites';
+import buildCommonClient from './create-common-client';
 
 const CHANNEL_ID = '3ac0cb8c-dda7-4247-beff-84d13ed06c16';
 
@@ -82,6 +82,31 @@ export function removeLineItem(ID: string, cartVersion: number, lineItemId: stri
               currencyCode: 'USD',
               centAmount,
             },
+          },
+        ],
+      },
+    })
+    .execute();
+}
+
+export function changeLineItemQuantity(ID: string, lineItemId: string, cartVersion: number, quantity: number) {
+  const ctpClient = buildCommonClient();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+  });
+
+  return apiRoot
+    .me()
+    .carts()
+    .withId({ ID })
+    .post({
+      body: {
+        version: cartVersion,
+        actions: [
+          {
+            action: 'changeLineItemQuantity',
+            lineItemId,
+            quantity,
           },
         ],
       },

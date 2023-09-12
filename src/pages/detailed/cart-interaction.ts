@@ -1,7 +1,8 @@
+import { Cart } from '@commercetools/platform-sdk';
+import { addLineItem, createCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
 import { createElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import './cart-interaction.scss';
-import { addLineItem, createCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
 
 export async function checkCartAvailability() {
   if (!localStorage.getItem('cartId')) {
@@ -12,18 +13,16 @@ export async function checkCartAvailability() {
   }
 }
 
-export async function checkCartLineItemsQty() {
+export async function checkCartLineItemsQty(cart?: Cart) {
   const cartId = localStorage.getItem('cartId');
 
   if (cartId) {
     const lineItemsBadges = findDomElements(document.body, '.nav-link__line-items-qty');
 
-    const { lineItems } = (await getCart(cartId)).body;
+    const bodyCart = cart || (await getCart(cartId)).body;
 
-    if (lineItems.length > 0) {
-      const lineItemsQty = lineItems.reduce((acc, item) => {
-        return acc + item.quantity;
-      }, 0);
+    if (bodyCart.totalLineItemQuantity && bodyCart.totalLineItemQuantity > 0) {
+      const lineItemsQty = bodyCart.totalLineItemQuantity;
 
       lineItemsBadges.forEach((link) => {
         const lineItemsBadge = link;
