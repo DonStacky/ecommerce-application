@@ -1,7 +1,7 @@
 import { createElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import './cart-interaction.scss';
-import { addLineItem, createCart, getCart, removeLineItem } from './detailed-data';
+import { addLineItem, createCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
 
 export async function checkCartAvailability() {
   if (!localStorage.getItem('cartId')) {
