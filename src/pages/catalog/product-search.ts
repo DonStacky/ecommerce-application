@@ -9,24 +9,31 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
 
-const ctpClient = buildCommonClient();
-const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-});
-
-apiRoot
-  .categories()
-  .get({
-    queryArgs: {
-      limit: 30,
-    },
-  })
-  .execute()
-  .then((data) => {
-    data.body.results.forEach((res) => Object.defineProperty(CATEGORY_NAME_ID_MAP, res.name.en, { value: res.id }));
+async function getCategories() {
+  const ctpClient = buildCommonClient();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
 
+  await apiRoot
+    .categories()
+    .get({
+      queryArgs: {
+        limit: 30,
+      },
+    })
+    .execute()
+    .then((data) => {
+      data.body.results.forEach((res) => {
+        CATEGORY_NAME_ID_MAP[res.name.en] = res.id;
+      });
+    });
+}
+
 export default async function search(searchInput: SearchInput) {
+  if (!Object.keys(CATEGORY_NAME_ID_MAP).length) {
+    await getCategories();
+  }
   const { seasons, materials, productType, sort, searchTextInput, price } = searchInput;
   const filterWrapper = 'categories.id:';
   const arr = [seasons, materials, productType].map((e) => e || []);
