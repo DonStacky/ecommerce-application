@@ -9,7 +9,7 @@ export default async function loginCustomer(email: string, password: string) {
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
   const result = await commonRoot.me().login().post({ body: { email, password } }).execute();
-  localStorage.removeItem('tokenCache');
+  sessionStorage.removeItem('tokenCache');
 
   const ctpClient = buildClientWithPassowrdFlow(email, password);
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({

@@ -383,7 +383,8 @@ const showLinks = (item: HTMLLIElement) => {
 
 function logout() {
   localStorage.removeItem('isLogged');
-  localStorage.removeItem('tokenCache');
+  sessionStorage.removeItem('tokenCache');
+  localStorage.removeItem('refreshToken');
   localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
   PROFILE_ITEM.remove();

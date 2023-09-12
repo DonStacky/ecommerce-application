@@ -10,7 +10,7 @@ import checkEnvVariables from '../helpers/utilites';
 import MyTokenCache from './token-cache';
 
 export default function buildCommonClient() {
-  const token = JSON.parse(localStorage.getItem('tokenCache') || 'null');
+  const refreshToken = localStorage.getItem('refreshToken') || '';
 
   const httpMiddlewareOptions: HttpMiddlewareOptions = {
     host: checkEnvVariables(process.env.CTP_API_URL),
@@ -29,7 +29,7 @@ export default function buildCommonClient() {
 
   const refreshOptions: RefreshAuthMiddlewareOptions = {
     ...CREDENTIALS,
-    refreshToken: token?.refreshToken,
+    refreshToken,
   };
 
   const anonymousOptions: AnonymousAuthMiddlewareOptions = {
@@ -37,11 +37,11 @@ export default function buildCommonClient() {
     scopes: [checkEnvVariables(process.env.CTP_SCOPES)],
   };
 
-  return token
+  return refreshToken
     ? new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions).withRefreshTokenFlow(refreshOptions).build()
     : new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions).withAnonymousSessionFlow(anonymousOptions).build();
 }
-
+// hGkjMtyEEng1dQvLikV0TWQKV2wTENqk anon token  span_team-ecom_app:gkMwJzhVGepH7WLB8qUiMqek8xLBbJODa1NDG7M7V8s
 //               Проверка слияния карт анонимного пользователя при логине/регистрации
 //
 //               Карты созданные пользователем в анонимном режиме добавляются при логине/регистрации пользователя
