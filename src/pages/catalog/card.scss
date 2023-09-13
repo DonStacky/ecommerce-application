@@ -79,9 +79,56 @@ span.discount {
   // position: absolute;
   // transform: rotateZ(45deg) translateX(-2rem);
   // transform-origin: center;
-  color: rgb(221, 221, 221);
   font-size: 1.7rem;
   // text-shadow: 1px 1px violet;
   margin-left: 5px;
   white-space: nowrap;
+}
+
+.my-card-basket {
+  position: absolute;
+  width: 6rem;
+  height: 6rem;
+  right: .5rem;
+  top: .5rem;
+  z-index: 2;
+  transition: filter .5s, scale .3s;
+  background-size: contain;
+}
+
+.my-card-basket:hover {
+  filter: drop-shadow(0 0 2px red);
+}
+
+.my-card-basket:active {
+  scale: .9;
+}
+
+.add-to-basket {
+  background-image: url('@svg/empty-basket.svg');
+}
+
+.remove-from-basket {
+  background-image: url('@svg/filled-basket.svg');
+}
+
+.blur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+  background-color: rgba(255, 0, 0, 0.1);
+
+  .spinner-border {
+    width: 6rem;
+    height: 6rem;
+    border-width: .6rem;
+  }
+
+  & ~ * {
+    filter: blur(5px);
+  }
 }

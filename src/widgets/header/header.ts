@@ -5,6 +5,7 @@ import seaSet from '@image/morskoj-nabor.jpg';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import CONTENT from '../../pages/catalog/content';
 import './header.scss';
 
 // --------------------- COMMON HEADER ---------------------
@@ -385,6 +386,10 @@ function logout() {
   localStorage.removeItem('isLogged');
   sessionStorage.removeItem('tokenCache');
   localStorage.removeItem('refreshToken');
+  localStorage.removeItem('MyCart');
+  [...CONTENT.children].forEach((card) => {
+    card.dispatchEvent(new CustomEvent('successUpdateCart'));
+  });
   localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
   PROFILE_ITEM.remove();

@@ -1,8 +1,57 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import { updateCart } from '../../shared/api/cart-handler';
 
-export default function createCard(product: ProductProjection) {
+function basketClickHandleWithCardParams(product: ProductProjection) {
+  return async function basketClickHandle(this: HTMLDivElement, event: Event) {
+    event.stopPropagation();
+
+    const blur = createElement({
+      tagname: 'div',
+      options: [
+        ['className', 'blur'],
+        [
+          'innerHTML',
+          `<div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>`,
+        ],
+      ],
+    });
+
+    this.before(blur);
+
+    const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
+
+    if (this.classList.contains('add-to-basket')) {
+      const updatedCart = await updateCart([
+        {
+          action: 'addLineItem',
+          productId: product.id,
+          variantId: 1,
+          quantity: 1,
+        },
+      ]);
+
+      localStorage.setItem('MyCart', JSON.stringify(updatedCart));
+    } else {
+      const updatedCart = await updateCart([
+        {
+          action: 'removeLineItem',
+          lineItemId: cart?.lineItems.filter((item) => item.productId === product.id)[0].id,
+          quantity: 1,
+        },
+      ]);
+
+      localStorage.setItem('MyCart', JSON.stringify(updatedCart));
+    }
+
+    blur.remove();
+  };
+}
+
+export default function createCard(product: ProductProjection, added: boolean) {
   const cardKey = product.key;
   const imgSrc = product.masterVariant.images
     ? product.masterVariant.images.filter((image) => image.url.includes('card'))[0].url ||
@@ -19,10 +68,17 @@ export default function createCard(product: ProductProjection) {
     ? `${productPrices[0].discounted.value.centAmount / 100} $`
     : undefined;
 
-  return createElement({
+  const BASKET = createElement({
+    tagname: 'div',
+    options: [['className', `my-card-basket ${added ? 'remove-from-basket' : 'add-to-basket'}`]],
+    events: [['click', basketClickHandleWithCardParams(product)]],
+  });
+
+  const card = createElement({
     tagname: 'div',
     options: [['className', 'my-card']],
     childElements: [
+      BASKET,
       createElement({
         tagname: 'img',
         options: [
@@ -94,4 +150,13 @@ export default function createCard(product: ProductProjection) {
       ],
     ],
   });
+
+  card.addEventListener('successUpdateCart', (e: CustomEvent<Cart | null>) => {
+    if (e.detail?.lineItems.some((item) => item.productId === product.id)) {
+      BASKET.classList.replace('add-to-basket', 'remove-from-basket');
+    } else {
+      BASKET.classList.replace('remove-from-basket', 'add-to-basket');
+    }
+  });
+  return card;
 }

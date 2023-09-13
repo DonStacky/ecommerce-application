@@ -5,8 +5,6 @@ import {
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import checkEnvVariables from '../helpers/utilites';
-// import { createElement } from '../helpers/dom-utilites';
-// import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import MyTokenCache from './token-cache';
 
 export default function buildCommonClient() {
@@ -41,61 +39,3 @@ export default function buildCommonClient() {
     ? new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions).withRefreshTokenFlow(refreshOptions).build()
     : new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions).withAnonymousSessionFlow(anonymousOptions).build();
 }
-// hGkjMtyEEng1dQvLikV0TWQKV2wTENqk anon token  span_team-ecom_app:gkMwJzhVGepH7WLB8qUiMqek8xLBbJODa1NDG7M7V8s
-//               Проверка слияния карт анонимного пользователя при логине/регистрации
-//
-//               Карты созданные пользователем в анонимном режиме добавляются при логине/регистрации пользователя
-//
-//
-// document.body.append(
-//   createElement({
-//     tagname: 'button',
-//     options: [
-//       ['textContent', 'log my cards'],
-//       ['className', 'btn fs-1 btn-danger'],
-//     ],
-//     events: [
-//       [
-//         'click',
-//         async () => {
-//           const ctpClient = buildCommonClient();
-//           const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-//             projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-//           });
-//           const cards = await apiRoot.me().carts().get().execute();
-//           console.log(cards);
-//         },
-//       ],
-//     ],
-//   })
-// );
-
-// document.body.append(
-//   createElement({
-//     tagname: 'button',
-//     options: [
-//       ['textContent', 'createCart'],
-//       ['className', 'btn fs-1 btn-danger'],
-//     ],
-//     events: [
-//       [
-//         'click',
-//         () => {
-//           const ctpClient = buildCommonClient();
-//           const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-//             projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-//           });
-//           apiRoot
-//             .me()
-//             .carts()
-//             .post({
-//               body: {
-//                 currency: 'USD',
-//               },
-//             })
-//             .execute();
-//         },
-//       ],
-//     ],
-//   })
-// );
