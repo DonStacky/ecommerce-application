@@ -1,5 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { changeLineItemQuantity, getCart } from '../../shared/api/for-carts-and-lineItems';
+import { changeLineItemQuantity, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
@@ -28,7 +28,6 @@ export default class BasketPage {
 
     this.createListItem(cart);
 
-    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
     this.PAGE.append(this.LIST, this.TOTAL);
     this.addEvents();
   }
@@ -38,6 +37,19 @@ export default class BasketPage {
     if (!cartId) return;
 
     const busket = cart || (await getCart(cartId)).body;
+
+    if (busket.lineItems.length === 0) {
+      const TITLE_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-center']);
+      const TITLE = createElementBase('div', []);
+      const LINK = createElementBase('a', [], undefined, 'our catalog');
+      LINK.setAttribute('href', '/catalog');
+      TITLE.innerHTML = 'Your cart is empty. Please go to ';
+      TITLE_CONTAINER.append(TITLE);
+      TITLE.append(LINK);
+      this.PAGE.append(TITLE_CONTAINER);
+      return;
+    }
+
     const names = busket.lineItems.map((item) => item.name.en);
     const prices = busket.lineItems.map((item) => {
       const price = item.price.discounted?.value.centAmount || item.price.value.centAmount;
@@ -115,6 +127,8 @@ export default class BasketPage {
     } else {
       this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}`;
     }
+
+    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
   }
 
   private addEvents() {
@@ -169,6 +183,21 @@ export default class BasketPage {
         });
       }
     });
+
+    this.LIST.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.classList[0] !== 'btn-close') return;
+
+      const ITEM = target.closest('li');
+      if (!ITEM) return;
+
+      const cartId = localStorage.getItem('cartId');
+      const cartVersion = localStorage.getItem('cartVersion');
+
+      if (!cartId || !cartVersion) return;
+
+      this.removeItem(target);
+    });
   }
 
   private async changeQuantity(element: HTMLInputElement) {
@@ -179,6 +208,19 @@ export default class BasketPage {
 
     const productId = LIST.id;
     const { body } = await changeLineItemQuantity(cartId, productId, +cartVersion, +element.value);
+    this.setCartInLocalStorage(body);
+    this.replasePage(body);
+    checkCartLineItemsQty(body);
+  }
+
+  private async removeItem(element: HTMLButtonElement) {
+    const cartId = localStorage.getItem('cartId');
+    const cartVersion = localStorage.getItem('cartVersion');
+    const LIST = element.closest('li');
+    if (!cartId || !LIST || !cartVersion) return;
+
+    const productId = LIST.id;
+    const { body } = await removeLineItem(cartId, +cartVersion, productId);
     this.setCartInLocalStorage(body);
     this.replasePage(body);
     checkCartLineItemsQty(body);

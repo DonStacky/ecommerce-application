@@ -105,11 +105,11 @@ async function removeProductFromCart() {
     );
 
     const lineItemId = lineItemInfo?.get(productId)?.split('+')[0];
-    const centAmount = lineItemInfo?.get(productId)?.split('+')[1];
+    // const centAmount = lineItemInfo?.get(productId)?.split('+')[1];
 
     try {
-      if (cartId && cartVersion && lineItemId && centAmount) {
-        const response = await removeLineItem(cartId, Number(cartVersion), lineItemId, Number(centAmount));
+      if (cartId && cartVersion && lineItemId /*  && centAmount */) {
+        const response = await removeLineItem(cartId, Number(cartVersion), lineItemId /* , Number(centAmount) */);
         const newCartVersion = response.body.version;
 
         localStorage.setItem('cartVersion', newCartVersion.toString());

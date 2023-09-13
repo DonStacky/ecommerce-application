@@ -60,7 +60,7 @@ export function addLineItem(ID: string, productId: string, cartVersion: number) 
     .execute();
 }
 
-export function removeLineItem(ID: string, cartVersion: number, lineItemId: string, centAmount: number) {
+export function removeLineItem(ID: string, cartVersion: number, lineItemId: string /* , centAmount: number */) {
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
@@ -77,11 +77,11 @@ export function removeLineItem(ID: string, cartVersion: number, lineItemId: stri
           {
             action: 'removeLineItem',
             lineItemId,
-            quantity: 1,
-            externalPrice: {
+            /*             externalPrice: {
               currencyCode: 'USD',
               centAmount,
             },
+ */
           },
         ],
       },
