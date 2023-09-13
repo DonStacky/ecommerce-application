@@ -9,12 +9,27 @@ export default class BasketPage {
 
   PAGE: HTMLDivElement;
 
+  TOTAL: HTMLDivElement;
+
+  TOTAL_TITLE: HTMLDivElement;
+
+  TOTAL_PRICE: HTMLDivElement;
+
+  total: string;
+
   constructor(cart?: Cart) {
+    this.total = '0';
+
     this.PAGE = createElementBase('div', ['container', 'container_margin'], 'basketPage');
     this.LIST = createElementBase('ol', ['list-group', 'list-group-numbered']);
+    this.TOTAL = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
+    this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
 
     this.createListItem(cart);
-    this.PAGE.append(this.LIST);
+
+    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
+    this.PAGE.append(this.LIST, this.TOTAL);
     this.addEvents();
   }
 
@@ -22,31 +37,31 @@ export default class BasketPage {
     const cartId = localStorage.getItem('cartId');
     if (!cartId) return;
 
-    const { lineItems } = cart || (await getCart(cartId)).body;
-    const names = lineItems.map((item) => item.name.en);
-    const prices = lineItems.map((item) => {
+    const busket = cart || (await getCart(cartId)).body;
+    const names = busket.lineItems.map((item) => item.name.en);
+    const prices = busket.lineItems.map((item) => {
       const price = item.price.discounted?.value.centAmount || item.price.value.centAmount;
       if (price % 100 === 0) return `${price / 100}.00`;
       if (price % 10 === 0) return `${price / 100}0`;
       return `${price / 100}`;
     });
-    const totalPrices = lineItems.map((item) => {
+    const totalPrices = busket.lineItems.map((item) => {
       const price = item.totalPrice.centAmount;
       if (price % 100 === 0) return `${price / 100}.00`;
       if (price % 10 === 0) return `${price / 100}0`;
       return `${price / 100}`;
     });
-    const counts = lineItems.map((item) => item.quantity);
-    const images = lineItems.map((item) => {
+    const counts = busket.lineItems.map((item) => item.quantity);
+    const images = busket.lineItems.map((item) => {
       const img = item.variant.images;
       if (img) {
         return img[0].url;
       }
       return '';
     });
-    const productId = lineItems.map((item) => item.id);
+    const productId = busket.lineItems.map((item) => item.id);
 
-    for (let i = 0; i < lineItems.length; i += 1) {
+    for (let i = 0; i < busket.lineItems.length; i += 1) {
       const LIST_ITEM = createElementBase(
         'li',
         ['row', 'list-item', 'justify-content-end', 'align-items-center'],
@@ -93,7 +108,13 @@ export default class BasketPage {
       this.LIST.append(LIST_ITEM);
     }
 
-    // this.addLineItem('8819f50c-9ab5-4ea8-8bb9-28def524d828', '7ace79b2-132b-44a4-97d6-ec04fc0d88a4', 110);
+    if (busket.totalPrice.centAmount % 100 === 0) {
+      this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}.00`;
+    } else if (busket.totalPrice.centAmount % 10 === 0) {
+      this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}0`;
+    } else {
+      this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}`;
+    }
   }
 
   private addEvents() {
