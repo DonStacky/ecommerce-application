@@ -3,7 +3,7 @@ import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import { updateCart } from '../../shared/api/cart-handler';
 
-function basketClickHandleWithCardParams(product: ProductProjection) {
+function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLDivElement) {
   return async function basketClickHandle(this: HTMLDivElement, event: Event) {
     event.stopPropagation();
 
@@ -20,7 +20,7 @@ function basketClickHandleWithCardParams(product: ProductProjection) {
       ],
     });
 
-    this.before(blur);
+    card.prepend(blur);
 
     const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
 
@@ -68,17 +68,30 @@ export default function createCard(product: ProductProjection, added: boolean) {
     ? `${productPrices[0].discounted.value.centAmount / 100} $`
     : undefined;
 
-  const BASKET = createElement({
-    tagname: 'div',
-    options: [['className', `my-card-basket ${added ? 'remove-from-basket' : 'add-to-basket'}`]],
-    events: [['click', basketClickHandleWithCardParams(product)]],
+  const MAIN_PRICE = createElement({
+    tagname: 'button',
+    options: [
+      ['className', `btn btn-primary fs-2 my-card-basket ${added ? 'remove-from-basket' : 'add-to-basket'}`],
+      ['textContent', `Price: ${productDiscountPrice || productMainPrice || 'N/A'}`],
+      ['title', `${added ? 'Remove item' : 'Add item'}`],
+    ],
   });
+  if (productDiscountPrice) {
+    MAIN_PRICE.append(
+      createElement({
+        tagname: 'span',
+        options: [
+          ['className', 'discount'],
+          ['textContent', productMainPrice || 'N/A'],
+        ],
+      })
+    );
+  }
 
   const card = createElement({
     tagname: 'div',
     options: [['className', 'my-card']],
     childElements: [
-      BASKET,
       createElement({
         tagname: 'img',
         options: [
@@ -106,38 +119,7 @@ export default function createCard(product: ProductProjection, added: boolean) {
           }),
         ],
       }),
-      (() => {
-        const MAIN_PRICE = createElement({
-          tagname: 'button',
-          options: [
-            ['className', 'btn btn-primary fs-2'],
-            ['textContent', productDiscountPrice || productMainPrice || 'N/A'],
-          ],
-          events: [
-            [
-              'click',
-              (event) => {
-                event.stopPropagation();
-                if (cardKey) {
-                  router.navigate(`/catalog/${cardKey}`);
-                }
-              },
-            ],
-          ],
-        });
-        if (productDiscountPrice) {
-          MAIN_PRICE.append(
-            createElement({
-              tagname: 'span',
-              options: [
-                ['className', 'discount'],
-                ['textContent', productMainPrice || 'N/A'],
-              ],
-            })
-          );
-        }
-        return MAIN_PRICE;
-      })(),
+      MAIN_PRICE,
     ],
     events: [
       [
@@ -151,12 +133,16 @@ export default function createCard(product: ProductProjection, added: boolean) {
     ],
   });
 
-  card.addEventListener('successUpdateCart', (e: CustomEvent<Cart | null>) => {
+  card.addEventListener('successUpdateCart', (e: CustomEvent<Cart>) => {
     if (e.detail?.lineItems.some((item) => item.productId === product.id)) {
-      BASKET.classList.replace('add-to-basket', 'remove-from-basket');
+      MAIN_PRICE.classList.replace('add-to-basket', 'remove-from-basket');
+      MAIN_PRICE.title = 'Remove item';
     } else {
-      BASKET.classList.replace('remove-from-basket', 'add-to-basket');
+      MAIN_PRICE.classList.replace('remove-from-basket', 'add-to-basket');
+      MAIN_PRICE.title = 'Add item';
     }
   });
+
+  MAIN_PRICE.addEventListener('click', basketClickHandleWithCardParams(product, card));
   return card;
 }

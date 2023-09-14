@@ -29,9 +29,17 @@
   }
 
   button::before {
-    content: 'Price: ';
+    margin-right: .5rem;
   }
 
+  button.add-to-basket::before {
+    content: url('@svg/empty-basket.svg');
+  }
+
+  button.remove-from-basket::before {
+    content: url('@svg/filled-basket.svg');
+  }
+  
   &:hover {
     box-shadow: 0px 0px 20px 0px #000000d4;
     cursor: pointer;
@@ -48,20 +56,13 @@
   }
 }
 
-// .my-card:has(.discount) {
-//   border: 1px solid violet;
-
-//   &:hover {
-//     box-shadow: 0.1rem 0.2rem 4rem 0.1rem violet;
-//   }
-// }
-
 .my-card-image {
   width: 27rem;
   height: 27rem;
   transition: height 0.5s;
   object-fit: cover;
 }
+
 .my-card-body {
   position: absolute;
   top: 27rem;
@@ -83,33 +84,6 @@ span.discount {
   // text-shadow: 1px 1px violet;
   margin-left: 5px;
   white-space: nowrap;
-}
-
-.my-card-basket {
-  position: absolute;
-  width: 6rem;
-  height: 6rem;
-  right: .5rem;
-  top: .5rem;
-  z-index: 2;
-  transition: filter .5s, scale .3s;
-  background-size: contain;
-}
-
-.my-card-basket:hover {
-  filter: drop-shadow(0 0 2px red);
-}
-
-.my-card-basket:active {
-  scale: .9;
-}
-
-.add-to-basket {
-  background-image: url('@svg/empty-basket.svg');
-}
-
-.remove-from-basket {
-  background-image: url('@svg/filled-basket.svg');
 }
 
 .blur {
