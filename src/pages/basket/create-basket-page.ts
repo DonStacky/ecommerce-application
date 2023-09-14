@@ -55,15 +55,11 @@ export default class BasketPage {
     const names = busket.lineItems.map((item) => item.name.en);
     const prices = busket.lineItems.map((item) => {
       const price = item.price.discounted?.value.centAmount || item.price.value.centAmount;
-      if (price % 100 === 0) return `${price / 100}.00`;
-      if (price % 10 === 0) return `${price / 100}0`;
-      return `${price / 100}`;
+      return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
     });
     const totalPrices = busket.lineItems.map((item) => {
       const price = item.totalPrice.centAmount;
-      if (price % 100 === 0) return `${price / 100}.00`;
-      if (price % 10 === 0) return `${price / 100}0`;
-      return `${price / 100}`;
+      return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
     });
     const counts = busket.lineItems.map((item) => item.quantity);
     const images = busket.lineItems.map((item) => {
@@ -86,49 +82,40 @@ export default class BasketPage {
       const PRODUCT_NAME = createElementBase('div', ['fw-bold'], undefined, names[i]);
 
       const COUNT = createElementBase('div', ['count', 'col-3', 'justify-content-center', 'align-self-center']);
-      const COUNT_BUTTON_MIN = createElementBase(
+      const BUTTON_ITEM_REMOVE = createElementBase(
         'button',
         ['btn_min', 'btn', 'btn-outline-secondary'],
         undefined,
         '➖'
       );
       const COUNT_NUMBER = createElementBase('input', ['count-input']);
-      const COUNT_BUTTON_MAX = createElementBase(
-        'button',
-        ['btn_max', 'btn', 'btn-outline-secondary'],
-        undefined,
-        '➕'
-      );
+      const BUTTON_ITEM_ADD = createElementBase('button', ['btn_max', 'btn', 'btn-outline-secondary'], undefined, '➕');
 
-      const PRODUCT_SUMM = createElementBase(
+      const PRODUCTS_TOTAL = createElementBase(
         'div',
         ['text-primary', 'fw-bold', 'col-1', 'align-self-center', 'text-center'],
         undefined,
         `${totalPrices[i]}`
       );
-      const BUTTON_REMOOVE = createElementBase('button', ['btn-close', 'align-self-center']);
+      const BUTTON_REMOVE = createElementBase('button', ['btn-close', 'align-self-center']);
 
       IMAGE.setAttribute('src', images[i]);
       IMAGE.setAttribute('width', '5%');
-      COUNT_BUTTON_MIN.setAttribute('type', 'button');
+      BUTTON_ITEM_REMOVE.setAttribute('type', 'button');
       COUNT_NUMBER.setAttribute('type', 'text');
       COUNT_NUMBER.setAttribute('value', `${counts[i]}`);
-      COUNT_BUTTON_MAX.setAttribute('type', 'button');
-      BUTTON_REMOOVE.setAttribute('aria-label', 'remoove');
+      BUTTON_ITEM_ADD.setAttribute('type', 'button');
+      BUTTON_REMOVE.setAttribute('aria-label', 'remoove');
 
       PRODUCT_CONTAINER.append(PRODUCT_NAME, `${prices[i]}`);
-      COUNT.append(COUNT_BUTTON_MIN, COUNT_NUMBER, COUNT_BUTTON_MAX);
-      LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCT_SUMM, BUTTON_REMOOVE);
+      COUNT.append(BUTTON_ITEM_REMOVE, COUNT_NUMBER, BUTTON_ITEM_ADD);
+      LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCTS_TOTAL, BUTTON_REMOVE);
       this.LIST.append(LIST_ITEM);
     }
 
-    if (busket.totalPrice.centAmount % 100 === 0) {
-      this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}.00`;
-    } else if (busket.totalPrice.centAmount % 10 === 0) {
-      this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}0`;
-    } else {
-      this.TOTAL_PRICE.innerText = `${busket.totalPrice.centAmount / 100}`;
-    }
+    this.TOTAL_PRICE.innerText = new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(
+      busket.totalPrice.centAmount / 100
+    );
 
     this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
   }
@@ -147,7 +134,7 @@ export default class BasketPage {
       const target = event.target as HTMLInputElement;
       const enterButtonKey = 13;
       if (target.classList[0] !== 'count-input' || event.keyCode !== enterButtonKey) return;
-      this.desableButtons();
+      this.disableButtons();
       this.changeQuantity(target).catch((error: Error) => {
         showModal(false, error.message);
         this.enableButtons();
@@ -166,7 +153,7 @@ export default class BasketPage {
       if (target.classList[0] === 'btn_min') {
         COUNT_INPUT.value = `${+COUNT_INPUT.value - 1}`;
 
-        this.desableButtons();
+        this.disableButtons();
         this.changeQuantity(COUNT_INPUT).catch((error: Error) => {
           showModal(false, error.message);
           this.enableButtons();
@@ -177,7 +164,7 @@ export default class BasketPage {
       if (target.classList[0] === 'btn_max') {
         COUNT_INPUT.value = `${+COUNT_INPUT.value + 1}`;
 
-        this.desableButtons();
+        this.disableButtons();
         this.changeQuantity(COUNT_INPUT).catch((error: Error) => {
           showModal(false, error.message);
           this.enableButtons();
@@ -211,7 +198,7 @@ export default class BasketPage {
     const productId = LIST.id;
     const { body } = await changeLineItemQuantity(cartId, productId, +cartVersion, +element.value);
     this.setCartInLocalStorage(body);
-    this.replasePage(body);
+    this.replacePage(body);
     checkCartLineItemsQty(body);
   }
 
@@ -224,7 +211,7 @@ export default class BasketPage {
     const productId = LIST.id;
     const { body } = await removeLineItem(cartId, +cartVersion, productId);
     this.setCartInLocalStorage(body);
-    this.replasePage(body);
+    this.replacePage(body);
     checkCartLineItemsQty(body);
   }
 
@@ -233,13 +220,13 @@ export default class BasketPage {
     localStorage.setItem('cartVersion', body.version.toString());
   }
 
-  private replasePage(cart?: Cart) {
+  private replacePage(cart?: Cart) {
     const PAGE = findDomElement(document.body, '#basketPage');
 
     PAGE.replaceWith(new BasketPage(cart).PAGE);
   }
 
-  private desableButtons() {
+  private disableButtons() {
     const buttons = findDomElements<'button'>(this.LIST, 'button');
     buttons.forEach((item) => item.classList.add('disabled'));
   }
