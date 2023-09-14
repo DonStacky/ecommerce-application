@@ -4,6 +4,7 @@ import { createElementBase, findDomElement, findDomElements } from '../../shared
 import showModal from '../../shared/modal/modal-window';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
 import BusketModal from './busket-modal';
+import CONTENT from '../catalog/content';
 
 export default class BasketPage {
   LIST: HTMLOListElement;
@@ -48,7 +49,10 @@ export default class BasketPage {
   }
 
   private async createListItem(cart?: Cart) {
-    const cartId = localStorage.getItem('cartId');
+    // const cartId = localStorage.getItem('cartId');
+    const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const cartId = cachedCart?.id;
+
     let busket = cart;
 
     if (cartId) {
@@ -196,8 +200,10 @@ export default class BasketPage {
       const ITEM = target.closest('li');
       if (!ITEM) return;
 
-      const cartId = localStorage.getItem('cartId');
-      const cartVersion = localStorage.getItem('cartVersion');
+      // const cartId = localStorage.getItem('cartId');
+      // const cartVersion = localStorage.getItem('cartVersion');
+      const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+      const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
       if (!cartId || !cartVersion) return;
 
@@ -213,8 +219,10 @@ export default class BasketPage {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      const cartId = localStorage.getItem('cartId');
-      const cartVersion = localStorage.getItem('cartVersion');
+      // const cartId = localStorage.getItem('cartId');
+      // const cartVersion = localStorage.getItem('cartVersion');
+      const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+      const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
       if (!cartId || !cartVersion) return;
 
@@ -227,8 +235,11 @@ export default class BasketPage {
   }
 
   private async changeQuantity(element: HTMLInputElement) {
-    const cartId = localStorage.getItem('cartId');
-    const cartVersion = localStorage.getItem('cartVersion');
+    // const cartId = localStorage.getItem('cartId');
+    // const cartVersion = localStorage.getItem('cartVersion');
+    const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
     const LIST = element.closest('li');
     if (!cartId || !LIST || !cartVersion) return;
 
@@ -236,42 +247,62 @@ export default class BasketPage {
     const { body } = await changeLineItemQuantity(cartId, productId, +cartVersion, +element.value);
     this.setCartInLocalStorage(body);
     this.replacePage(body);
-    checkCartLineItemsQty(body);
+    checkCartLineItemsQty(/* body */);
+
+    [...CONTENT.children].forEach((card: Element) => {
+      card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: body }));
+    });
   }
 
   private async removeItem(element: HTMLButtonElement) {
-    const cartId = localStorage.getItem('cartId');
-    const cartVersion = localStorage.getItem('cartVersion');
+    // const cartId = localStorage.getItem('cartId');
+    // const cartVersion = localStorage.getItem('cartVersion');
+    const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
     const LIST = element.closest('li');
     if (!cartId || !LIST || !cartVersion) return;
 
     const productId = LIST.id;
-    const { body } = await removeLineItem(cartId, +cartVersion, productId);
-    this.setCartInLocalStorage(body);
-    this.replacePage(body);
-    checkCartLineItemsQty(body);
+    const /* { body } */ cart = await removeLineItem(cartId, +cartVersion, productId);
+    this.setCartInLocalStorage(/* body */ cart);
+    this.replacePage(/* body */ cart);
+    checkCartLineItemsQty(/* body */);
+
+    [...CONTENT.children].forEach((card: Element) => {
+      card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: cart }));
+    });
   }
 
   private async removeCart() {
-    const cartId = localStorage.getItem('cartId');
-    const cartVersion = localStorage.getItem('cartVersion');
+    // const cartId = localStorage.getItem('cartId');
+    // const cartVersion = localStorage.getItem('cartVersion');
+    const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
     if (!cartId || !cartVersion) return;
 
-    const { body } = await deleteCart(cartId, +cartVersion);
+    /* const { body } = */ await deleteCart(cartId, +cartVersion);
     this.removeCartInLocalStorage();
-    this.replacePage(body);
+    // this.replacePage(body);
+    this.replacePage();
     checkCartLineItemsQty();
     this.modal.modal?.hide();
+    [...CONTENT.children].forEach((card: Element) => {
+      card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart'));
+    });
   }
 
   private setCartInLocalStorage(body: Cart) {
-    localStorage.setItem('cartId', body.id);
-    localStorage.setItem('cartVersion', body.version.toString());
+    localStorage.setItem('MyCart', JSON.stringify(body));
+    // localStorage.setItem('cartId', body.id);
+    // localStorage.setItem('cartVersion', body.version.toString());
   }
 
   private removeCartInLocalStorage() {
-    localStorage.removeItem('cartId');
-    localStorage.removeItem('cartVersion');
+    localStorage.removeItem('MyCart');
+    // localStorage.removeItem('cartId');
+    // localStorage.removeItem('cartVersion');
   }
 
   private replacePage(cart?: Cart) {

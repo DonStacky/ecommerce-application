@@ -1,7 +1,9 @@
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { checkCart, updateCart } from '../../shared/api/cart-handler';
+// import { checkCart, updateCart } from '../../shared/api/cart-handler';
+import { checkCart, updateCart } from '../../shared/api/for-carts-and-lineItems';
+import { checkCartLineItemsQty } from '../detailed/cart-interaction';
 
 function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLDivElement) {
   return async function basketClickHandle(this: HTMLDivElement, event: Event) {
@@ -36,9 +38,11 @@ function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLD
         ],
         version: cart.version,
       });
+
       this.classList.replace('add-to-basket', 'remove-from-basket');
       this.title = 'Remove item';
       localStorage.setItem('MyCart', JSON.stringify(updatedCart));
+      checkCartLineItemsQty();
     } else {
       const updatedCart = await updateCart(cart.id, {
         actions: [
@@ -49,9 +53,11 @@ function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLD
         ],
         version: cart.version,
       });
+
       this.classList.replace('remove-from-basket', 'add-to-basket');
       this.title = 'Add item';
       localStorage.setItem('MyCart', JSON.stringify(updatedCart));
+      checkCartLineItemsQty();
     }
 
     blur.remove();

@@ -8,6 +8,7 @@ import { Carousel } from 'bootstrap';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import CONTENT from '../../pages/catalog/content';
 import './header.scss';
+import { checkCartLineItemsQty } from '../../pages/detailed/cart-interaction';
 
 // --------------------- COMMON HEADER ---------------------
 
@@ -297,6 +298,7 @@ function logout() {
   [...CONTENT.children].forEach((card) => {
     card.dispatchEvent(new CustomEvent('successUpdateCart'));
   });
+  checkCartLineItemsQty(/* body */);
   localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
   PROFILE_ITEM.remove();
