@@ -15,10 +15,9 @@ export async function checkCartAvailability() {
 
 export async function checkCartLineItemsQty(cart?: Cart) {
   const cartId = localStorage.getItem('cartId');
+  const lineItemsBadges = findDomElements(document.body, '.nav-link__line-items-qty');
 
   if (cartId) {
-    const lineItemsBadges = findDomElements(document.body, '.nav-link__line-items-qty');
-
     const bodyCart = cart || (await getCart(cartId)).body;
 
     if (bodyCart.totalLineItemQuantity && bodyCart.totalLineItemQuantity > 0) {
@@ -30,11 +29,11 @@ export async function checkCartLineItemsQty(cart?: Cart) {
         lineItemsBadge.classList.add('nav-link__line-items-qty--active');
         lineItemsBadge.innerHTML = `&nbsp;${lineItemsQty}&nbsp;`;
       });
-    } else {
-      lineItemsBadges.forEach((link) => {
-        link.classList.remove('nav-link__line-items-qty--active');
-      });
     }
+  } else {
+    lineItemsBadges.forEach((link) => {
+      link.classList.remove('nav-link__line-items-qty--active');
+    });
   }
 }
 

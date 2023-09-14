@@ -1,5 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { changeLineItemQuantity, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
+import { changeLineItemQuantity, deleteCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
@@ -17,6 +17,10 @@ export default class BasketPage {
 
   total: string;
 
+  DELETE_BUTTON: HTMLButtonElement;
+
+  DELETE_BUTTON_CONTAINER: HTMLDivElement;
+
   constructor(cart?: Cart) {
     this.total = '0';
 
@@ -25,10 +29,14 @@ export default class BasketPage {
     this.TOTAL = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
     this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
     this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
+    this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.DELETE_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-danger'], undefined, 'Cart delete');
+
+    this.DELETE_BUTTON.setAttribute('type', 'button');
 
     this.createListItem(cart);
 
-    this.PAGE.append(this.LIST, this.TOTAL);
+    this.PAGE.append(this.LIST, this.TOTAL, this.DELETE_BUTTON_CONTAINER);
     this.addEvents();
   }
 
@@ -118,6 +126,7 @@ export default class BasketPage {
     );
 
     this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
+    this.DELETE_BUTTON_CONTAINER.append(this.DELETE_BUTTON);
   }
 
   private addEvents() {
@@ -185,7 +194,24 @@ export default class BasketPage {
 
       if (!cartId || !cartVersion) return;
 
+      this.disableButtons();
       this.removeItem(target).catch((error: Error) => {
+        showModal(false, error.message);
+        this.enableButtons();
+      });
+    });
+
+    this.DELETE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.tagName !== 'BUTTON') return;
+
+      const cartId = localStorage.getItem('cartId');
+      const cartVersion = localStorage.getItem('cartVersion');
+
+      if (!cartId || !cartVersion) return;
+
+      this.disableButtons();
+      this.removeCart().catch((error: Error) => {
         showModal(false, error.message);
         this.enableButtons();
       });
@@ -218,9 +244,25 @@ export default class BasketPage {
     checkCartLineItemsQty(body);
   }
 
+  private async removeCart() {
+    const cartId = localStorage.getItem('cartId');
+    const cartVersion = localStorage.getItem('cartVersion');
+    if (!cartId || !cartVersion) return;
+
+    const { body } = await deleteCart(cartId, +cartVersion);
+    this.removeCartInLocalStorage();
+    this.replacePage(body);
+    checkCartLineItemsQty();
+  }
+
   private setCartInLocalStorage(body: Cart) {
     localStorage.setItem('cartId', body.id);
     localStorage.setItem('cartVersion', body.version.toString());
+  }
+
+  private removeCartInLocalStorage() {
+    localStorage.removeItem('cartId');
+    localStorage.removeItem('cartVersion');
   }
 
   private replacePage(cart?: Cart) {

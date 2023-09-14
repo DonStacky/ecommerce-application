@@ -113,3 +113,22 @@ export function changeLineItemQuantity(ID: string, lineItemId: string, cartVersi
     })
     .execute();
 }
+
+export function deleteCart(ID: string, cartVersion: number) {
+  const ctpClient = buildCommonClient();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+  });
+
+  return apiRoot
+    .me()
+    .carts()
+    .withId({ ID })
+    .delete({
+      queryArgs: {
+        version: cartVersion,
+        // ab: 'QueryParam',
+      },
+    })
+    .execute();
+}
