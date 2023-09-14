@@ -5,7 +5,7 @@ import CONTENT from '../../pages/catalog/content';
 
 export default async function loginCustomer(email: string, password: string) {
   const anonymousCart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
-  const anonymousCartId = anonymousCart?.anonymousId;
+  const anonymousCartId = localStorage.getItem('isLogged') ? undefined : anonymousCart?.anonymousId;
 
   sessionStorage.removeItem('tokenCache');
 
