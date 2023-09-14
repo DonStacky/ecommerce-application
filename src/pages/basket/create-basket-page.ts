@@ -34,11 +34,13 @@ export default class BasketPage {
 
   private async createListItem(cart?: Cart) {
     const cartId = localStorage.getItem('cartId');
-    if (!cartId) return;
+    let busket = cart;
 
-    const busket = cart || (await getCart(cartId)).body;
+    if (cartId) {
+      busket = busket || (await getCart(cartId)).body;
+    }
 
-    if (busket.lineItems.length === 0) {
+    if (!cartId || !busket || busket.lineItems.length === 0) {
       const TITLE_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-center']);
       const TITLE = createElementBase('div', []);
       const LINK = createElementBase('a', [], undefined, 'our catalog');
