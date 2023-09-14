@@ -45,7 +45,6 @@ function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLD
           {
             action: 'removeLineItem',
             lineItemId: cart?.lineItems.filter((item) => item.productId === product.id)[0].id,
-            quantity: 1,
           },
         ],
         version: cart.version,
