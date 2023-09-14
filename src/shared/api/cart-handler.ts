@@ -22,25 +22,6 @@ async function createCart() {
   return cart;
 }
 
-export async function replicateCart(cartIdToReplicate: string) {
-  const ctpClient = buildCommonClient();
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-  });
-
-  const { body: cart } = await apiRoot
-    .me()
-    .carts()
-    .replicate()
-    .post({
-      body: {
-        reference: { id: cartIdToReplicate, typeId: 'cart' },
-      },
-    })
-    .execute();
-  localStorage.setItem('MyCart', JSON.stringify(cart));
-}
-
 export async function checkCart() {
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({

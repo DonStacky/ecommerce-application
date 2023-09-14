@@ -1,31 +1,34 @@
 import { Cart, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import checkEnvVariables from '../helpers/utilites';
 import buildClientWithPassowrdFlow from './build-client';
-import buildCommonClient from './create-common-client';
-import { replicateCart } from './cart-handler';
+import CONTENT from '../../pages/catalog/content';
 
 export default async function loginCustomer(email: string, password: string) {
-  const commonClient = buildCommonClient();
-  const commonRoot = createApiBuilderFromCtpClient(commonClient).withProjectKey({
-    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
-  });
-
   const anonymousCart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
-  const anonymousCartId = anonymousCart?.id;
+  const anonymousCartId = anonymousCart?.anonymousId;
 
-  const result = await commonRoot.me().login().post({ body: { email, password } }).execute();
   sessionStorage.removeItem('tokenCache');
 
   const ctpClient = buildClientWithPassowrdFlow(email, password);
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
-  await apiRoot.me().login().post({ body: { email, password } }).execute();
+  const result = (
+    await apiRoot
+      .login()
+      .post({
+        body: { email, password, anonymousId: anonymousCartId, anonymousCartSignInMode: 'UseAsNewActiveCustomerCart' },
+      })
+      .execute()
+  ).body;
   localStorage.setItem('isLogged', 'true');
 
-  if (anonymousCartId) {
-    await replicateCart(anonymousCartId);
+  if (result.cart) {
+    localStorage.setItem('MyCart', JSON.stringify(result.cart));
+    [...CONTENT.children].forEach((card: Element) => {
+      card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: result.cart }));
+    });
   }
 
-  return result;
+  return result.customer;
 }
