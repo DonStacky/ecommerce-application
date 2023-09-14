@@ -77,11 +77,8 @@
 
 span.discount {
   text-decoration: line-through;
-  // position: absolute;
-  // transform: rotateZ(45deg) translateX(-2rem);
-  // transform-origin: center;
+  color: rgb(221, 221, 221);
   font-size: 1.7rem;
-  // text-shadow: 1px 1px violet;
   margin-left: 5px;
   white-space: nowrap;
 }

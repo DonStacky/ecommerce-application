@@ -4,6 +4,7 @@ import lights from '@image/lights.jpg';
 import seaSet from '@image/morskoj-nabor.jpg';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
+import { Carousel } from 'bootstrap';
 import { createElement } from '../../shared/helpers/dom-utilites';
 import CONTENT from '../../pages/catalog/content';
 import './header.scss';
@@ -13,10 +14,10 @@ import './header.scss';
 const headerLinkText: string[][] = [
   ['Home', 'home'],
   ['Catalog', 'catalog'],
-  ['Basket', 'basket'],
   ['About us', 'about'],
   ['Log in', 'login'],
   ['Sign up', 'registration'],
+  ['Basket', 'basket'],
 ];
 
 const HEADER_LINKS = headerLinkText.map(([text, link]) => {
@@ -33,6 +34,12 @@ const HEADER_LINKS = headerLinkText.map(([text, link]) => {
 
   if (link === 'home') {
     HEADER_LINK.setAttribute('href', '/');
+  }
+
+  if (link === 'basket') {
+    HEADER_LINK.innerHTML = `Cart
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
+    </span>`;
   }
 
   return HEADER_LINK;
@@ -141,6 +148,12 @@ const MAIN_HEADER_LINKS = headerLinkText.map(([text, link]) => {
     MAIN_HEADER_LINK.setAttribute('href', '/');
   }
 
+  if (link === 'basket') {
+    MAIN_HEADER_LINK.innerHTML = `Cart
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-light nav-link__line-items-qty">
+    </span>`;
+  }
+
   return MAIN_HEADER_LINK;
 });
 MAIN_HEADER_LINKS[0].setAttribute('aria-current', 'page');
@@ -238,112 +251,6 @@ const MAIN_HEADER_STARTLINE = createElement({
   childElements: [MAIN_HEADER_NAV_TOP, MAIN_HEADER_NAV_BOTTOM],
 });
 
-// --------------------- MAIN PAGE HEADER-BODY ---------------------
-
-const MAIN_HEADER_TEXT = createElement({
-  tagname: 'p',
-  options: [
-    ['className', 'text-light m-5'],
-    [
-      'textContent',
-      'Welcome to our website dedicated to wooden products! We are proud to offer a wide range of items made of high-quality natural materials.',
-    ],
-  ],
-});
-
-const MAIN_HEADER_TITLE = createElement({
-  tagname: 'h1',
-  options: [
-    ['className', 'text-light'],
-    ['textContent', 'HANDMADE WOOD PRODUCTS'],
-  ],
-});
-
-const MAIN_HEADER_VIEW_BTN = createElement({
-  tagname: 'button',
-  options: [
-    ['className', 'btn btn-light btn-lg'],
-    ['textContent', 'View more'],
-  ],
-});
-MAIN_HEADER_VIEW_BTN.setAttribute('href', '/catalog');
-MAIN_HEADER_VIEW_BTN.dataset.navigo = 'true';
-
-const MAIN_HEADER_TEXT_COLUMN = createElement({
-  tagname: 'div',
-  options: [
-    [
-      'className',
-      'col text-center col-sm-6 col-12 d-flex flex-column justify-content-center align-items-center header__text',
-    ],
-  ],
-  childElements: [MAIN_HEADER_TITLE, MAIN_HEADER_TEXT, MAIN_HEADER_VIEW_BTN],
-});
-
-const headerCarouselImages = [deer, seaSet, lights, lighthouse];
-
-const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
-  const HEADER_CAROUSEL_IMAGE = createElement({
-    tagname: 'img',
-    options: [
-      ['className', 'd-block w-100'],
-      ['alt', `${image}`],
-      ['src', image],
-    ],
-  });
-  return HEADER_CAROUSEL_IMAGE;
-});
-
-const HEADER_CAROUSEL_ITEMS = HEADER_CAROUSEL_IMAGES.map((image) => {
-  const HEADER_CAROUSEL_ITEM = createElement({
-    tagname: 'div',
-    options: [['className', 'carousel-item']],
-    childElements: [image],
-  });
-  return HEADER_CAROUSEL_ITEM;
-});
-HEADER_CAROUSEL_ITEMS[0].classList.add('active');
-
-const HEADER_CAROUSEL_INNER = createElement({
-  tagname: 'div',
-  options: [['className', 'carousel-inner w-75']],
-  childElements: [...HEADER_CAROUSEL_ITEMS],
-});
-
-const HEADER_CAROUSEL = createElement({
-  tagname: 'div',
-  options: [
-    ['className', 'header__carousel carousel slide d-flex justify-content-center'],
-    ['id', 'carouselHeader'],
-  ],
-  childElements: [HEADER_CAROUSEL_INNER],
-});
-HEADER_CAROUSEL.setAttribute('data-bs-ride', 'carousel');
-
-const HEADER_CAROUSEL_COLUMN = createElement({
-  tagname: 'div',
-  options: [['className', 'col col-sm-6 col-12']],
-  childElements: [HEADER_CAROUSEL],
-});
-
-const HEADER_GRID_ROW = createElement({
-  tagname: 'div',
-  options: [['className', 'row header__products-row']],
-  childElements: [MAIN_HEADER_TEXT_COLUMN, HEADER_CAROUSEL_COLUMN],
-});
-
-const MAIN_HEADER_CONTAINER = createElement({
-  tagname: 'div',
-  options: [['className', 'container-xl flex-fill d-flex align-items-center header__products']],
-  childElements: [HEADER_GRID_ROW],
-});
-
-export const MAIN_HEADER = createElement({
-  tagname: 'header',
-  options: [['className', 'header d-flex flex-column']],
-  childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
-});
-
 const LOG_OUT_LINK = createElement({
   tagname: 'a',
   options: [
@@ -424,3 +331,115 @@ export function addLogoutBtn() {
 if (localStorage.getItem('isLogged')) {
   addLogoutBtn();
 }
+
+// --------------------- MAIN PAGE HEADER-BODY ---------------------
+
+const MAIN_HEADER_TEXT = createElement({
+  tagname: 'p',
+  options: [
+    ['className', 'text-light m-5'],
+    [
+      'textContent',
+      'Welcome to our website dedicated to wooden products! We are proud to offer a wide range of items made of high-quality natural materials.',
+    ],
+  ],
+});
+
+const MAIN_HEADER_TITLE = createElement({
+  tagname: 'h1',
+  options: [
+    ['className', 'text-light'],
+    ['textContent', 'HANDMADE WOOD PRODUCTS'],
+  ],
+});
+
+const MAIN_HEADER_VIEW_BTN = createElement({
+  tagname: 'button',
+  options: [
+    ['className', 'btn btn-light btn-lg'],
+    ['textContent', 'View more'],
+  ],
+});
+MAIN_HEADER_VIEW_BTN.setAttribute('href', '/catalog');
+MAIN_HEADER_VIEW_BTN.dataset.navigo = 'true';
+
+const MAIN_HEADER_TEXT_COLUMN = createElement({
+  tagname: 'div',
+  options: [
+    [
+      'className',
+      'col text-center col-sm-6 col-12 d-flex flex-column justify-content-center align-items-center header__text',
+    ],
+  ],
+  childElements: [MAIN_HEADER_TITLE, MAIN_HEADER_TEXT, MAIN_HEADER_VIEW_BTN],
+});
+
+const headerCarouselImages = [deer, seaSet, lights, lighthouse];
+
+const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
+  const HEADER_CAROUSEL_IMAGE = createElement({
+    tagname: 'img',
+    options: [
+      ['className', 'd-block w-100'],
+      ['alt', `${image}`],
+      ['src', image],
+    ],
+  });
+  return HEADER_CAROUSEL_IMAGE;
+});
+
+const HEADER_CAROUSEL_ITEMS = HEADER_CAROUSEL_IMAGES.map((image) => {
+  const HEADER_CAROUSEL_ITEM = createElement({
+    tagname: 'div',
+    options: [['className', 'carousel-item']],
+    childElements: [image],
+  });
+  return HEADER_CAROUSEL_ITEM;
+});
+HEADER_CAROUSEL_ITEMS[0].classList.add('active');
+
+const HEADER_CAROUSEL_INNER = createElement({
+  tagname: 'div',
+  options: [['className', 'carousel-inner w-75']],
+  childElements: [...HEADER_CAROUSEL_ITEMS],
+});
+
+const HEADER_CAROUSEL = createElement({
+  tagname: 'div',
+  options: [
+    ['className', 'header__carousel carousel slide d-flex justify-content-center'],
+    ['id', 'carouselHeader'],
+  ],
+  childElements: [HEADER_CAROUSEL_INNER],
+});
+
+const carousel = new Carousel(HEADER_CAROUSEL, {
+  interval: 3000,
+  pause: 'hover',
+  ride: 'carousel',
+});
+carousel.next();
+
+const HEADER_CAROUSEL_COLUMN = createElement({
+  tagname: 'div',
+  options: [['className', 'col col-sm-6 col-12']],
+  childElements: [HEADER_CAROUSEL],
+});
+
+const HEADER_GRID_ROW = createElement({
+  tagname: 'div',
+  options: [['className', 'row header__products-row']],
+  childElements: [MAIN_HEADER_TEXT_COLUMN, HEADER_CAROUSEL_COLUMN],
+});
+
+const MAIN_HEADER_CONTAINER = createElement({
+  tagname: 'div',
+  options: [['className', 'container-xl flex-fill d-flex align-items-center header__products']],
+  childElements: [HEADER_GRID_ROW],
+});
+
+export const MAIN_HEADER = createElement({
+  tagname: 'header',
+  options: [['className', 'header d-flex flex-column']],
+  childElements: [MAIN_HEADER_STARTLINE, MAIN_HEADER_CONTAINER],
+});
