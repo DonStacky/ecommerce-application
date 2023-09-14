@@ -185,7 +185,10 @@ export default class BasketPage {
 
       if (!cartId || !cartVersion) return;
 
-      this.removeItem(target);
+      this.removeItem(target).catch((error: Error) => {
+        showModal(false, error.message);
+        this.enableButtons();
+      });
     });
   }
 
