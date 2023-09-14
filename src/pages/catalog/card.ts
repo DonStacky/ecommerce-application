@@ -1,7 +1,7 @@
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import { updateCart } from '../../shared/api/cart-handler';
+import { checkCart, updateCart } from '../../shared/api/cart-handler';
 
 function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLDivElement) {
   return async function basketClickHandle(this: HTMLDivElement, event: Event) {
@@ -22,28 +22,36 @@ function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLD
 
     card.prepend(blur);
 
-    const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const cart = await checkCart();
 
     if (this.classList.contains('add-to-basket')) {
-      const updatedCart = await updateCart([
-        {
-          action: 'addLineItem',
-          productId: product.id,
-          variantId: 1,
-          quantity: 1,
-        },
-      ]);
-
+      const updatedCart = await updateCart(cart.id, {
+        actions: [
+          {
+            action: 'addLineItem',
+            productId: product.id,
+            variantId: 1,
+            quantity: 1,
+          },
+        ],
+        version: cart.version,
+      });
+      this.classList.replace('add-to-basket', 'remove-from-basket');
+      this.title = 'Remove item';
       localStorage.setItem('MyCart', JSON.stringify(updatedCart));
     } else {
-      const updatedCart = await updateCart([
-        {
-          action: 'removeLineItem',
-          lineItemId: cart?.lineItems.filter((item) => item.productId === product.id)[0].id,
-          quantity: 1,
-        },
-      ]);
-
+      const updatedCart = await updateCart(cart.id, {
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId: cart?.lineItems.filter((item) => item.productId === product.id)[0].id,
+            quantity: 1,
+          },
+        ],
+        version: cart.version,
+      });
+      this.classList.replace('remove-from-basket', 'add-to-basket');
+      this.title = 'Add item';
       localStorage.setItem('MyCart', JSON.stringify(updatedCart));
     }
 

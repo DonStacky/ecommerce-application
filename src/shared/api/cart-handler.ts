@@ -22,6 +22,7 @@ async function createCart() {
   return cart;
 }
 
+// Использовать только в случае манипуляции с картой (в любых других случаях брать карту из localStorage)
 export async function checkCart() {
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
@@ -47,9 +48,7 @@ export async function checkCart() {
   return myCart;
 }
 
-export async function updateCart(updateRequest: MyCartUpdate['actions']) {
-  const { id: cartId, version: cartVersion } = await checkCart();
-
+export async function updateCart(id: string, updateRequest: MyCartUpdate) {
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
@@ -58,17 +57,11 @@ export async function updateCart(updateRequest: MyCartUpdate['actions']) {
   const { body: cart } = await apiRoot
     .me()
     .carts()
-    .withId({ ID: cartId })
+    .withId({ ID: id })
     .post({
-      body: { actions: updateRequest, version: cartVersion },
+      body: updateRequest,
     })
     .execute();
-
-  localStorage.setItem('MyCart', JSON.stringify(cart));
-
-  [...CONTENT.children].forEach((card: Element) => {
-    card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: cart }));
-  });
 
   return cart;
 }
