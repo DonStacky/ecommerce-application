@@ -3,6 +3,7 @@ import { changeLineItemQuantity, deleteCart, getCart, removeLineItem } from '../
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
+import BusketModal from './busket-modal';
 
 export default class BasketPage {
   LIST: HTMLOListElement;
@@ -21,6 +22,8 @@ export default class BasketPage {
 
   DELETE_BUTTON_CONTAINER: HTMLDivElement;
 
+  modal: BusketModal;
+
   constructor(cart?: Cart) {
     this.total = '0';
 
@@ -33,10 +36,14 @@ export default class BasketPage {
     this.DELETE_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-danger'], undefined, 'Cart delete');
 
     this.DELETE_BUTTON.setAttribute('type', 'button');
+    this.DELETE_BUTTON.setAttribute('data-bs-toggle', 'modal');
+    this.DELETE_BUTTON.setAttribute('data-bs-target', '#busketModal');
+
+    this.modal = new BusketModal();
 
     this.createListItem(cart);
 
-    this.PAGE.append(this.LIST, this.TOTAL, this.DELETE_BUTTON_CONTAINER);
+    this.PAGE.append(this.LIST, this.TOTAL, this.DELETE_BUTTON_CONTAINER, this.modal.MODAL);
     this.addEvents();
   }
 
@@ -201,7 +208,8 @@ export default class BasketPage {
       });
     });
 
-    this.DELETE_BUTTON.addEventListener('click', (event: MouseEvent) => {
+    this.modal.BUTTON_YES.addEventListener('click', (event: MouseEvent) => {
+      event.preventDefault();
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
@@ -253,6 +261,7 @@ export default class BasketPage {
     this.removeCartInLocalStorage();
     this.replacePage(body);
     checkCartLineItemsQty();
+    this.modal.modal?.hide();
   }
 
   private setCartInLocalStorage(body: Cart) {

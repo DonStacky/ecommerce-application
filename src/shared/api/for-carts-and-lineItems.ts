@@ -127,7 +127,6 @@ export function deleteCart(ID: string, cartVersion: number) {
     .delete({
       queryArgs: {
         version: cartVersion,
-        // ab: 'QueryParam',
       },
     })
     .execute();
