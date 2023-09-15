@@ -1,4 +1,4 @@
-import { Cart, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import buildCommonClient from '../../shared/api/create-common-client';
 import checkEnvVariables from '../../shared/helpers/utilites';
 import { SearchInput } from '../../shared/types/types';
@@ -6,37 +6,27 @@ import createCard from './card';
 import CONTENT from './content';
 import NOT_FOUND from '@svg/no-result.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
-// import { checkCart } from '../../shared/api/cart-handler';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
 
-async function getCategories() {
-  const ctpClient = buildCommonClient();
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+const ctpClient = buildCommonClient();
+const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+  projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+});
+
+apiRoot
+  .categories()
+  .get({
+    queryArgs: {
+      limit: 30,
+    },
+  })
+  .execute()
+  .then((data) => {
+    data.body.results.forEach((res) => Object.defineProperty(CATEGORY_NAME_ID_MAP, res.name.en, { value: res.id }));
   });
 
-  await apiRoot
-    .categories()
-    .get({
-      queryArgs: {
-        limit: 30,
-      },
-    })
-    .execute()
-    .then((data) => {
-      data.body.results.forEach((res) => {
-        CATEGORY_NAME_ID_MAP[res.name.en] = res.id;
-      });
-    });
-}
-
 export default async function search(searchInput: SearchInput) {
-  const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
-
-  if (!Object.keys(CATEGORY_NAME_ID_MAP).length) {
-    await getCategories();
-  }
   const { seasons, materials, productType, sort, searchTextInput, price } = searchInput;
   const filterWrapper = 'categories.id:';
   const arr = [seasons, materials, productType].map((e) => e || []);
@@ -57,47 +47,48 @@ export default async function search(searchInput: SearchInput) {
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
 
-  const productsData = (
-    await root
-      .productProjections()
-      .search()
-      .get({
-        queryArgs: {
-          limit: 30,
-          'text.en': `${searchTextInput || ''}`,
-          filter: mappedArr,
-          sort,
-        },
-      })
-      .execute()
-  ).body.results;
-
-  const cards = productsData.reduce((acc, cur, idx) => {
-    acc.push(createCard(cur, !!cart?.lineItems.filter((item) => item.productId === productsData[idx].id).length));
-    return acc;
-  }, new Array<HTMLDivElement>(0));
-
-  if (cards.length) {
-    CONTENT.replaceChildren(...cards);
-    CONTENT.classList.remove('content-not-found');
-  } else {
-    CONTENT.replaceChildren(
-      createElement({
-        tagname: 'img',
-        options: [
-          ['src', NOT_FOUND],
-          ['className', 'aside__image'],
-          ['alt', 'Page not found'],
-        ],
-      }),
-      createElement({
-        tagname: 'div',
-        options: [
-          ['textContent', 'Found 0 results'],
-          ['className', 'fs-3'],
-        ],
-      })
-    );
-    CONTENT.classList.add('content-not-found');
-  }
+  root
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        limit: 30,
+        'text.en': `${searchTextInput || ''}`,
+        filter: mappedArr,
+        sort,
+      },
+    })
+    .execute()
+    .then((data) => {
+      const result = data.body.results.reduce((acc, cur) => {
+        acc.push(createCard(cur));
+        return acc;
+      }, new Array<HTMLDivElement>(0));
+      return result;
+    })
+    .then((cards) => {
+      if (cards.length) {
+        CONTENT.replaceChildren(...cards);
+        CONTENT.classList.remove('content-not-found');
+      } else {
+        CONTENT.replaceChildren(
+          createElement({
+            tagname: 'img',
+            options: [
+              ['src', NOT_FOUND],
+              ['className', 'aside__image'],
+              ['alt', 'Page not found'],
+            ],
+          }),
+          createElement({
+            tagname: 'div',
+            options: [
+              ['textContent', 'Found 0 results'],
+              ['className', 'fs-3'],
+            ],
+          })
+        );
+        CONTENT.classList.add('content-not-found');
+      }
+    });
 }

@@ -6,9 +6,7 @@ import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import { Carousel } from 'bootstrap';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import CONTENT from '../../pages/catalog/content';
 import './header.scss';
-import { checkCartLineItemsQty } from '../../pages/detailed/cart-interaction';
 
 // --------------------- COMMON HEADER ---------------------
 
@@ -292,13 +290,7 @@ const showLinks = (item: HTMLLIElement) => {
 
 function logout() {
   localStorage.removeItem('isLogged');
-  sessionStorage.removeItem('tokenCache');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('MyCart');
-  [...CONTENT.children].forEach((card) => {
-    card.dispatchEvent(new CustomEvent('successUpdateCart'));
-  });
-  checkCartLineItemsQty(/* body */);
+  localStorage.removeItem('tokenCache');
   localStorage.removeItem('userInformation');
   LOG_OUT_ITEM.remove();
   PROFILE_ITEM.remove();

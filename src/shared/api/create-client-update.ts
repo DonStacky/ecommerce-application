@@ -3,7 +3,7 @@ import checkEnvVariables from '../helpers/utilites';
 import { buildClientUpdate } from './build-client';
 
 function getToken() {
-  const token = sessionStorage.getItem('tokenCache');
+  const token = localStorage.getItem('tokenCache');
   if (!token) return undefined;
   return `Bearer ${JSON.parse(token).token}`;
 }
