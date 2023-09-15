@@ -4,6 +4,7 @@ import buildCommonClient from './create-common-client';
 import CONTENT from '../../pages/catalog/content';
 
 // const CHANNEL_ID = '3ac0cb8c-dda7-4247-beff-84d13ed06c16';
+localStorage.setItem('cartUpdatePermission', 'true');
 
 export function createCart() {
   const ctpClient = buildCommonClient();
@@ -45,6 +46,8 @@ export async function checkCart() {
 }
 
 export async function updateCart(id: string, updateRequest: MyCartUpdate) {
+  localStorage.removeItem('cartUpdatePermission');
+
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
@@ -58,6 +61,7 @@ export async function updateCart(id: string, updateRequest: MyCartUpdate) {
       body: updateRequest,
     })
     .execute();
+  localStorage.setItem('cartUpdatePermission', 'true');
 
   return cart;
 }
@@ -150,13 +154,15 @@ export async function removeLineItem(ID: string, cartVersion: number, lineItemId
   //     .execute();
 }
 
-export function changeLineItemQuantity(ID: string, lineItemId: string, cartVersion: number, quantity: number) {
+export async function changeLineItemQuantity(ID: string, lineItemId: string, cartVersion: number, quantity: number) {
+  localStorage.removeItem('cartUpdatePermission');
+
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
 
-  return apiRoot
+  const changedCart = await apiRoot
     .me()
     .carts()
     .withId({ ID })
@@ -173,15 +179,20 @@ export function changeLineItemQuantity(ID: string, lineItemId: string, cartVersi
       },
     })
     .execute();
+  localStorage.setItem('cartUpdatePermission', 'true');
+
+  return changedCart;
 }
 
-export function deleteCart(ID: string, cartVersion: number) {
+export async function deleteCart(ID: string, cartVersion: number) {
+  localStorage.removeItem('cartUpdatePermission');
+
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
 
-  return apiRoot
+  const changedCart = await apiRoot
     .me()
     .carts()
     .withId({ ID })
@@ -191,4 +202,7 @@ export function deleteCart(ID: string, cartVersion: number) {
       },
     })
     .execute();
+  localStorage.setItem('cartUpdatePermission', 'true');
+
+  return changedCart;
 }

@@ -113,6 +113,10 @@ async function addProductToCart() {
   //     showModal(false, 'Add product to cart');
   //   }
   // }
+  if (!localStorage.getItem('cartUpdatePermission')) {
+    return;
+  }
+
   const currentProductId = localStorage.getItem('currentProductId') || '';
   const { id: cartId, version: cartVersion } = await checkCart();
 
@@ -162,7 +166,9 @@ async function removeProductFromCart() {
   //     showModal(false, `${err}. Remove product from cart`);
   //   }
   // }
-
+  if (!localStorage.getItem('cartUpdatePermission')) {
+    return;
+  }
   const cart = await checkCart();
   const currentProductId = localStorage.getItem('currentProductId');
 
