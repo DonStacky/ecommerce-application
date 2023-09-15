@@ -38,17 +38,21 @@ const REMOVE_FROM_CART_BTN = createElement({
   ],
 });
 
-function toggleCartBtn() {
+function toggleDisableAddtBtn() {
   ADD_TO_CART_BTN.classList.toggle('disabled');
+}
+
+function toggleRemoveBtn() {
   REMOVE_FROM_CART_BTN.classList.toggle('detailed__remove-btn--active');
 }
 
 async function addProductToCart() {
+  toggleDisableAddtBtn();
+
   const currentProductId = localStorage.getItem('currentProductId') || '';
   const { id: cartId, version: cartVersion } = await checkCart();
 
   try {
-    toggleCartBtn();
     const newCart = await addLineItem(cartId, currentProductId, cartVersion);
     localStorage.setItem('MyCart', JSON.stringify(newCart));
     checkCartLineItemsQty();
@@ -56,14 +60,15 @@ async function addProductToCart() {
     [...CONTENT.children].forEach((card: Element) => {
       card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: newCart }));
     });
+    toggleRemoveBtn();
   } catch {
-    toggleCartBtn();
+    toggleDisableAddtBtn();
     showModal(false, '', '', `The product wasn't added to your cart`);
   }
 }
 
 async function removeProductFromCart() {
-  toggleCartBtn();
+  toggleRemoveBtn();
 
   const cart = await checkCart();
   const currentProductId = localStorage.getItem('currentProductId');
@@ -85,8 +90,9 @@ async function removeProductFromCart() {
     [...CONTENT.children].forEach((card: Element) => {
       card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: newCart }));
     });
+    toggleDisableAddtBtn();
   } catch (err) {
-    toggleCartBtn();
+    toggleRemoveBtn();
     showModal(false, '', `${err}. Remove product from cart`, `The product wasn't removed from the cart`);
   }
 }
