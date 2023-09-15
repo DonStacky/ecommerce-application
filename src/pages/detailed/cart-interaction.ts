@@ -49,6 +49,10 @@ function toggleRemoveBtn() {
 async function addProductToCart() {
   toggleDisableAddtBtn();
 
+  if (!localStorage.getItem('cartUpdatePermission')) {
+    return;
+  }
+
   const currentProductId = localStorage.getItem('currentProductId') || '';
   const { id: cartId, version: cartVersion } = await checkCart();
 
@@ -69,6 +73,10 @@ async function addProductToCart() {
 
 async function removeProductFromCart() {
   toggleRemoveBtn();
+
+  if (!localStorage.getItem('cartUpdatePermission')) {
+    return;
+  }
 
   const cart = await checkCart();
   const currentProductId = localStorage.getItem('currentProductId');

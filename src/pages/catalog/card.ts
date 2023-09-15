@@ -8,6 +8,10 @@ function basketClickHandleWithCardParams(product: ProductProjection, card: HTMLD
   return async function basketClickHandle(this: HTMLDivElement, event: Event) {
     event.stopPropagation();
 
+    if (!localStorage.getItem('cartUpdatePermission')) {
+      return;
+    }
+
     const blur = createElement({
       tagname: 'div',
       options: [

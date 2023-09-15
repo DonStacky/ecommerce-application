@@ -266,6 +266,10 @@ export default class BasketPage {
   }
 
   private async removeCart() {
+    if (!localStorage.getItem('cartUpdatePermission')) {
+      return;
+    }
+
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
