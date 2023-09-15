@@ -2,9 +2,9 @@ import { Cart } from '@commercetools/platform-sdk';
 import { changeLineItemQuantity, deleteCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
+import CONTENT from '../catalog/content';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
 import BusketModal from './busket-modal';
-import CONTENT from '../catalog/content';
 
 export default class BasketPage {
   LIST: HTMLOListElement;
@@ -25,6 +25,8 @@ export default class BasketPage {
 
   modal: BusketModal;
 
+  TOTAL_PRICE_THROUGH: HTMLDivElement;
+
   constructor(cart?: Cart) {
     this.total = '0';
 
@@ -33,6 +35,13 @@ export default class BasketPage {
     this.TOTAL = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
     this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
     this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
+    this.TOTAL_PRICE_THROUGH = createElementBase('div', [
+      'text-decoration-line-through',
+      'small',
+      'text-secondary',
+      'text-center',
+    ]);
+
     this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
     this.DELETE_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-danger'], undefined, 'Cart delete');
 
@@ -49,7 +58,6 @@ export default class BasketPage {
   }
 
   private async createListItem(cart?: Cart) {
-    // const cartId = localStorage.getItem('cartId');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const cartId = cachedCart?.id;
 
@@ -72,8 +80,15 @@ export default class BasketPage {
     }
 
     const names = busket.lineItems.map((item) => item.name.en);
-    const prices = busket.lineItems.map((item) => {
-      const price = item.price.discounted?.value.centAmount || item.price.value.centAmount;
+    const discountPrices = busket.lineItems.map((item) => {
+      const price = item.price.discounted?.value.centAmount;
+      if (price) {
+        return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+      }
+      return null;
+    });
+    const mainPrices = busket.lineItems.map((item) => {
+      const price = item.price.value.centAmount;
       return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
     });
     const totalPrices = busket.lineItems.map((item) => {
@@ -110,13 +125,23 @@ export default class BasketPage {
       const COUNT_NUMBER = createElementBase('input', ['count-input']);
       const BUTTON_ITEM_ADD = createElementBase('button', ['btn_max', 'btn', 'btn-outline-secondary'], undefined, '➕');
 
+      const PRODUCTS_TOTAL_CONTAINER = createElementBase('div', ['col-1', 'align-self-center', 'text-center']);
       const PRODUCTS_TOTAL = createElementBase(
         'div',
-        ['text-primary', 'fw-bold', 'col-1', 'align-self-center', 'text-center'],
+        ['text-primary', 'fw-bold', 'text-center'],
         undefined,
         `${totalPrices[i]}`
       );
+      const PRICES_TOTAL_THROUGH = createElementBase('div', [
+        'text-decoration-line-through',
+        'small',
+        'text-secondary',
+        'text-center',
+      ]);
+
       const BUTTON_REMOVE = createElementBase('button', ['btn-close', 'align-self-center']);
+      const DISCOUNT_PRICE = createElementBase('span', ['me-2']);
+      const MAIN_PRICE = createElementBase('s', ['small']);
 
       IMAGE.setAttribute('src', images[i]);
       IMAGE.setAttribute('width', '5%');
@@ -126,9 +151,20 @@ export default class BasketPage {
       BUTTON_ITEM_ADD.setAttribute('type', 'button');
       BUTTON_REMOVE.setAttribute('aria-label', 'remoove');
 
-      PRODUCT_CONTAINER.append(PRODUCT_NAME, `${prices[i]}`);
+      if (!discountPrices[i]) {
+        DISCOUNT_PRICE.innerText = `${mainPrices[i]}`;
+      } else {
+        DISCOUNT_PRICE.innerText = `${discountPrices[i]}`;
+        MAIN_PRICE.innerText = `${mainPrices[i]}`;
+        PRICES_TOTAL_THROUGH.innerText = `${this.getThroughPrice(busket, counts[i], i)}`;
+      }
+
+      this.TOTAL_PRICE_THROUGH.innerText = this.getThroughTotalPrice(busket);
+
+      PRODUCT_CONTAINER.append(PRODUCT_NAME, DISCOUNT_PRICE, MAIN_PRICE);
       COUNT.append(BUTTON_ITEM_REMOVE, COUNT_NUMBER, BUTTON_ITEM_ADD);
-      LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCTS_TOTAL, BUTTON_REMOVE);
+      PRODUCTS_TOTAL_CONTAINER.append(PRODUCTS_TOTAL, PRICES_TOTAL_THROUGH);
+      LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCTS_TOTAL_CONTAINER, BUTTON_REMOVE);
       this.LIST.append(LIST_ITEM);
     }
 
@@ -136,7 +172,7 @@ export default class BasketPage {
       busket.totalPrice.centAmount / 100
     );
 
-    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
+    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE, this.TOTAL_PRICE_THROUGH);
     this.DELETE_BUTTON_CONTAINER.append(this.DELETE_BUTTON);
   }
 
@@ -200,8 +236,6 @@ export default class BasketPage {
       const ITEM = target.closest('li');
       if (!ITEM) return;
 
-      // const cartId = localStorage.getItem('cartId');
-      // const cartVersion = localStorage.getItem('cartVersion');
       const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
       const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -219,8 +253,6 @@ export default class BasketPage {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      // const cartId = localStorage.getItem('cartId');
-      // const cartVersion = localStorage.getItem('cartVersion');
       const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
       const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -235,8 +267,6 @@ export default class BasketPage {
   }
 
   private async changeQuantity(element: HTMLInputElement) {
-    // const cartId = localStorage.getItem('cartId');
-    // const cartVersion = localStorage.getItem('cartVersion');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -255,8 +285,6 @@ export default class BasketPage {
   }
 
   private async removeItem(element: HTMLButtonElement) {
-    // const cartId = localStorage.getItem('cartId');
-    // const cartVersion = localStorage.getItem('cartVersion');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -264,10 +292,10 @@ export default class BasketPage {
     if (!cartId || !LIST || !cartVersion) return;
 
     const productId = LIST.id;
-    const /* { body } */ cart = await removeLineItem(cartId, +cartVersion, productId);
-    this.setCartInLocalStorage(/* body */ cart);
-    this.replacePage(/* body */ cart);
-    checkCartLineItemsQty(/* body */);
+    const cart = await removeLineItem(cartId, +cartVersion, productId);
+    this.setCartInLocalStorage(cart);
+    this.replacePage(cart);
+    checkCartLineItemsQty();
 
     [...CONTENT.children].forEach((card: Element) => {
       card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: cart }));
@@ -275,16 +303,13 @@ export default class BasketPage {
   }
 
   private async removeCart() {
-    // const cartId = localStorage.getItem('cartId');
-    // const cartVersion = localStorage.getItem('cartVersion');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
     if (!cartId || !cartVersion) return;
 
-    /* const { body } = */ await deleteCart(cartId, +cartVersion);
+    await deleteCart(cartId, +cartVersion);
     this.removeCartInLocalStorage();
-    // this.replacePage(body);
     this.replacePage();
     checkCartLineItemsQty();
     this.modal.modal?.hide();
@@ -295,14 +320,10 @@ export default class BasketPage {
 
   private setCartInLocalStorage(body: Cart) {
     localStorage.setItem('MyCart', JSON.stringify(body));
-    // localStorage.setItem('cartId', body.id);
-    // localStorage.setItem('cartVersion', body.version.toString());
   }
 
   private removeCartInLocalStorage() {
     localStorage.removeItem('MyCart');
-    // localStorage.removeItem('cartId');
-    // localStorage.removeItem('cartVersion');
   }
 
   private replacePage(cart?: Cart) {
@@ -319,5 +340,16 @@ export default class BasketPage {
   private enableButtons() {
     const buttons = findDomElements<'button'>(this.LIST, 'button');
     buttons.forEach((item) => item.classList.remove('disabled'));
+  }
+
+  private getThroughPrice(body: Cart, count: number, index: number) {
+    const price = body.lineItems[index].price.value.centAmount * count;
+    return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+  }
+
+  private getThroughTotalPrice(body: Cart) {
+    const price = body.lineItems.reduce((a, b) => a + b.price.value.centAmount * b.quantity, 0);
+
+    return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
   }
 }
