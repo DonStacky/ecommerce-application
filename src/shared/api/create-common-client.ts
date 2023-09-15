@@ -46,7 +46,7 @@ export default function buildCommonClient() {
 //
 //               Карты созданные пользователем в анонимном режиме добавляются при логине/регистрации пользователя
 //
-//
+
 // document.body.append(
 //   createElement({
 //     tagname: 'button',

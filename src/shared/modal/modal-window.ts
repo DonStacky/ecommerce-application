@@ -1,7 +1,19 @@
 import { Alert } from 'bootstrap';
-import { createElement } from '../helpers/dom-utilites';
+import { createElement, findDomElement } from '../helpers/dom-utilites';
+
+function closeModal() {
+  if (document.querySelector('.modal-window')) {
+    const modal = findDomElement(document.body, '.modal-window');
+
+    if (modal) {
+      modal.remove();
+    }
+  }
+}
 
 export default function showModal(success: boolean, title: string, description?: string) {
+  closeModal();
+
   const SVG_SUCCESS_CONTAINER = createElement({
     tagname: 'div',
     options: [

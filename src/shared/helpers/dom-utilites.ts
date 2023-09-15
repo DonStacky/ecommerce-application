@@ -46,3 +46,9 @@ export function findDomElement<T extends keyof HTMLElementTagNameMap>(parentElem
   if (element !== null) return element;
   throw new Error(`Selector ${selector} didn't match any elements`);
 }
+
+export function findDomElements<T extends keyof HTMLElementTagNameMap>(parentElement: HTMLElement, selector: string) {
+  const element = parentElement.querySelectorAll<HTMLElementTagNameMap[T]>(selector);
+  if (element !== null) return element;
+  throw new Error(`Selector ${selector} didn't match any elements`);
+}

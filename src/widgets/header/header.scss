@@ -169,3 +169,18 @@
 .hide {
   display: none;
 }
+
+// .cart-item {
+//   list-style-type: none;
+// }
+.nav-link {
+  position: relative;
+}
+
+.nav-link__line-items-qty {
+  display: none;
+}
+
+.nav-link__line-items-qty--active {
+  display: block;
+}
