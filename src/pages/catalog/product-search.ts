@@ -6,7 +6,6 @@ import createCard from './card';
 import CONTENT from './content';
 import NOT_FOUND from '@svg/no-result.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
-// import { checkCart } from '../../shared/api/cart-handler';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
 

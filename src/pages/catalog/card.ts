@@ -1,7 +1,6 @@
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import router from '../../app/router/router';
 import { createElement } from '../../shared/helpers/dom-utilites';
-// import { checkCart, updateCart } from '../../shared/api/cart-handler';
 import { checkCart, updateCart } from '../../shared/api/for-carts-and-lineItems';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
 

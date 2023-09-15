@@ -11,7 +11,7 @@ function closeModal() {
   }
 }
 
-export default function showModal(success: boolean, title: string, description?: string) {
+export default function showModal(success: boolean, title: string, description?: string, myText?: string) {
   closeModal();
 
   const SVG_SUCCESS_CONTAINER = createElement({
@@ -62,7 +62,7 @@ export default function showModal(success: boolean, title: string, description?:
         childElements: [
           createElement({
             tagname: 'div',
-            options: [['textContent', success ? `Successfully ${title}` : `${title} failed`]],
+            options: [['textContent', myText || (success ? `Successfully ${title}` : `${title} failed`)]],
           }),
           createElement({
             tagname: 'div',
