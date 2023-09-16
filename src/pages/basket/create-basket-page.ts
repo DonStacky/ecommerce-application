@@ -315,6 +315,7 @@ export default class BasketPage {
       if (!cartId || !cartVersion) return;
 
       const code = (target.previousElementSibling as HTMLInputElement).value;
+      if (!code) return;
 
       this.disableButtons();
       this.addPromoCode(code).catch((error: Error) => {
