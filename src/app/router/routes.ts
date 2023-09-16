@@ -14,7 +14,7 @@ import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-pa
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
-import NOT_FOUND from '../../pages/not_found/not_found';
+import NOT_FOUND from '../../pages/not-found/not-found';
 import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
