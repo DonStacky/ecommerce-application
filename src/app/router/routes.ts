@@ -8,11 +8,7 @@ import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import CONTENT from '../../pages/catalog/content';
 import search from '../../pages/catalog/product-search';
-import {
-  // checkCartAvailability,
-  checkProductInCart,
-  checkCartLineItemsQty,
-} from '../../pages/detailed/cart-interaction';
+import { checkProductInCart, checkCartLineItemsQty } from '../../pages/detailed/cart-interaction';
 import { getProductWithKey } from '../../pages/detailed/detailed-data';
 import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-page';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
@@ -162,7 +158,6 @@ const getRoutes = (router: Navigo) => {
             getDetailedInfo(id);
             checkProductInCart(id);
             localStorage.setItem('currentProductId', id);
-            // checkCartAvailability();
 
             render(DETAILED_PAGE);
           } catch {

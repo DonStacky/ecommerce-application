@@ -49,7 +49,6 @@ export default class BasketPage {
   }
 
   private async createListItem(cart?: Cart) {
-    // const cartId = localStorage.getItem('cartId');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const cartId = cachedCart?.id;
 
@@ -200,8 +199,6 @@ export default class BasketPage {
       const ITEM = target.closest('li');
       if (!ITEM) return;
 
-      // const cartId = localStorage.getItem('cartId');
-      // const cartVersion = localStorage.getItem('cartVersion');
       const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
       const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -219,8 +216,6 @@ export default class BasketPage {
       const target = event.target as HTMLButtonElement;
       if (target.tagName !== 'BUTTON') return;
 
-      // const cartId = localStorage.getItem('cartId');
-      // const cartVersion = localStorage.getItem('cartVersion');
       const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
       const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -235,8 +230,6 @@ export default class BasketPage {
   }
 
   private async changeQuantity(element: HTMLInputElement) {
-    // const cartId = localStorage.getItem('cartId');
-    // const cartVersion = localStorage.getItem('cartVersion');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -255,8 +248,6 @@ export default class BasketPage {
   }
 
   private async removeItem(element: HTMLButtonElement) {
-    // const cartId = localStorage.getItem('cartId');
-    // const cartVersion = localStorage.getItem('cartVersion');
     const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
     const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
 
@@ -275,8 +266,6 @@ export default class BasketPage {
   }
 
   private async removeCart() {
-    // const cartId = localStorage.getItem('cartId');
-    // const cartVersion = localStorage.getItem('cartVersion');
     if (!localStorage.getItem('cartUpdatePermission')) {
       return;
     }
@@ -286,9 +275,8 @@ export default class BasketPage {
 
     if (!cartId || !cartVersion) return;
 
-    /* const { body } = */ await deleteCart(cartId, +cartVersion);
+    await deleteCart(cartId, +cartVersion);
     this.removeCartInLocalStorage();
-    // this.replacePage(body);
     this.replacePage();
     checkCartLineItemsQty();
     this.modal.modal?.hide();
@@ -299,14 +287,10 @@ export default class BasketPage {
 
   private setCartInLocalStorage(body: Cart) {
     localStorage.setItem('MyCart', JSON.stringify(body));
-    // localStorage.setItem('cartId', body.id);
-    // localStorage.setItem('cartVersion', body.version.toString());
   }
 
   private removeCartInLocalStorage() {
     localStorage.removeItem('MyCart');
-    // localStorage.removeItem('cartId');
-    // localStorage.removeItem('cartVersion');
   }
 
   private replacePage(cart?: Cart) {
