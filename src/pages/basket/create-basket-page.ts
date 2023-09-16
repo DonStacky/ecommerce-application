@@ -48,10 +48,10 @@ export default class BasketPage {
 
     this.PAGE = createElementBase('div', ['container', 'container_margin'], 'basketPage');
     this.LIST = createElementBase('ol', ['list-group', 'list-group-numbered']);
-    this.TOTAL_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.TOTAL_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-10']);
     this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
     this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
-    this.TOTAL_PRICE_THROUGH_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.TOTAL_PRICE_THROUGH_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-10']);
     this.TOTAL_PRICE_THROUGH = createElementBase('div', [
       'text-decoration-line-through',
       'small',
@@ -147,7 +147,7 @@ export default class BasketPage {
         productId[i]
       );
       const IMAGE = createElementBase('img', ['image', 'col-1']);
-      const PRODUCT_CONTAINER = createElementBase('div', ['col-6', 'align-self-center']);
+      const PRODUCT_CONTAINER = createElementBase('div', ['col-5', 'align-self-center']);
       const PRODUCT_NAME = createElementBase('div', ['fw-bold'], undefined, names[i]);
 
       const COUNT = createElementBase('div', ['count', 'col-3', 'justify-content-center', 'align-self-center']);
@@ -160,7 +160,7 @@ export default class BasketPage {
       const COUNT_NUMBER = createElementBase('input', ['count-input']);
       const BUTTON_ITEM_ADD = createElementBase('button', ['btn_max', 'btn', 'btn-outline-secondary'], undefined, '➕');
 
-      const PRODUCTS_TOTAL_CONTAINER = createElementBase('div', ['col-1', 'align-self-center', 'text-center']);
+      const PRODUCTS_TOTAL_CONTAINER = createElementBase('div', ['col-2', 'align-self-center', 'text-center']);
       const PRODUCTS_TOTAL = createElementBase(
         'div',
         ['text-primary', 'fw-bold', 'text-center'],
