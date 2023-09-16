@@ -1,5 +1,11 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { changeLineItemQuantity, deleteCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
+import {
+  addDiscountCode,
+  changeLineItemQuantity,
+  deleteCart,
+  getCart,
+  removeLineItem,
+} from '../../shared/api/for-carts-and-lineItems';
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
 import CONTENT from '../catalog/content';
@@ -11,7 +17,7 @@ export default class BasketPage {
 
   PAGE: HTMLDivElement;
 
-  TOTAL: HTMLDivElement;
+  TOTAL_CONTAINER: HTMLDivElement;
 
   TOTAL_TITLE: HTMLDivElement;
 
@@ -27,33 +33,56 @@ export default class BasketPage {
 
   TOTAL_PRICE_THROUGH: HTMLDivElement;
 
+  TOTAL_PRICE_THROUGH_CONTAINER: HTMLDivElement;
+
+  DISCOUNT_CONTAINER: HTMLDivElement;
+
+  DISCOUNT_TITLE: HTMLDivElement;
+
+  DISCOUNT_INPUT: HTMLInputElement;
+
+  DISCOUNT_BUTTON: HTMLButtonElement;
+
   constructor(cart?: Cart) {
     this.total = '0';
 
     this.PAGE = createElementBase('div', ['container', 'container_margin'], 'basketPage');
     this.LIST = createElementBase('ol', ['list-group', 'list-group-numbered']);
-    this.TOTAL = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.TOTAL_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
     this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
     this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
+    this.TOTAL_PRICE_THROUGH_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
     this.TOTAL_PRICE_THROUGH = createElementBase('div', [
       'text-decoration-line-through',
       'small',
       'text-secondary',
       'text-center',
     ]);
-
-    this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mb-1']);
     this.DELETE_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-danger'], undefined, 'Cart delete');
+
+    this.DISCOUNT_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mt-3']);
+    this.DISCOUNT_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Promo code:');
+    this.DISCOUNT_INPUT = createElementBase('input', []);
+    this.DISCOUNT_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-success'], undefined, 'Apply');
 
     this.DELETE_BUTTON.setAttribute('type', 'button');
     this.DELETE_BUTTON.setAttribute('data-bs-toggle', 'modal');
     this.DELETE_BUTTON.setAttribute('data-bs-target', '#busketModal');
+    this.DISCOUNT_INPUT.setAttribute('type', 'text');
 
     this.modal = new BusketModal();
 
     this.createListItem(cart);
 
-    this.PAGE.append(this.LIST, this.TOTAL, this.DELETE_BUTTON_CONTAINER, this.modal.MODAL);
+    this.PAGE.append(
+      this.DELETE_BUTTON_CONTAINER,
+      this.LIST,
+      this.TOTAL_CONTAINER,
+      this.TOTAL_PRICE_THROUGH_CONTAINER,
+      this.DISCOUNT_CONTAINER,
+      this.modal.MODAL
+    );
     this.addEvents();
   }
 
@@ -80,6 +109,12 @@ export default class BasketPage {
     }
 
     const names = busket.lineItems.map((item) => item.name.en);
+    const promoPrices = busket.lineItems.map((item) => {
+      if (item.discountedPricePerQuantity.length === 0) {
+        return false;
+      }
+      return true;
+    });
     const discountPrices = busket.lineItems.map((item) => {
       const price = item.price.discounted?.value.centAmount;
       if (price) {
@@ -153,6 +188,9 @@ export default class BasketPage {
 
       if (!discountPrices[i]) {
         DISCOUNT_PRICE.innerText = `${mainPrices[i]}`;
+        if (promoPrices[i]) {
+          PRICES_TOTAL_THROUGH.innerText = `${this.getThroughPrice(busket, counts[i], i)}`;
+        }
       } else {
         DISCOUNT_PRICE.innerText = `${discountPrices[i]}`;
         MAIN_PRICE.innerText = `${mainPrices[i]}`;
@@ -172,7 +210,9 @@ export default class BasketPage {
       busket.totalPrice.centAmount / 100
     );
 
-    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE, this.TOTAL_PRICE_THROUGH);
+    this.DISCOUNT_CONTAINER.append(this.DISCOUNT_TITLE, this.DISCOUNT_INPUT, this.DISCOUNT_BUTTON);
+    this.TOTAL_PRICE_THROUGH_CONTAINER.append(this.TOTAL_PRICE_THROUGH);
+    this.TOTAL_CONTAINER.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
     this.DELETE_BUTTON_CONTAINER.append(this.DELETE_BUTTON);
   }
 
@@ -264,6 +304,24 @@ export default class BasketPage {
         this.enableButtons();
       });
     });
+
+    this.DISCOUNT_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.tagName !== 'BUTTON') return;
+
+      const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+      const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
+      if (!cartId || !cartVersion) return;
+
+      const code = (target.previousElementSibling as HTMLInputElement).value;
+
+      this.disableButtons();
+      this.addPromoCode(code).catch((error: Error) => {
+        showModal(false, error.message);
+        this.enableButtons();
+      });
+    });
   }
 
   private async changeQuantity(element: HTMLInputElement) {
@@ -316,6 +374,18 @@ export default class BasketPage {
     [...CONTENT.children].forEach((card: Element) => {
       card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart'));
     });
+  }
+
+  private async addPromoCode(code: string) {
+    const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
+    if (!cartId || !cartVersion) return;
+
+    const { body } = await addDiscountCode(cartId, +cartVersion, code);
+
+    this.setCartInLocalStorage(body);
+    this.replacePage();
   }
 
   private setCartInLocalStorage(body: Cart) {
