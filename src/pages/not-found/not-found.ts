@@ -1,6 +1,6 @@
 import notFound from '@svg/404_not_found.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
-import './not_found.scss';
+import './not-found.scss';
 
 const NOT_FOUND_TEXT = createElement({
   tagname: 'p',
