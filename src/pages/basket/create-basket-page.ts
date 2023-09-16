@@ -197,7 +197,9 @@ export default class BasketPage {
         PRICES_TOTAL_THROUGH.innerText = `${this.getThroughPrice(busket, counts[i], i)}`;
       }
 
-      this.TOTAL_PRICE_THROUGH.innerText = this.getThroughTotalPrice(busket);
+      if (promoPrices.some((item) => item === true) || discountPrices.some((item) => item !== null)) {
+        this.TOTAL_PRICE_THROUGH.innerText = this.getThroughTotalPrice(busket);
+      }
 
       PRODUCT_CONTAINER.append(PRODUCT_NAME, DISCOUNT_PRICE, MAIN_PRICE);
       COUNT.append(BUTTON_ITEM_REMOVE, COUNT_NUMBER, BUTTON_ITEM_ADD);
