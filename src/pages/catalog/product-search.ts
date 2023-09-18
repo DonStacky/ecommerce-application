@@ -11,7 +11,7 @@ import { nextPage, currentPage, prevPage } from './page-navigation';
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
 let pageQuantity = 0;
 let currentPageNumber = 0;
-const cardPerPage = 4;
+const cardPerPage = 6;
 
 let searchQueryStorage: { [key: string]: QueryParam } = {};
 
