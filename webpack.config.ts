@@ -9,7 +9,7 @@ import prodConfig from './webpack.prod.config';
 import Dotenv from 'dotenv-webpack';
 
 const baseConfig: Configuration = {
-  entry: [path.resolve(__dirname, './src/app/app'), path.resolve(__dirname, './public/lib/gsap/ScrollSmoother.min')],
+  entry: path.resolve(__dirname, './src/app/app'),
   mode: 'development',
   module: {
     rules: [

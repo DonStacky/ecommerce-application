@@ -138,7 +138,6 @@ const MEMBER_ARTICLES = membersInfo.map((member) => {
         options: [['textContent', member[INDEX]]],
       });
       INDEX += 1;
-      console.log(MEMBER_IMPACT_ITEM);
       return MEMBER_IMPACT_ITEM;
     });
 
@@ -286,20 +285,7 @@ window.addEventListener('scroll', () => {
 
 gsap.registerPlugin(ScrollTrigger /** , ScrollSmoother */);
 
-// ScrollSmoother.create({
-//   wrapper: '.wrapper',
-//   content: '.content',
-//   effects: true,
-// });
-
-// console.log(document.querySelector('.layers'));
-// console.log(LAYER_WRAPPER);
-
 function addGsap() {
-  // console.log(document.getElementsByClassName('layers'));
-  // console.log(document.getElementsByClassName('team__item'));
-  // console.log(document.getElementsByClassName('team__text'));
-
   gsap.fromTo(
     '.layers',
     { opacity: 1 },
@@ -315,7 +301,6 @@ function addGsap() {
   );
 
   const itemsLeft = gsap.utils.toArray('.team__left .team__item');
-  // console.log(itemsLeft);
 
   itemsLeft.forEach((item) => {
     gsap.fromTo(
