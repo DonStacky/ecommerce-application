@@ -6,6 +6,17 @@
   column-gap: 2rem;
   row-gap: 2rem;
   flex-grow: 1;
+  position: relative;
+  
+  * {
+    transition: filter .5s;
+  }
+
+  &>.blur {
+    width: calc(100% - 4rem);
+    height: calc(100% - 4rem);
+    background-color: transparent;
+  }
 
   .aside__image {
     max-width: 30%;

@@ -40,6 +40,21 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
   const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
   console.log('currentPage', currentPageNumber);
 
+  const blur = createElement({
+    tagname: 'div',
+    options: [
+      ['className', 'blur'],
+      [
+        'innerHTML',
+        `<div class="spinner-border" role="status">
+  <span class="sr-only">Loading...</span>
+</div>`,
+      ],
+    ],
+  });
+
+  CONTENT.prepend(blur);
+
   if (!Object.keys(CATEGORY_NAME_ID_MAP).length) {
     await getCategories();
   }
