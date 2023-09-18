@@ -38,7 +38,6 @@ async function getCategories() {
 
 export default async function search(searchInput: SearchInput, isStoredRequest?: boolean) {
   const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
-  console.log('currentPage', currentPageNumber);
 
   const blur = createElement({
     tagname: 'div',

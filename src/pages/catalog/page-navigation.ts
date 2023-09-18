@@ -1,31 +1,32 @@
 import { createElement } from '../../shared/helpers/dom-utilites';
 
 export const prevPage = createElement({
-  tagname: 'li',
+  tagname: 'button',
   options: [
     ['textContent', 'Previous'],
-    ['classList', 'btn btn-secondary page-item page-link'],
+    ['className', 'btn btn-secondary page-link fs-2'],
   ],
 });
 
 export const nextPage = createElement({
-  tagname: 'li',
+  tagname: 'button',
   options: [
     ['textContent', 'Next'],
-    ['classList', 'btn btn-secondary page-item page-link'],
+    ['className', 'btn btn-secondary page-link fs-2'],
   ],
 });
 
 export const currentPage = createElement({
   tagname: 'li',
-  options: [
-    ['textContent', '2 of 10'],
-    ['classList', 'page-item page-link'],
-  ],
+  options: [['className', 'page-item page-link fs-2']],
 });
 
 export const PAGE_NAVIGATION = createElement({
   tagname: 'ul',
   options: [['className', 'pagination justify-content-center']],
-  childElements: [prevPage, currentPage, nextPage],
+  childElements: [
+    createElement({ tagname: 'li', options: [['className', 'page-item']], childElements: [prevPage] }),
+    currentPage,
+    createElement({ tagname: 'li', options: [['className', 'page-item']], childElements: [nextPage] }),
+  ],
 });
