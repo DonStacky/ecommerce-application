@@ -51,15 +51,14 @@ const FOOTER_COMPANY_TITLE = createElement({
 // --------------------- FOOTER CUSTOMERS ---------------------
 
 const footerCustomersText: string[][] = [
-  ['Basket', 'basket'],
-  ['Discounts', 'discounts'],
-  ['Promo codes', 'promo'],
+  ['Basket', '/basket'],
+  ['Promo codes', '#discounts'],
 ];
 
 const FOOTER_CUSTOMERS_LINKS = footerCustomersText.map(([text, link]) => {
   const FOOTER_CUSTOMER_LINK = createElement({
     tagname: 'a',
-    options: [['href', `/${link}`]],
+    options: [['href', `${link}`]],
   });
   FOOTER_CUSTOMER_LINK.textContent = text;
   FOOTER_CUSTOMER_LINK.dataset.navigo = 'true';
