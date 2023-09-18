@@ -1,4 +1,4 @@
-import { Cart, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { Cart, QueryParam, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import buildCommonClient from '../../shared/api/create-common-client';
 import checkEnvVariables from '../../shared/helpers/utilites';
 import { SearchInput } from '../../shared/types/types';
@@ -6,8 +6,14 @@ import createCard from './card';
 import CONTENT from './content';
 import NOT_FOUND from '@svg/no-result.svg';
 import { createElement } from '../../shared/helpers/dom-utilites';
+import { nextPage, currentPage, prevPage } from './page-navigation';
 
 const CATEGORY_NAME_ID_MAP: { [name: string]: string } = {};
+let pageQuantity = 0;
+let currentPageNumber = 0;
+const cardPerPage = 4;
+
+let searchQueryStorage: null | { [key: string]: QueryParam } = null;
 
 async function getCategories() {
   const ctpClient = buildCommonClient();
@@ -30,8 +36,9 @@ async function getCategories() {
     });
 }
 
-export default async function search(searchInput: SearchInput) {
+export default async function search(searchInput: SearchInput, isStoredRequest?: boolean) {
   const cart: Cart | null = JSON.parse(localStorage.getItem('MyCart') || 'null');
+  console.log('currentPage', currentPageNumber);
 
   if (!Object.keys(CATEGORY_NAME_ID_MAP).length) {
     await getCategories();
@@ -56,20 +63,50 @@ export default async function search(searchInput: SearchInput) {
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
   });
 
-  const productsData = (
+  if (!isStoredRequest) {
+    currentPageNumber = 0;
+    searchQueryStorage = {
+      limit: cardPerPage,
+      'text.en': `${searchTextInput || ''}`,
+      filter: mappedArr,
+      sort,
+      offset: cardPerPage * currentPageNumber,
+    };
+  }
+
+  const { results: productsData, total } = (
     await root
       .productProjections()
       .search()
       .get({
-        queryArgs: {
-          limit: 30,
-          'text.en': `${searchTextInput || ''}`,
-          filter: mappedArr,
-          sort,
-        },
+        queryArgs:
+          isStoredRequest && searchQueryStorage
+            ? searchQueryStorage
+            : {
+                limit: cardPerPage,
+                'text.en': `${searchTextInput || ''}`,
+                filter: mappedArr,
+                sort,
+                offset: cardPerPage * currentPageNumber,
+              },
       })
       .execute()
-  ).body.results;
+  ).body;
+
+  pageQuantity = Math.ceil((total || 0) / cardPerPage);
+
+  if (!currentPageNumber) {
+    prevPage.classList.add('disabled');
+  } else {
+    prevPage.classList.remove('disabled');
+  }
+  if (!pageQuantity || pageQuantity === currentPageNumber + 1) {
+    nextPage.classList.add('disabled');
+  } else {
+    nextPage.classList.remove('disabled');
+  }
+
+  currentPage.textContent = `${currentPageNumber + 1} of ${pageQuantity || 1}`;
 
   const cards = productsData.reduce((acc, cur, idx) => {
     acc.push(createCard(cur, !!cart?.lineItems.filter((item) => item.productId === productsData[idx].id).length));
@@ -100,3 +137,22 @@ export default async function search(searchInput: SearchInput) {
     CONTENT.classList.add('content-not-found');
   }
 }
+
+function showNextPage(this: HTMLElement) {
+  if (!this.classList.contains('disabled') && searchQueryStorage) {
+    currentPageNumber += 1;
+    searchQueryStorage.offset = cardPerPage * currentPageNumber;
+  }
+  search({}, true);
+}
+
+function showPrevPage(this: HTMLElement) {
+  if (!this.classList.contains('disabled') && searchQueryStorage) {
+    currentPageNumber += -1;
+    searchQueryStorage.offset = cardPerPage * currentPageNumber;
+  }
+  search({}, true);
+}
+
+prevPage.addEventListener('click', showPrevPage);
+nextPage.addEventListener('click', showNextPage);
