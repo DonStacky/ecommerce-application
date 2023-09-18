@@ -5,7 +5,7 @@
   height: 37rem;
   border-radius: 10px;
   border: 1px solid #000000d4;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, filter .5s;
 
   .btn-primary {
     background-color: $catalog-button-color;
@@ -59,7 +59,7 @@
 .my-card-image {
   width: 27rem;
   height: 27rem;
-  transition: height 0.5s;
+  transition: height 0.5s, filter .5s;
   object-fit: cover;
 }
 
@@ -68,7 +68,7 @@
   top: 27rem;
   height: 37rem;
   width: 27rem;
-  transition: top 0.5s, color 0.5s;
+  transition: top 0.5s, color 0.5s, filter .5s;
 }
 
 .my-card-text {
