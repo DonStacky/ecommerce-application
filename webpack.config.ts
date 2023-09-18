@@ -9,7 +9,7 @@ import prodConfig from './webpack.prod.config';
 import Dotenv from 'dotenv-webpack';
 
 const baseConfig: Configuration = {
-  entry: path.resolve(__dirname, './src/app/app'),
+  entry: [path.resolve(__dirname, './src/app/app'), path.resolve(__dirname, './public/lib/gsap/ScrollSmoother.min')],
   mode: 'development',
   module: {
     rules: [
@@ -77,6 +77,7 @@ const baseConfig: Configuration = {
     alias: {
       '@image': path.resolve(__dirname, 'public/image'),
       '@svg': path.resolve(__dirname, 'public/svg'),
+      '@lib': path.resolve(__dirname, 'public/lib'),
     },
   },
   output: {

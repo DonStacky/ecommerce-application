@@ -1,0 +1,194 @@
+p {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  background-color: #b8c4c4;
+  color: #efefef;
+}
+
+:root {
+  --index: calc(1vw + 1vh);
+  // --transition: transform 0.75s cubic-bezier(0.075, 0.5, 0, 1);
+  // --about-color-title: #f4efec;
+  // --about-color-text: #cdc6c3;
+}
+
+.layers {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.layer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-size: cover;
+  will-change: transform;
+  // transition: var(--transition);
+}
+
+.about__content {
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layers__base {
+  transform: translate3d(0, calc(var(--scrollTop) / 1.6), 0);
+  background-position: 50%;
+  z-index: 0;
+}
+
+.layers__middle {
+  transform: translate3d(0, calc(var(--scrollTop) / 2.5), 0);
+  background-position: 50%;
+
+}
+
+.layers__front {
+  transform: translate3d(0, calc(var(--scrollTop) / 5.7), 0);
+  background-position: 50%;
+  z-index: 2;
+}
+
+.layers__title {
+  z-index: 1;
+  transform: translate3d(0, calc(var(--scrollTop) / 2), 0);
+  will-change: transform;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: calc(var(--index) * 3.2);
+  letter-spacing: calc(var(--index) / 2.25);
+  text-shadow: 0px 0px 35px #010101;
+  // transition: var(--transition);
+}
+
+.about__inner {
+  will-change: transform;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: repeat(4, 1fr);
+  padding: calc(var(--index) * 5) 0;
+  grid-gap: calc(var(--index) * 6) 0;
+  align-content: center;
+  justify-content: center;
+}
+
+.team > div {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.container {
+  padding: 0 calc(var(--index) * 5);
+}
+
+.team__left, .team__collaborate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.team__avatar {
+  background: url('@image/don-stacky.jpg');
+  background-size: cover;
+  max-width: 50%;
+  // height: calc(var(--index) * 12);
+  border-radius: 50%;
+  box-shadow:  0px 0px 20px -4px #010101;
+  /* margin-top: calc(var(--index) * 21.5); */
+  /* margin-bottom: calc(var(--index) * 2.5); */
+}
+
+.team__item {
+  // max-width: calc(var(--index) * 40);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--index) * 3);
+}
+
+.team-work {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  padding-bottom: calc(var(--index) * 15);
+  gap: calc(var(--index) * 2);
+}
+
+.team-work__content {
+  display: flex;
+  align-items: center;
+  gap: 10vw;
+}
+
+.team-work__img {
+  max-width: 30vw;
+  border-radius: 8px;
+}
+
+.team-work__text {
+  background-color: #8b6752;
+  /* width: calc(var(--index) * 25); */
+  /* height: calc(var(--index) * 5); */
+}
+
+.team__link {
+  text-decoration: none;
+  color: #efefef;
+  transition: .3s;
+
+  &:hover {
+    color: #b8c4c4;
+  }
+}
+
+.fa-github {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.team__text {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  height: auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #829797;
+  line-height: 2.5rem;
+  font-size: 1.6rem;
+  box-shadow: 4px 6px 20px -5px #010101;
+  // align-self:center
+  // margin-bottom: 0.5rem;
+}
+
+.team__collaboration {
+  align-self:center;
+}
+
+.title__impact-list {
+  padding-left: 20px;
+}
+
+.team-work__img {
+  max-width: 60%;
+}
+
+.team__rsschool {
+  display: flex;
+  justify-content: center;
+}
