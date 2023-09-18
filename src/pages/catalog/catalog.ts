@@ -4,6 +4,7 @@ import CONTENT from './content';
 import { SEARCH_BAR } from './search-form';
 import 'bootstrap';
 import ACCORDION from './side-bar';
+import { PAGE_NAVIGATION } from './page-navigation';
 
 const CATALOG_PAGE = createElement({
   tagname: 'section',
@@ -11,7 +12,12 @@ const CATALOG_PAGE = createElement({
   childElements: [
     SEARCH_BAR,
     BREADCRUMB,
-    createElement({ tagname: 'div', options: [['className', 'd-flex']], childElements: [ACCORDION, CONTENT] }),
+    createElement({
+      tagname: 'div',
+      options: [['className', 'd-flex']],
+      childElements: [ACCORDION, CONTENT],
+    }),
+    PAGE_NAVIGATION,
   ],
 });
 
