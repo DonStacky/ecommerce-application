@@ -1,14 +1,14 @@
-import { createElement } from '../../shared/helpers/dom-utilites';
-import './about.scss';
+import avatarDonStacky from '@image/don-stacky.jpg';
+import frontLayer from '@image/front-layer.png';
+import avatarGserdg from '@image/gserdg.jpg';
+import rsschoolLogo from '@image/logo_rs2.svg';
 import baseLayer from '@image/main-layer.jpg';
 import middleLayer from '@image/middle-layer2.png';
-import frontLayer from '@image/front-layer.png';
-import avatarDonStacky from '@image/don-stacky.jpg';
-import avatarGserdg from '@image/gserdg.jpg';
 import avatarUser42022 from '@image/user42022.jpg';
-import rsschoolLogo from '@image/logo_rs2.svg';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { createElement } from '../../shared/helpers/dom-utilites';
+import './about.scss';
 
 const ABOUT_TITLE = createElement({
   tagname: 'h1',
@@ -273,7 +273,7 @@ const ABOUT_INNER = createElement({
 
 const ABOUT_PAGE = createElement({
   tagname: 'div',
-  options: [['className', 'wrapper']],
+  options: [['className', 'about__wrapper']],
   childElements: [ABOUT_INNER],
 });
 

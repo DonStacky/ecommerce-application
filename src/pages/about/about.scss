@@ -1,11 +1,6 @@
-p {
+.team p {
   margin: 0;
   box-sizing: border-box;
-}
-
-.wrapper {
-  background-color: #b8c4c4;
-  color: #efefef;
 }
 
 .layers {
@@ -56,15 +51,22 @@ p {
   will-change: transform;
 }
 
-.about__content {
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.about {
+  &__content {
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.about__inner {
-  will-change: transform;
+  &__inner {
+    will-change: transform;
+  }
+
+  &__wrapper {
+    background-color: #b8c4c4;
+    color: #efefef;
+  }
 }
 
 .team {
@@ -81,41 +83,64 @@ p {
     align-items: center;
     flex-direction: column;
   }
-}
 
-.team__left, .team__collaborate {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  &__left, &__collaborate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.team__avatar {
-  background: url('@image/don-stacky.jpg');
-  background-size: cover;
-  max-width: 50%;
-  border-radius: 50%;
-  box-shadow:  0px 0px 20px -4px #010101;
-}
+  &__avatar {
+    background: url('@image/don-stacky.jpg');
+    background-size: cover;
+    max-width: 50%;
+    border-radius: 50%;
+    box-shadow:  0px 0px 20px -4px #010101;
+  }
 
-.team__item {
-  display: flex;
-  flex-direction: column;
-  gap: 3.5rem;
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: #efefef;
+    transition: .3s;
+
+    &:hover {
+      color: #b8c4c4;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    height: auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #829797;
+    line-height: 2.5rem;
+    font-size: 1.6rem;
+    box-shadow: 4px 6px 20px -5px #010101;
+  }
+
+  &__collaboration {
+    align-self:center;
+  }
+
+  &__rsschool {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .team-work__img {
+  max-width: 60%;
   max-width: 30vw;
   border-radius: 8px;
-}
-
-.team__link {
-  text-decoration: none;
-  color: #efefef;
-  transition: .3s;
-
-  &:hover {
-    color: #b8c4c4;
-  }
 }
 
 .fa-github {
@@ -123,32 +148,6 @@ p {
   height: 1.6rem;
 }
 
-.team__text {
-  display: flex;
-  flex-direction: column;
-  max-width: 85%;
-  height: auto;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #829797;
-  line-height: 2.5rem;
-  font-size: 1.6rem;
-  box-shadow: 4px 6px 20px -5px #010101;
-}
-
-.team__collaboration {
-  align-self:center;
-}
-
 .title__impact-list {
   padding-left: 20px;
-}
-
-.team-work__img {
-  max-width: 60%;
-}
-
-.team__rsschool {
-  display: flex;
-  justify-content: center;
 }
