@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.6",
     "@types/dotenv-webpack": "^7.0.4",
+    "@types/gsap": "^3.0.0",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -66,6 +67,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.1",
     "dotenv": "^16.3.1",
+    "gsap": "^3.12.2",
     "http-status-codes": "^2.2.0",
     "navigo": "^8.11.1",
     "yup": "^1.2.0"

@@ -1,7 +1,5 @@
-import deer from '@image/deer.jpg';
-import lighthouse from '@image/lighthouse.jpg';
-import lights from '@image/lights.jpg';
-import seaSet from '@image/morskoj-nabor.jpg';
+import discount1 from '@image/discount.jpg';
+import discount2 from '@image/discount2.jpg';
 import blackLogo from '@svg/logo-black.svg';
 import whiteLogo from '@svg/logo-white.svg';
 import { Carousel } from 'bootstrap';
@@ -9,6 +7,7 @@ import { createElement } from '../../shared/helpers/dom-utilites';
 import CONTENT from '../../pages/catalog/content';
 import './header.scss';
 import { checkCartLineItemsQty } from '../../pages/detailed/cart-interaction';
+import showModal from '../../shared/modal/modal-window';
 
 // --------------------- COMMON HEADER ---------------------
 
@@ -376,7 +375,7 @@ const MAIN_HEADER_TEXT_COLUMN = createElement({
   childElements: [MAIN_HEADER_TITLE, MAIN_HEADER_TEXT, MAIN_HEADER_VIEW_BTN],
 });
 
-const headerCarouselImages = [deer, seaSet, lights, lighthouse];
+const headerCarouselImages = [discount1, discount2];
 
 const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
   const HEADER_CAROUSEL_IMAGE = createElement({
@@ -391,14 +390,36 @@ const HEADER_CAROUSEL_IMAGES = headerCarouselImages.map((image) => {
 });
 
 const HEADER_CAROUSEL_ITEMS = HEADER_CAROUSEL_IMAGES.map((image) => {
+  const HEADER_CAROUSEL_CAPTURE = createElement({
+    tagname: 'div',
+    options: [['className', 'carousel-caption d-none d-md-block']],
+    childElements: [
+      createElement({
+        tagname: 'p',
+        options: [
+          ['textContent', 'click on the image to copy'],
+          ['className', 'text-dark carousel__capture'],
+        ],
+      }),
+    ],
+  });
+
   const HEADER_CAROUSEL_ITEM = createElement({
     tagname: 'div',
     options: [['className', 'carousel-item']],
-    childElements: [image],
+    childElements: [image, HEADER_CAROUSEL_CAPTURE],
   });
   return HEADER_CAROUSEL_ITEM;
 });
 HEADER_CAROUSEL_ITEMS[0].classList.add('active');
+HEADER_CAROUSEL_ITEMS[0].addEventListener('click', () => {
+  navigator.clipboard.writeText('FOURSEASONS10');
+  showModal(true, '', '', 'Promo code FOURSEASONS10 copied successfully. Use it in Cart');
+});
+HEADER_CAROUSEL_ITEMS[1].addEventListener('click', () => {
+  navigator.clipboard.writeText('SUMMER20');
+  showModal(true, '', '', 'Promo code SUMMER20 copied successfully. Use it in Cart');
+});
 
 const HEADER_CAROUSEL_INNER = createElement({
   tagname: 'div',
@@ -406,13 +427,33 @@ const HEADER_CAROUSEL_INNER = createElement({
   childElements: [...HEADER_CAROUSEL_ITEMS],
 });
 
+const CAROUSEL_INDICATORS = Array(2)
+  .fill(null)
+  .map((_item, index) => {
+    const CAROUSEL_INDICATOR = createElement({
+      tagname: 'button',
+      options: [['type', 'button']],
+    });
+    CAROUSEL_INDICATOR.dataset.bsSlideTo = `${index}`;
+    CAROUSEL_INDICATOR.dataset.bsTarget = '#carouselHeader';
+
+    return CAROUSEL_INDICATOR;
+  });
+CAROUSEL_INDICATORS[0].classList.add('active');
+
+const CAROUSEL_INDICATORS_WRAPPER = createElement({
+  tagname: 'div',
+  options: [['className', 'carousel-indicators']],
+  childElements: [...CAROUSEL_INDICATORS],
+});
+
 const HEADER_CAROUSEL = createElement({
   tagname: 'div',
   options: [
-    ['className', 'header__carousel carousel slide d-flex justify-content-center'],
+    ['className', 'header__carousel carousel carousel-dark slide d-flex justify-content-center'],
     ['id', 'carouselHeader'],
   ],
-  childElements: [HEADER_CAROUSEL_INNER],
+  childElements: [CAROUSEL_INDICATORS_WRAPPER, HEADER_CAROUSEL_INNER],
 });
 
 const carousel = new Carousel(HEADER_CAROUSEL, {
@@ -424,7 +465,10 @@ carousel.next();
 
 const HEADER_CAROUSEL_COLUMN = createElement({
   tagname: 'div',
-  options: [['className', 'col col-sm-6 col-12']],
+  options: [
+    ['className', 'col col-sm-6 col-12'],
+    ['id', 'discounts'],
+  ],
   childElements: [HEADER_CAROUSEL],
 });
 
