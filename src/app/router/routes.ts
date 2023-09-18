@@ -52,6 +52,9 @@ const render = (content: HTMLElement, linkID?: string) => {
   } else if (content === REG_PAGE) {
     document.body.style.background = `url(${regBack}) 0 0 / cover`;
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))`;
+  } else if (content === ABOUT_PAGE) {
+    document.body.style.background = `#829797`;
+    FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))`;
   } else {
     document.body.style.background = 'transparent';
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${footerBack}) 0 100% / cover no-repeat`;
