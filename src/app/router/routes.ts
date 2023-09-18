@@ -8,17 +8,13 @@ import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import CONTENT from '../../pages/catalog/content';
 import search from '../../pages/catalog/product-search';
-import {
-  // checkCartAvailability,
-  checkProductInCart,
-  checkCartLineItemsQty,
-} from '../../pages/detailed/cart-interaction';
+import { checkProductInCart, checkCartLineItemsQty } from '../../pages/detailed/cart-interaction';
 import { getProductWithKey } from '../../pages/detailed/detailed-data';
 import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-page';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
-import NOT_FOUND from '../../pages/not_found/not_found';
+import NOT_FOUND from '../../pages/not-found/not-found';
 import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
@@ -162,7 +158,6 @@ const getRoutes = (router: Navigo) => {
             getDetailedInfo(id);
             checkProductInCart(id);
             localStorage.setItem('currentProductId', id);
-            // checkCartAvailability();
 
             render(DETAILED_PAGE);
           } catch {
