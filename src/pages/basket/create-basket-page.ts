@@ -1,17 +1,24 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { changeLineItemQuantity, deleteCart, getCart, removeLineItem } from '../../shared/api/for-carts-and-lineItems';
+import {
+  applyDiscountCode,
+  changeLineItemQuantity,
+  deleteCart,
+  getCart,
+  // eslint-disable-next-line prettier/prettier
+  removeLineItem
+} from '../../shared/api/for-carts-and-lineItems';
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
+import CONTENT from '../catalog/content';
 import { checkCartLineItemsQty } from '../detailed/cart-interaction';
 import BusketModal from './busket-modal';
-import CONTENT from '../catalog/content';
 
 export default class BasketPage {
   LIST: HTMLOListElement;
 
   PAGE: HTMLDivElement;
 
-  TOTAL: HTMLDivElement;
+  TOTAL_CONTAINER: HTMLDivElement;
 
   TOTAL_TITLE: HTMLDivElement;
 
@@ -25,26 +32,58 @@ export default class BasketPage {
 
   modal: BusketModal;
 
+  TOTAL_PRICE_THROUGH: HTMLDivElement;
+
+  TOTAL_PRICE_THROUGH_CONTAINER: HTMLDivElement;
+
+  DISCOUNT_CONTAINER: HTMLDivElement;
+
+  DISCOUNT_TITLE: HTMLDivElement;
+
+  DISCOUNT_INPUT: HTMLInputElement;
+
+  DISCOUNT_BUTTON: HTMLButtonElement;
+
   constructor(cart?: Cart) {
     this.total = '0';
 
     this.PAGE = createElementBase('div', ['container', 'container_margin'], 'basketPage');
     this.LIST = createElementBase('ol', ['list-group', 'list-group-numbered']);
-    this.TOTAL = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.TOTAL_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'price_margin']);
     this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
     this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
-    this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2']);
+    this.TOTAL_PRICE_THROUGH_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'price_margin']);
+    this.TOTAL_PRICE_THROUGH = createElementBase('div', [
+      'text-decoration-line-through',
+      'small',
+      'text-secondary',
+      'text-center',
+    ]);
+    this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mb-1']);
     this.DELETE_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-danger'], undefined, 'Cart delete');
+
+    this.DISCOUNT_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mt-3', 'gap-3']);
+    this.DISCOUNT_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Promo code:');
+    this.DISCOUNT_INPUT = createElementBase('input', []);
+    this.DISCOUNT_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-success'], undefined, 'Apply');
 
     this.DELETE_BUTTON.setAttribute('type', 'button');
     this.DELETE_BUTTON.setAttribute('data-bs-toggle', 'modal');
     this.DELETE_BUTTON.setAttribute('data-bs-target', '#busketModal');
+    this.DISCOUNT_INPUT.setAttribute('type', 'text');
 
     this.modal = new BusketModal();
 
     this.createListItem(cart);
 
-    this.PAGE.append(this.LIST, this.TOTAL, this.DELETE_BUTTON_CONTAINER, this.modal.MODAL);
+    this.PAGE.append(
+      this.DELETE_BUTTON_CONTAINER,
+      this.LIST,
+      this.TOTAL_CONTAINER,
+      this.TOTAL_PRICE_THROUGH_CONTAINER,
+      this.DISCOUNT_CONTAINER,
+      this.modal.MODAL
+    );
     this.addEvents();
   }
 
@@ -69,16 +108,16 @@ export default class BasketPage {
       this.PAGE.append(TITLE_CONTAINER);
       return;
     }
-
     const names = busket.lineItems.map((item) => item.name.en);
-    const prices = busket.lineItems.map((item) => {
-      const price = item.price.discounted?.value.centAmount || item.price.value.centAmount;
-      return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+    const promoPrices = busket.lineItems.map((item) => {
+      if (item.discountedPricePerQuantity.length === 0) {
+        return false;
+      }
+      return true;
     });
-    const totalPrices = busket.lineItems.map((item) => {
-      const price = item.totalPrice.centAmount;
-      return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
-    });
+    const discountPrices = this.getPrice(busket, 'discount');
+    const mainPrices = this.getPrice(busket, 'main');
+    const totalPrices = this.getPrice(busket, 'total');
     const counts = busket.lineItems.map((item) => item.quantity);
     const images = busket.lineItems.map((item) => {
       const img = item.variant.images;
@@ -96,7 +135,7 @@ export default class BasketPage {
         productId[i]
       );
       const IMAGE = createElementBase('img', ['image', 'col-1']);
-      const PRODUCT_CONTAINER = createElementBase('div', ['col-6', 'align-self-center']);
+      const PRODUCT_CONTAINER = createElementBase('div', ['col-5', 'align-self-center']);
       const PRODUCT_NAME = createElementBase('div', ['fw-bold'], undefined, names[i]);
 
       const COUNT = createElementBase('div', ['count', 'col-3', 'justify-content-center', 'align-self-center']);
@@ -109,13 +148,23 @@ export default class BasketPage {
       const COUNT_NUMBER = createElementBase('input', ['count-input']);
       const BUTTON_ITEM_ADD = createElementBase('button', ['btn_max', 'btn', 'btn-outline-secondary'], undefined, '➕');
 
+      const PRODUCTS_TOTAL_CONTAINER = createElementBase('div', ['col-2', 'align-self-center', 'text-center']);
       const PRODUCTS_TOTAL = createElementBase(
         'div',
-        ['text-primary', 'fw-bold', 'col-1', 'align-self-center', 'text-center'],
+        ['text-primary', 'fw-bold', 'text-center'],
         undefined,
         `${totalPrices[i]}`
       );
+      const PRICES_TOTAL_THROUGH = createElementBase('div', [
+        'text-decoration-line-through',
+        'small',
+        'text-secondary',
+        'text-center',
+      ]);
+
       const BUTTON_REMOVE = createElementBase('button', ['btn-close', 'align-self-center']);
+      const DISCOUNT_PRICE = createElementBase('span', ['me-2']);
+      const MAIN_PRICE = createElementBase('s', ['small']);
 
       IMAGE.setAttribute('src', images[i]);
       IMAGE.setAttribute('width', '5%');
@@ -125,9 +174,25 @@ export default class BasketPage {
       BUTTON_ITEM_ADD.setAttribute('type', 'button');
       BUTTON_REMOVE.setAttribute('aria-label', 'remoove');
 
-      PRODUCT_CONTAINER.append(PRODUCT_NAME, `${prices[i]}`);
+      if (!discountPrices[i]) {
+        DISCOUNT_PRICE.innerText = `${mainPrices[i]}`;
+        if (promoPrices[i]) {
+          PRICES_TOTAL_THROUGH.innerText = `${this.getPriceWithoutDiscount(busket, counts[i], i)}`;
+        }
+      } else {
+        DISCOUNT_PRICE.innerText = `${discountPrices[i]}`;
+        MAIN_PRICE.innerText = `${mainPrices[i]}`;
+        PRICES_TOTAL_THROUGH.innerText = `${this.getPriceWithoutDiscount(busket, counts[i], i)}`;
+      }
+
+      if (promoPrices.some((item) => item === true) || discountPrices.some((item) => item !== null)) {
+        this.TOTAL_PRICE_THROUGH.innerText = this.getTotalPriceWithoutDiscount(busket);
+      }
+
+      PRODUCT_CONTAINER.append(PRODUCT_NAME, DISCOUNT_PRICE, MAIN_PRICE);
       COUNT.append(BUTTON_ITEM_REMOVE, COUNT_NUMBER, BUTTON_ITEM_ADD);
-      LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCTS_TOTAL, BUTTON_REMOVE);
+      PRODUCTS_TOTAL_CONTAINER.append(PRODUCTS_TOTAL, PRICES_TOTAL_THROUGH);
+      LIST_ITEM.append(IMAGE, PRODUCT_CONTAINER, COUNT, PRODUCTS_TOTAL_CONTAINER, BUTTON_REMOVE);
       this.LIST.append(LIST_ITEM);
     }
 
@@ -135,7 +200,9 @@ export default class BasketPage {
       busket.totalPrice.centAmount / 100
     );
 
-    this.TOTAL.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
+    this.DISCOUNT_CONTAINER.append(this.DISCOUNT_TITLE, this.DISCOUNT_INPUT, this.DISCOUNT_BUTTON);
+    this.TOTAL_PRICE_THROUGH_CONTAINER.append(this.TOTAL_PRICE_THROUGH);
+    this.TOTAL_CONTAINER.append(this.TOTAL_TITLE, this.TOTAL_PRICE);
     this.DELETE_BUTTON_CONTAINER.append(this.DELETE_BUTTON);
   }
 
@@ -227,6 +294,25 @@ export default class BasketPage {
         this.enableButtons();
       });
     });
+
+    this.DISCOUNT_BUTTON.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.tagName !== 'BUTTON') return;
+
+      const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+      const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
+      if (!cartId || !cartVersion) return;
+
+      const code = (target.previousElementSibling as HTMLInputElement).value;
+      if (!code) return;
+
+      this.disableButtons();
+      this.addPromoCode(code).catch((error: Error) => {
+        showModal(false, '', '', error.message);
+        this.enableButtons();
+      });
+    });
   }
 
   private async changeQuantity(element: HTMLInputElement) {
@@ -255,10 +341,10 @@ export default class BasketPage {
     if (!cartId || !LIST || !cartVersion) return;
 
     const productId = LIST.id;
-    const /* { body } */ cart = await removeLineItem(cartId, +cartVersion, productId);
-    this.setCartInLocalStorage(/* body */ cart);
-    this.replacePage(/* body */ cart);
-    checkCartLineItemsQty(/* body */);
+    const cart = await removeLineItem(cartId, +cartVersion, productId);
+    this.setCartInLocalStorage(cart);
+    this.replacePage(cart);
+    checkCartLineItemsQty();
 
     [...CONTENT.children].forEach((card: Element) => {
       card.dispatchEvent(new CustomEvent<Cart | null>('successUpdateCart', { detail: cart }));
@@ -285,6 +371,18 @@ export default class BasketPage {
     });
   }
 
+  private async addPromoCode(code: string) {
+    const cachedCart: null | Cart = JSON.parse(localStorage.getItem('MyCart') || 'null');
+    const { id: cartId, version: cartVersion } = cachedCart || { id: null, version: null };
+
+    if (!cartId || !cartVersion) return;
+
+    const { body } = await applyDiscountCode(cartId, +cartVersion, code);
+
+    this.setCartInLocalStorage(body);
+    this.replacePage();
+  }
+
   private setCartInLocalStorage(body: Cart) {
     localStorage.setItem('MyCart', JSON.stringify(body));
   }
@@ -307,5 +405,36 @@ export default class BasketPage {
   private enableButtons() {
     const buttons = findDomElements<'button'>(this.LIST, 'button');
     buttons.forEach((item) => item.classList.remove('disabled'));
+  }
+
+  private getPriceWithoutDiscount(body: Cart, count: number, index: number) {
+    const price = body.lineItems[index].price.value.centAmount * count;
+    return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+  }
+
+  private getTotalPriceWithoutDiscount(body: Cart) {
+    const price = body.lineItems.reduce((a, b) => a + b.price.value.centAmount * b.quantity, 0);
+
+    return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+  }
+
+  private getPrice(busket: Cart, type: string) {
+    return busket.lineItems.map((item) => {
+      let price: number | undefined;
+      if (type === 'discount') {
+        price = item.price.discounted?.value.centAmount;
+      }
+      if (type === 'main') {
+        price = item.price.value.centAmount;
+      }
+      if (type === 'total') {
+        price = item.totalPrice.centAmount;
+      }
+
+      if (price) {
+        return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+      }
+      return null;
+    });
   }
 }

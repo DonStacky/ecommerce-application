@@ -1,7 +1,7 @@
-import { Cart, MyCartUpdate, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { Cart, createApiBuilderFromCtpClient, MyCartUpdate } from '@commercetools/platform-sdk';
+import CONTENT from '../../pages/catalog/content';
 import checkEnvVariables from '../helpers/utilites';
 import buildCommonClient from './create-common-client';
-import CONTENT from '../../pages/catalog/content';
 
 localStorage.setItem('cartUpdatePermission', 'true');
 
@@ -147,4 +147,28 @@ export async function deleteCart(ID: string, cartVersion: number) {
   localStorage.setItem('cartUpdatePermission', 'true');
 
   return changedCart;
+}
+
+export function applyDiscountCode(ID: string, cartVersion: number, code: string) {
+  const ctpClient = buildCommonClient();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+    projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
+  });
+
+  return apiRoot
+    .me()
+    .carts()
+    .withId({ ID })
+    .post({
+      body: {
+        version: cartVersion,
+        actions: [
+          {
+            action: 'addDiscountCode',
+            code,
+          },
+        ],
+      },
+    })
+    .execute();
 }
