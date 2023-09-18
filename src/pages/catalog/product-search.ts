@@ -13,7 +13,7 @@ let pageQuantity = 0;
 let currentPageNumber = 0;
 const cardPerPage = 4;
 
-let searchQueryStorage: null | { [key: string]: QueryParam } = null;
+let searchQueryStorage: { [key: string]: QueryParam } = {};
 
 async function getCategories() {
   const ctpClient = buildCommonClient();
@@ -79,16 +79,15 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
       .productProjections()
       .search()
       .get({
-        queryArgs:
-          isStoredRequest && searchQueryStorage
-            ? searchQueryStorage
-            : {
-                limit: cardPerPage,
-                'text.en': `${searchTextInput || ''}`,
-                filter: mappedArr,
-                sort,
-                offset: cardPerPage * currentPageNumber,
-              },
+        queryArgs: isStoredRequest
+          ? searchQueryStorage
+          : {
+              limit: cardPerPage,
+              'text.en': `${searchTextInput || ''}`,
+              filter: mappedArr,
+              sort,
+              offset: cardPerPage * currentPageNumber,
+            },
       })
       .execute()
   ).body;
@@ -139,7 +138,7 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
 }
 
 function showNextPage(this: HTMLElement) {
-  if (!this.classList.contains('disabled') && searchQueryStorage) {
+  if (!this.classList.contains('disabled')) {
     currentPageNumber += 1;
     searchQueryStorage.offset = cardPerPage * currentPageNumber;
   }
@@ -147,7 +146,7 @@ function showNextPage(this: HTMLElement) {
 }
 
 function showPrevPage(this: HTMLElement) {
-  if (!this.classList.contains('disabled') && searchQueryStorage) {
+  if (!this.classList.contains('disabled')) {
     currentPageNumber += -1;
     searchQueryStorage.offset = cardPerPage * currentPageNumber;
   }
