@@ -309,7 +309,7 @@ export default class BasketPage {
 
       this.disableButtons();
       this.addPromoCode(code).catch((error: Error) => {
-        showModal(false, error.message);
+        showModal(false, '', '', error.message);
         this.enableButtons();
       });
     });
