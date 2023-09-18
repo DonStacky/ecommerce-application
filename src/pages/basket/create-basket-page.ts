@@ -1,10 +1,11 @@
 import { Cart } from '@commercetools/platform-sdk';
 import {
-  addDiscountCode,
+  applyDiscountCode,
   changeLineItemQuantity,
   deleteCart,
   getCart,
-  removeLineItem,
+  // eslint-disable-next-line prettier/prettier
+  removeLineItem
 } from '../../shared/api/for-carts-and-lineItems';
 import { createElementBase, findDomElement, findDomElements } from '../../shared/helpers/dom-utilites';
 import showModal from '../../shared/modal/modal-window';
@@ -48,10 +49,10 @@ export default class BasketPage {
 
     this.PAGE = createElementBase('div', ['container', 'container_margin'], 'basketPage');
     this.LIST = createElementBase('ol', ['list-group', 'list-group-numbered']);
-    this.TOTAL_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-10']);
+    this.TOTAL_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'price_margin']);
     this.TOTAL_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Total:');
     this.TOTAL_PRICE = createElementBase('div', ['text-primary', 'fw-bold', 'ms-3']);
-    this.TOTAL_PRICE_THROUGH_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-10']);
+    this.TOTAL_PRICE_THROUGH_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'price_margin']);
     this.TOTAL_PRICE_THROUGH = createElementBase('div', [
       'text-decoration-line-through',
       'small',
@@ -107,7 +108,6 @@ export default class BasketPage {
       this.PAGE.append(TITLE_CONTAINER);
       return;
     }
-
     const names = busket.lineItems.map((item) => item.name.en);
     const promoPrices = busket.lineItems.map((item) => {
       if (item.discountedPricePerQuantity.length === 0) {
@@ -115,21 +115,9 @@ export default class BasketPage {
       }
       return true;
     });
-    const discountPrices = busket.lineItems.map((item) => {
-      const price = item.price.discounted?.value.centAmount;
-      if (price) {
-        return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
-      }
-      return null;
-    });
-    const mainPrices = busket.lineItems.map((item) => {
-      const price = item.price.value.centAmount;
-      return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
-    });
-    const totalPrices = busket.lineItems.map((item) => {
-      const price = item.totalPrice.centAmount;
-      return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
-    });
+    const discountPrices = this.getPrice(busket, 'discount');
+    const mainPrices = this.getPrice(busket, 'main');
+    const totalPrices = this.getPrice(busket, 'total');
     const counts = busket.lineItems.map((item) => item.quantity);
     const images = busket.lineItems.map((item) => {
       const img = item.variant.images;
@@ -189,16 +177,16 @@ export default class BasketPage {
       if (!discountPrices[i]) {
         DISCOUNT_PRICE.innerText = `${mainPrices[i]}`;
         if (promoPrices[i]) {
-          PRICES_TOTAL_THROUGH.innerText = `${this.getThroughPrice(busket, counts[i], i)}`;
+          PRICES_TOTAL_THROUGH.innerText = `${this.getPriceWithoutDiscount(busket, counts[i], i)}`;
         }
       } else {
         DISCOUNT_PRICE.innerText = `${discountPrices[i]}`;
         MAIN_PRICE.innerText = `${mainPrices[i]}`;
-        PRICES_TOTAL_THROUGH.innerText = `${this.getThroughPrice(busket, counts[i], i)}`;
+        PRICES_TOTAL_THROUGH.innerText = `${this.getPriceWithoutDiscount(busket, counts[i], i)}`;
       }
 
       if (promoPrices.some((item) => item === true) || discountPrices.some((item) => item !== null)) {
-        this.TOTAL_PRICE_THROUGH.innerText = this.getThroughTotalPrice(busket);
+        this.TOTAL_PRICE_THROUGH.innerText = this.getTotalPriceWithoutDiscount(busket);
       }
 
       PRODUCT_CONTAINER.append(PRODUCT_NAME, DISCOUNT_PRICE, MAIN_PRICE);
@@ -385,7 +373,7 @@ export default class BasketPage {
 
     if (!cartId || !cartVersion) return;
 
-    const { body } = await addDiscountCode(cartId, +cartVersion, code);
+    const { body } = await applyDiscountCode(cartId, +cartVersion, code);
 
     this.setCartInLocalStorage(body);
     this.replacePage();
@@ -415,14 +403,34 @@ export default class BasketPage {
     buttons.forEach((item) => item.classList.remove('disabled'));
   }
 
-  private getThroughPrice(body: Cart, count: number, index: number) {
+  private getPriceWithoutDiscount(body: Cart, count: number, index: number) {
     const price = body.lineItems[index].price.value.centAmount * count;
     return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
   }
 
-  private getThroughTotalPrice(body: Cart) {
+  private getTotalPriceWithoutDiscount(body: Cart) {
     const price = body.lineItems.reduce((a, b) => a + b.price.value.centAmount * b.quantity, 0);
 
     return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+  }
+
+  private getPrice(busket: Cart, type: string) {
+    return busket.lineItems.map((item) => {
+      let price: number | undefined;
+      if (type === 'discount') {
+        price = item.price.discounted?.value.centAmount;
+      }
+      if (type === 'main') {
+        price = item.price.value.centAmount;
+      }
+      if (type === 'total') {
+        price = item.totalPrice.centAmount;
+      }
+
+      if (price) {
+        return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price / 100);
+      }
+      return null;
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Cart, MyCartUpdate, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { Cart, createApiBuilderFromCtpClient, MyCartUpdate } from '@commercetools/platform-sdk';
 import CONTENT from '../../pages/catalog/content';
 import checkEnvVariables from '../helpers/utilites';
 import buildCommonClient from './create-common-client';
@@ -136,7 +136,7 @@ export function deleteCart(ID: string, cartVersion: number) {
     .execute();
 }
 
-export function addDiscountCode(ID: string, cartVersion: number, code: string) {
+export function applyDiscountCode(ID: string, cartVersion: number, code: string) {
   const ctpClient = buildCommonClient();
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: checkEnvVariables(process.env.CTP_PROJECT_KEY),
