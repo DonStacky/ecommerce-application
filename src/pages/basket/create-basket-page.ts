@@ -62,7 +62,7 @@ export default class BasketPage {
     this.DELETE_BUTTON_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mb-1']);
     this.DELETE_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-danger'], undefined, 'Cart delete');
 
-    this.DISCOUNT_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mt-3']);
+    this.DISCOUNT_CONTAINER = createElementBase('div', ['d-flex', 'justify-content-end', 'me-2', 'mt-3', 'gap-3']);
     this.DISCOUNT_TITLE = createElementBase('div', ['fw-bold'], undefined, 'Promo code:');
     this.DISCOUNT_INPUT = createElementBase('input', []);
     this.DISCOUNT_BUTTON = createElementBase('button', ['btn_max', 'btn', 'btn-success'], undefined, 'Apply');
