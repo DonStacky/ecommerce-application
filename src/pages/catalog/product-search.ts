@@ -52,7 +52,11 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
     ],
   });
 
-  CONTENT.prepend(blur);
+  if (CONTENT.firstElementChild?.classList.contains('blur')) {
+    CONTENT.firstElementChild.replaceWith(blur);
+  } else {
+    CONTENT.prepend(blur);
+  }
 
   if (!Object.keys(CATEGORY_NAME_ID_MAP).length) {
     await getCategories();
@@ -106,7 +110,9 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
       .execute()
   ).body;
 
-  pageQuantity = Math.ceil((total || 0) / cardPerPage);
+  if (!isStoredRequest) {
+    pageQuantity = Math.ceil((total || 0) / cardPerPage);
+  }
 
   if (!currentPageNumber) {
     prevPage.classList.add('disabled');
@@ -152,7 +158,7 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
 }
 
 function showNextPage(this: HTMLElement) {
-  if (!this.classList.contains('disabled')) {
+  if (currentPageNumber + 1 < pageQuantity) {
     currentPageNumber += 1;
     searchQueryStorage.offset = cardPerPage * currentPageNumber;
   }
@@ -160,7 +166,7 @@ function showNextPage(this: HTMLElement) {
 }
 
 function showPrevPage(this: HTMLElement) {
-  if (!this.classList.contains('disabled')) {
+  if (currentPageNumber) {
     currentPageNumber += -1;
     searchQueryStorage.offset = cardPerPage * currentPageNumber;
   }
