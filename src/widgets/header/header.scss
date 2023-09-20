@@ -169,3 +169,24 @@
 .hide {
   display: none;
 }
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link__line-items-qty {
+  display: none;
+}
+
+.nav-link__line-items-qty--active {
+  display: block;
+}
+
+.carousel__capture {
+  display: inline-block;
+  padding: 0 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}

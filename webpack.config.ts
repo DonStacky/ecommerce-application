@@ -77,6 +77,7 @@ const baseConfig: Configuration = {
     alias: {
       '@image': path.resolve(__dirname, 'public/image'),
       '@svg': path.resolve(__dirname, 'public/svg'),
+      '@lib': path.resolve(__dirname, 'public/lib'),
     },
   },
   output: {

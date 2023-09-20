@@ -5,7 +5,7 @@
   height: 37rem;
   border-radius: 10px;
   border: 1px solid #000000d4;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, filter .5s;
 
   .btn-primary {
     background-color: $catalog-button-color;
@@ -29,9 +29,17 @@
   }
 
   button::before {
-    content: 'Price: ';
+    margin-right: .5rem;
   }
 
+  button.add-to-basket::before {
+    content: url('@svg/empty-basket.svg');
+  }
+
+  button.remove-from-basket::before {
+    content: url('@svg/filled-basket.svg');
+  }
+  
   &:hover {
     box-shadow: 0px 0px 20px 0px #000000d4;
     cursor: pointer;
@@ -48,26 +56,19 @@
   }
 }
 
-// .my-card:has(.discount) {
-//   border: 1px solid violet;
-
-//   &:hover {
-//     box-shadow: 0.1rem 0.2rem 4rem 0.1rem violet;
-//   }
-// }
-
 .my-card-image {
   width: 27rem;
   height: 27rem;
-  transition: height 0.5s;
+  transition: height 0.5s, filter .5s;
   object-fit: cover;
 }
+
 .my-card-body {
   position: absolute;
   top: 27rem;
   height: 37rem;
   width: 27rem;
-  transition: top 0.5s, color 0.5s;
+  transition: top 0.5s, color 0.5s, filter .5s;
 }
 
 .my-card-text {
@@ -76,12 +77,29 @@
 
 span.discount {
   text-decoration: line-through;
-  // position: absolute;
-  // transform: rotateZ(45deg) translateX(-2rem);
-  // transform-origin: center;
   color: rgb(221, 221, 221);
   font-size: 1.7rem;
-  // text-shadow: 1px 1px violet;
   margin-left: 5px;
   white-space: nowrap;
+}
+
+.blur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+  background-color: rgba(255, 0, 0, 0.1);
+
+  .spinner-border {
+    width: 6rem;
+    height: 6rem;
+    border-width: .6rem;
+  }
+
+  & ~ * {
+    filter: blur(5px);
+  }
 }

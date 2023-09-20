@@ -443,9 +443,7 @@ export default class ProfilePage extends GetUserData {
         try {
           if (newPassword === repeatPassword) {
             await changePassword(currentPassword, newPassword);
-            const {
-              body: { customer },
-            } = await loginCustomer(email, newPassword);
+            const customer = await loginCustomer(email, newPassword);
             this.modalPasswordChange.modal?.hide();
             localStorage.setItem('userInformation', JSON.stringify(customer));
             this.replasePage();

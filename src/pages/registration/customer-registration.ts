@@ -55,9 +55,7 @@ async function registerCustomer(customerData: CustomerData) {
 
   try {
     await apiRoot.customers().post({ body: newCustomer }).execute();
-    const {
-      body: { customer },
-    } = await loginCustomer(customerData.email.value, customerData.password.value);
+    const customer = await loginCustomer(customerData.email.value, customerData.password.value);
     ROUTER.navigate('/');
     addLogoutBtn();
     showModal(true, 'created');

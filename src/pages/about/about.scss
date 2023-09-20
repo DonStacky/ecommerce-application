@@ -1,0 +1,152 @@
+.team p {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.layers {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  margin-top: 30px;
+
+  &__base {
+    transform: translate3d(0, calc(var(--scrollTop) / 1.6), 0);
+    background-position: 50%;
+    z-index: 0;
+  }
+
+  &__middle {
+    transform: translate3d(0, calc(var(--scrollTop) / 2.5), 0);
+    background-position: 50%;
+  }
+
+  &__front {
+    transform: translate3d(0, calc(var(--scrollTop) / 5.7), 0);
+    background-position: 50%;
+    z-index: 2;
+  }
+
+  &__title {
+    position: relative;
+    top: -7vh;
+    z-index: 1;
+    transform: translate3d(0, calc(var(--scrollTop) / 2), 0);
+    will-change: transform;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 6rem;
+    letter-spacing: 1.6rem;
+    text-shadow: 0px 0px 35px #010101;
+  }
+}
+
+.layer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-size: cover;
+  will-change: transform;
+}
+
+.about {
+  &__content {
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__inner {
+    will-change: transform;
+  }
+
+  &__wrapper {
+    background-color: #b8c4c4;
+    color: #efefef;
+  }
+}
+
+.team {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: repeat(4, 1fr);
+  padding: 7rem 0;
+  grid-gap: 7rem 0;
+  align-content: center;
+  justify-content: center;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__left, &__collaborate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__avatar {
+    background: url('@image/don-stacky.jpg');
+    background-size: cover;
+    max-width: 50%;
+    border-radius: 50%;
+    box-shadow:  0px 0px 20px -4px #010101;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: #efefef;
+    transition: .3s;
+
+    &:hover {
+      color: #b8c4c4;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    height: auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #829797;
+    line-height: 2.5rem;
+    font-size: 1.6rem;
+    box-shadow: 4px 6px 20px -5px #010101;
+  }
+
+  &__collaboration {
+    align-self:center;
+  }
+
+  &__rsschool {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.team-work__img {
+  max-width: 60%;
+  border-radius: 8px;
+}
+
+.fa-github {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.title__impact-list {
+  padding-left: 20px;
+}

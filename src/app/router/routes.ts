@@ -3,26 +3,26 @@ import loginBack from '@image/hand-holding-string.jpg';
 import footerBack from '@image/tools-and-wood-sawdust-in-workshop.jpg';
 import Navigo from 'navigo';
 import ABOUT_PAGE from '../../pages/about/about';
-import BASKET_PAGE from '../../pages/basket/basket';
+import BasketPage from '../../pages/basket/create-basket-page';
 import { showBreadCrumb } from '../../pages/catalog/breadcrumb';
 import CATALOG_PAGE from '../../pages/catalog/catalog';
 import CONTENT from '../../pages/catalog/content';
 import search from '../../pages/catalog/product-search';
+import { checkProductInCart, checkCartLineItemsQty } from '../../pages/detailed/cart-interaction';
 import { getProductWithKey } from '../../pages/detailed/detailed-data';
 import { DETAILED_PAGE, getDetailedInfo } from '../../pages/detailed/detailed-page';
 import DISCOUNTS_PAGE from '../../pages/discounts/discounts';
 import LOGIN_PAGE from '../../pages/login/create-login-page';
 import { MAIN, MAIN_INNER, PAGE } from '../../pages/main/main-page';
-import NOT_FOUND from '../../pages/not_found/not_found';
+import NOT_FOUND from '../../pages/not-found/not-found';
 import ProfilePage from '../../pages/profile/create-profile-page';
 import PROMO_PAGE from '../../pages/promo/promo';
 import REG_PAGE from '../../pages/registration/registration-form';
-import { findDomElement } from '../../shared/helpers/dom-utilites';
+import { findDomElements, findDomElement } from '../../shared/helpers/dom-utilites';
 import FOOTER from '../../widgets/footer/footer';
 import {
   addLogoutBtn,
   HEADER,
-  HEADER_ITEMS,
   HEADER_LIST,
   LOG_OUT_ITEM,
   MAIN_HEADER_ITEMS,
@@ -33,7 +33,7 @@ import {
 import ROUTER from './router';
 
 const render = (content: HTMLElement, linkID?: string) => {
-  if (localStorage.getItem('tokenCache')) {
+  if (localStorage.getItem('isLogged')) {
     if (linkID === '#home') {
       addLogoutBtn();
     } else {
@@ -52,11 +52,15 @@ const render = (content: HTMLElement, linkID?: string) => {
   } else if (content === REG_PAGE) {
     document.body.style.background = `url(${regBack}) 0 0 / cover`;
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))`;
+  } else if (content === ABOUT_PAGE) {
+    document.body.style.background = `#829797`;
+    FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))`;
   } else {
     document.body.style.background = 'transparent';
     FOOTER.style.background = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${footerBack}) 0 100% / cover no-repeat`;
   }
 
+  const HEADER_ITEMS = findDomElements(document.body, '.header-bottom__item');
   HEADER_ITEMS.forEach((item) => item.classList.remove('active'));
 
   if (linkID) {
@@ -69,6 +73,8 @@ const render = (content: HTMLElement, linkID?: string) => {
   HEADER.classList.add('header-bottom__nav--common');
   MAIN.innerHTML = '';
   MAIN.append(content);
+
+  checkCartLineItemsQty();
 };
 
 const getRoutes = (router: Navigo) => {
@@ -116,17 +122,17 @@ const getRoutes = (router: Navigo) => {
       showBreadCrumb(['All', 'Autumn']);
     })
     .on('/basket', () => {
-      render(BASKET_PAGE, '#basket');
+      render(new BasketPage().PAGE, '#basket');
     })
     .on('/login', () => {
-      if (localStorage.getItem('tokenCache')) {
+      if (localStorage.getItem('isLogged')) {
         ROUTER.navigate('/');
       } else {
         render(LOGIN_PAGE, '#login');
       }
     })
     .on('/registration', () => {
-      if (localStorage.getItem('tokenCache')) {
+      if (localStorage.getItem('isLogged')) {
         ROUTER.navigate('/');
       } else {
         render(REG_PAGE, '#registration');
@@ -139,8 +145,8 @@ const getRoutes = (router: Navigo) => {
       render(PROMO_PAGE);
     })
     .on('/profile', () => {
-      if (localStorage.getItem('tokenCache')) {
-        render(new ProfilePage().PROFILE_CONTAINER);
+      if (localStorage.getItem('isLogged')) {
+        render(new ProfilePage().PROFILE_CONTAINER, '#profile');
       } else {
         ROUTER.navigate('/login');
       }
@@ -153,6 +159,9 @@ const getRoutes = (router: Navigo) => {
           try {
             const { id } = (await getProductWithKey(data.key)).body;
             getDetailedInfo(id);
+            checkProductInCart(id);
+            localStorage.setItem('currentProductId', id);
+
             render(DETAILED_PAGE);
           } catch {
             render(NOT_FOUND);

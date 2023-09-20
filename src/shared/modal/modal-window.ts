@@ -1,7 +1,19 @@
 import { Alert } from 'bootstrap';
-import { createElement } from '../helpers/dom-utilites';
+import { createElement, findDomElement } from '../helpers/dom-utilites';
 
-export default function showModal(success: boolean, title: string, description?: string) {
+function closeModal() {
+  if (document.querySelector('.modal-window')) {
+    const modal = findDomElement(document.body, '.modal-window');
+
+    if (modal) {
+      modal.remove();
+    }
+  }
+}
+
+export default function showModal(success: boolean, title: string, description?: string, myText?: string) {
+  closeModal();
+
   const SVG_SUCCESS_CONTAINER = createElement({
     tagname: 'div',
     options: [
@@ -50,7 +62,7 @@ export default function showModal(success: boolean, title: string, description?:
         childElements: [
           createElement({
             tagname: 'div',
-            options: [['textContent', success ? `Successfully ${title}` : `${title} failed`]],
+            options: [['textContent', myText || (success ? `Successfully ${title}` : `${title} failed`)]],
           }),
           createElement({
             tagname: 'div',
