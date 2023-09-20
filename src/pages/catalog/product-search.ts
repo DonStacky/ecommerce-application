@@ -52,7 +52,11 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
     ],
   });
 
-  CONTENT.prepend(blur);
+  if (CONTENT.firstElementChild?.classList.contains('blur')) {
+    CONTENT.firstElementChild.replaceWith(blur);
+  } else {
+    CONTENT.prepend(blur);
+  }
 
   if (!Object.keys(CATEGORY_NAME_ID_MAP).length) {
     await getCategories();
@@ -106,20 +110,21 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
       .execute()
   ).body;
 
-  pageQuantity = Math.ceil((total || 0) / cardPerPage);
+  if (!isStoredRequest) {
+    pageQuantity = Math.ceil((total || 0) / cardPerPage);
+    currentPage.textContent = `${currentPageNumber + 1} of ${pageQuantity || 1}`;
 
-  if (!currentPageNumber) {
-    prevPage.classList.add('disabled');
-  } else {
-    prevPage.classList.remove('disabled');
+    if (!currentPageNumber) {
+      prevPage.classList.add('disabled');
+    } else {
+      prevPage.classList.remove('disabled');
+    }
+    if (!pageQuantity || pageQuantity === currentPageNumber + 1) {
+      nextPage.classList.add('disabled');
+    } else {
+      nextPage.classList.remove('disabled');
+    }
   }
-  if (!pageQuantity || pageQuantity === currentPageNumber + 1) {
-    nextPage.classList.add('disabled');
-  } else {
-    nextPage.classList.remove('disabled');
-  }
-
-  currentPage.textContent = `${currentPageNumber + 1} of ${pageQuantity || 1}`;
 
   const cards = productsData.reduce((acc, cur, idx) => {
     acc.push(createCard(cur, !!cart?.lineItems.filter((item) => item.productId === productsData[idx].id).length));
@@ -152,18 +157,32 @@ export default async function search(searchInput: SearchInput, isStoredRequest?:
 }
 
 function showNextPage(this: HTMLElement) {
-  if (!this.classList.contains('disabled')) {
-    currentPageNumber += 1;
-    searchQueryStorage.offset = cardPerPage * currentPageNumber;
+  currentPageNumber += 1;
+
+  if (pageQuantity <= currentPageNumber + 1) {
+    currentPageNumber = pageQuantity ? pageQuantity - 1 : 0;
+    this.classList.add('disabled');
   }
+
+  searchQueryStorage.offset = cardPerPage * currentPageNumber;
+  prevPage.classList.remove('disabled');
+  currentPage.textContent = `${currentPageNumber + 1} of ${pageQuantity || 1}`;
+
   search({}, true);
 }
 
 function showPrevPage(this: HTMLElement) {
-  if (!this.classList.contains('disabled')) {
-    currentPageNumber += -1;
-    searchQueryStorage.offset = cardPerPage * currentPageNumber;
+  currentPageNumber += -1;
+
+  if (currentPageNumber < 1) {
+    currentPageNumber = 0;
+    this.classList.add('disabled');
   }
+
+  searchQueryStorage.offset = cardPerPage * currentPageNumber;
+  nextPage.classList.remove('disabled');
+  currentPage.textContent = `${currentPageNumber + 1} of ${pageQuantity || 1}`;
+
   search({}, true);
 }
 
